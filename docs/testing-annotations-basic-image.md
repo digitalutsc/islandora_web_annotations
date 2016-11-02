@@ -6,7 +6,7 @@
 * Install [islandora_context] (https://github.com/mjordan/islandora_context) drupal module
 * Install [islandora_web_annotations] (https://github.com/digitalutsc/islandora_web_annotations) drupal module
 
-## Creatin the context
+## Creating the context needed for basic_image annotations
 Go to admin/structure/context and import the following context.
 
 ```php
