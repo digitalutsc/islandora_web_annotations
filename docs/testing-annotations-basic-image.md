@@ -9,7 +9,7 @@ When you isntall this module, you will get a Notices such as "Notice: Use of und
 
 * Install [islandora_web_annotations] (https://github.com/digitalutsc/islandora_web_annotations) drupal module
 
-## Creating the context needed for basic_image annotations
+## Creating the context needed by basic_image annotations
 Go to admin/structure/context and import the following context.
 
 ```php
