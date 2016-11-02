@@ -1,7 +1,10 @@
-# Testing Basic Image Annotations
+# Testing basic image annotations
 
 ## Insatllation
-
+* Install [context] (https://www.drupal.org/project/context) drupal module
+* Install [context_addassets] (https://www.drupal.org/project/context_addassets) drupal module
+* Install [islandora_context] (https://github.com/mjordan/islandora_context) drupal module
+* Install [islandora_web_annotations] (https://github.com/digitalutsc/islandora_web_annotations) drupal module
 
 ## Creatin the context
 Go to admin/structure/context and import the following context.
@@ -56,3 +59,7 @@ $context->reactions = array(
 );
 $context->condition_mode = 0;
 ```
+
+## Create a sample image and see if you are able to create annotations
+Review [annotorious] (https://annotorious.github.io/)  for detail feature list.
+
