@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Examples showing how to use some of the new JavaScript features in Drupal 7.
+ */
+
+/**
+ * @defgroup islandora_web_annotations Example: JavaScript
+ * @ingroup examples
+ * @{
+ * Examples using Drupal 7's built-in JavaScript.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function islandora_web_annotations_theme() {
+  return array(
+    'my_accordion' => array(
+      'template' => 'accordion',
+      'variables' => array('title' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function islandora_web_annotations_menu() {
+  $items = array();
+  $items['islandora_web_annotations/accordion'] = array(
+    'title' => 'JS Test',
+    'page callback' => 'islandora_web_annotations_accordion',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Demonstrate accordion effect.
+ */
+function islandora_web_annotations_accordion() {
+  $title = t('Click sections to expand or collapse:');
+  $build['myelement'] = array(
+    '#theme' => 'my_accordion',
+    '#title' => $title,
+  );
+  $build['myelement']['#attached']['library'][] = array('system', 'ui.accordion');
+  $build['myelement']['#attached']['js'][] = array('data' => '(function($){$(function() { $("#accordion").accordion(); })})(jQuery);', 'type' => 'inline');
+  $output = drupal_render($build);
+  return $output;
+}
