@@ -1,5 +1,7 @@
 #Testing large image annotations - OpenSeaDragon Viewer
 
+## Known Issues
+* If the user scrolls down on the page and then creates the annotations, then the annotations positions are not vertically alinged properly.  
 
 ## Insatllation
 * Install [context] (https://www.drupal.org/project/context) drupal module
