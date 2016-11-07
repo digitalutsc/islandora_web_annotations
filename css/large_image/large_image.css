@@ -1,0 +1,23 @@
+#add-annotation-button {
+    position:absolute;
+    top: 0px;
+    left:140px;
+}
+
+.islandora-openseadragon
+{
+    position: relative;
+    height:500px;
+    width: 100%;
+}
+
+#openseadragon-islandora {
+    position:absolute;
+    width:800px;
+    height:500px;
+}
+
+.islandora-openseadragon canvas
+{
+    background-color : transparent !important; /* should be replaced with OpenSeadragon setting */
+}
