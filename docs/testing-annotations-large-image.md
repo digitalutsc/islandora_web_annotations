@@ -12,7 +12,7 @@ When you isntall this module, you will get a Notices such as "Notice: Use of und
 
 * Install [islandora_web_annotations] (https://github.com/digitalutsc/islandora_web_annotations) drupal module
 
-* annotorious.github.io library does not work with the OpenSeaDragon versions than 1.0.  [v2.0.0 OpenSeaDragon] (https://github.com/openseadragon/openseadragon/releases/tag/v2.0.0) is recommended.  Note that this is NOT the recommended version for islandora_openseadragon module.  
+* annotorious.github.io library does not work with the OpenSeaDragon versions less than 1.0.  [v2.0.0 OpenSeaDragon] (https://github.com/openseadragon/openseadragon/releases/tag/v2.0.0) is recommended.  Note that this is NOT the recommended version for islandora_openseadragon module.  
 
 ## Creating the context needed by basic_image annotations
 Go to admin/structure/context and import the following context.
