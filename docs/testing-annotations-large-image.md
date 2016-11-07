@@ -1,4 +1,4 @@
-#Testing large image annotations - OpenSeaDragon Viewer
+#Testing large image annotations - OpenSeaDragon viewer
 
 ## Known Issues
 * If the user scrolls down on the page and then creates the annotations, then the annotations positions are not vertically alinged properly.  
