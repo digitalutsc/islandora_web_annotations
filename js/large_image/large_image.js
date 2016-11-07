@@ -6,7 +6,6 @@ jQuery(document).ready(function() {
 
     Drupal.settings.islandora_open_seadragon_viewer.id = "openseadragon-islandora";
 
-
     // Get the div DOM
     var openSeaDragonDiv = jQuery("#openseadragon-islandora");
 
