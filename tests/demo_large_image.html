@@ -1,0 +1,93 @@
+<html>
+<head>
+    <title>Annotorious OpenSeadragon Test Page</title>
+    <script src="../lib/js/openseadragon/openseadragon.js"></script>
+    <link rel="stylesheet" type="text/css" href="../lib/css/theme-dark/annotorious-dark.css" />
+    <script type="text/javascript" src="../lib/js/annotorious.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            var viewer = OpenSeadragon({
+                id: "openseadragon-islandora",
+                prefixUrl: "../lib/js/openseadragon/images/",
+                showNavigator: false,
+                tileSources: {
+                    type: 'legacy-image-pyramid',
+                    levels:[{
+                        url: 'fixtures/large_image/2003rosen1799/0001q.jpg',
+                        height: 889,
+                        width:  600
+                    },{
+                        url: 'fixtures/large_image/2003rosen1799/0001r.jpg',
+                        height: 2201,
+                        width:  1485
+                    },{
+                        url: 'fixtures/large_image/2003rosen1799/0001v.jpg',
+                        height: 4402,
+                        width:  2970
+                    }]
+                },
+
+                gestureSettingsMouse: {
+                    clickToZoom: false,
+                    dblClickToZoom: true
+                }
+
+            });
+
+            viewer.addHandler('canvas-click', function(target) {
+                if(target.quick === true){
+                    var viewportPoint = viewer.viewport.pointFromPixel(target.position);
+                    var imagePoint = viewer.viewport.viewportToImageCoordinates(viewportPoint.x, viewportPoint.y);
+                    console.log(parseInt(imagePoint.x), parseInt(imagePoint.y));
+                }
+            });
+
+            anno.makeAnnotatable(viewer);
+        }
+    </script>
+    <style>
+        #test {
+            position: relative;
+            display: block;
+            margin-top: 0px;
+            width: 100%;
+            height:500px;
+
+        }
+        #openseadragon-islandora {
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 500px;
+        }
+
+        #add-annotation-button {
+            position:absolute;
+            top:14px;
+            left:155px;
+        }
+
+        #testb
+        {
+            margin-top: 790px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="test">
+    <div id="openseadragon-islandora"></div>
+    <button id="add-annotation-button" onclick="anno.activateSelector();">Add Annotation</button>
+</div>
+
+
+
+
+
+<div id="testb">
+    This content is below.
+</div>
+
+
+</body>
+</html>

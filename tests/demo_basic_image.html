@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Annotorious Example Page</title>
+    <link rel="stylesheet" href="../lib//css/theme-dark/annotorious-dark.css" />
+    <script src="../lib/js/annotorious.min.js"></script>
+
+    <script>
+
+        function initAnnotate()
+        {
+            anno.makeAnnotatable(document.getElementById("sampleImage"));
+        }
+    </script>
+
+</head>
+<body onload="initAnnotate()">
+
+
+<h2>Demo Image</h2>
+<div style="float:left; margin:10px 0px 10px 30px;">
+    <img src="fixtures/basic_image/Common_Wombat.jpg" id="sampleImage" width="700">
+</div>
+
+
+</body>
+</html>
+
+
