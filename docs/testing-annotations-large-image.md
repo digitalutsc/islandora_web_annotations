@@ -72,4 +72,4 @@ $context->condition_mode = 0;
 ```
 
 ## Create a sample image and see if you are able to create annotations
-Review [annotorious] (https://annotorious.github.io/)  for detail feature list.
+Review [OpenVideoAnnotation] (https://github.com/CtrHellenicStudies/OpenVideoAnnotation)  for detail feature list.
