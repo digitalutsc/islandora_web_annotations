@@ -23,4 +23,8 @@ jQuery(document).ready(function() {
     var os_viewer = Drupal.settings.islandora_open_seadragon_viewer;
     anno.makeAnnotatable(os_viewer);
 
+    anno.addHandler('onEditorShown', function(annotation) {
+        window.pageYOffset = 0;
+    });
+
 });
