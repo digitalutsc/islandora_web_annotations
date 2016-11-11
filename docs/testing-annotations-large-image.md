@@ -71,5 +71,5 @@ $context->reactions = array(
 $context->condition_mode = 0;
 ```
 
-## Create a sample image and see if you are able to create annotations
-Review [annotorious] (https://annotorious.github.io/)  for detail feature list.
+## Create a sample video and see if you are able to create annotations
+Review [OpenVideoAnnotation] (https://github.com/CtrHellenicStudies/OpenVideoAnnotation)  for detail feature list.
