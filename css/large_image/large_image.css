@@ -4,6 +4,19 @@
     left:140px;
 }
 
+#save-annotation-button {
+    position:absolute;
+    top: 0px;
+    left:280px;
+}
+
+
+#load-annotation-button {
+    position:absolute;
+    top: 0px;
+    left:420px;
+}
+
 .islandora-openseadragon
 {
     position: relative;

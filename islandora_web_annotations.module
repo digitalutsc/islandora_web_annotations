@@ -28,13 +28,31 @@ function islandora_web_annotations_theme() {
  * Implements hook_menu().
  */
 function islandora_web_annotations_menu() {
-  $items = array();
-  $items['islandora_web_annotations/accordion'] = array(
-    'title' => 'JS Test',
-    'page callback' => 'islandora_web_annotations_accordion',
-    'access callback' => TRUE,
-  );
-  return $items;
+    $items = array();
+    $items['islandora_web_annotations/accordion'] = array(
+        'title' => 'JS Test',
+        'page callback' => 'islandora_web_annotations_accordion',
+        'access callback' => TRUE,
+    );
+    $items['islandora_web_annotations/create'] = array(
+        'title' => 'Create Web Annotation',
+        'description' => 'Add a new Web Annotation',
+        'page callback' => 'createAnnotation',
+        'access callback' => TRUE,
+        'file' => 'includes/AnnotationController.php',
+        'type' => MENU_CALLBACK,
+    );
+
+    $items['islandora_web_annotations/get'] = array(
+        'title' => 'Get Web Annotation Container',
+        'description' => 'Get Annotation Container',
+        'page callback' => 'getAnnotationContainer',
+        'access callback' => TRUE,
+        'file' => 'includes/AnnotationController.php',
+        'type' => MENU_CALLBACK,
+    );
+
+    return $items;
 }
 
 /**
