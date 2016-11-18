@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: nat
- * Date: 15/11/16
- * Time: 11:42 AM
+ * @file
+ * AnnotaionContainer intreface based on Web Annotation Protocol
  */
 
 interface interfaceAnnotationContainer {
@@ -49,6 +47,6 @@ interface interfaceAnnotationContainer {
      * @param $annotationID
      * @return mixed
      */
-    public function deleteAnnotation($annotationID);
+    public function deleteAnnotation($annotaionContainerID, $annotationID);
 
 }

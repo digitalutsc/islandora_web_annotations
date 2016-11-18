@@ -1,9 +1,8 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: nat
- * Date: 15/11/16
- * Time: 1:53 PM
+ * @file
+ * AnnotaionContainer implementation based on Web Annotation Protocol
  */
 
 require_once('interfaceAnnotationContainer.php');
@@ -42,7 +41,44 @@ class AnnotationContainer implements interfaceAnnotationContainer
 
     }
 
-    public function deleteAnnotation($annotationID){
+    public function deleteAnnotation($annotationContainerID, $annotationID){
+
+        // Remove it from container
+        $connection = islandora_get_tuque_connection();
+        $repository = $connection->repository;
+
+        // Get Datastream content
+        $object = $repository->getObject($annotationContainerID);
+        $WADMObject = $object->getDatastream("WADMContainer");
+        $content = (string)$WADMObject->content;
+        $contentJson = json_decode($content, true);
+        $items = $contentJson["first"]["items"];
+
+
+        // Remove the annotation from items
+        if(($key = array_search($annotationID, $items)) !== false) {
+            unset($items[$key]);
+        }
+        $items = array_values($items);
+
+        // Update the datastream
+        $contentJson["first"]["items"] = $items;
+        $updatedContent = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $WADMObject->content = $updatedContent;
+
+
+        watchdog('islandora_web_annotations', 'Deleted ' . $annotationID . "from the annotation container: " . $annotationContainerID);
+
+        // Delete the object
+        // Add annotation
+        $oAnnotation = new Annotation();
+        $annotationPID = $oAnnotation->deleteAnnotation($annotationID);
+
+        // Return message
+        $output = array('status' => "Success", "msg"=> "The following annotation was deleted: " . $annotationID);
+        $output = json_encode($output);
+
+        return $output;
 
     }
 
@@ -79,10 +115,10 @@ class AnnotationContainer implements interfaceAnnotationContainer
         return $object->id;
     }
 
-    public function deleteAnnotationContainer($objectID){
-
-
-
+    public function deleteAnnotationContainer($annotationContainerID){
+        $connection = islandora_get_tuque_connection();
+        $repository = $connection->repository;
+        $repository->purgeObject($annotationContainerID);
     }
 
     public function getAnnotationContainer($objectID){
@@ -104,18 +140,24 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $object = $repository->getObject($annotationContainerID);
             $WADMObject = $object->getDatastream("WADMContainer");
             $content = (string)$WADMObject->content;
-            $contentJson = json_decode($content);
-            $items = $contentJson->first->items;
+            $contentJson = json_decode($content, true);
+            $items = $contentJson["first"]["items"];
 
             $newArray = array();
             for($i = 0; $i < count($items); $i++) {
+
                 $dsContent = $this->getDatastreamContent($repository, $items[$i], "WADM");
-                $dsContentJson = json_decode($dsContent);
-                $data = $dsContentJson->data;
-                array_push($newArray, $data);
+                if($dsContent != "NotFound")
+                {
+                    $dsContentJson = json_decode($dsContent);
+                    $data = $dsContentJson->data;
+                    $data->pid = $items[$i];
+                    array_push($newArray, $data);
+                }
             }
 
-            $contentJson->first->items = $newArray;
+            $contentJson["first"]["items"] = $newArray;
+            $contentJson["@id"] = $annotationContainerID;
 
             $annotationContainerWithItems  = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
@@ -135,12 +177,12 @@ class AnnotationContainer implements interfaceAnnotationContainer
         $object = $repository->getObject($annotationContainerID);
         $WADMObject = $object->getDatastream("WADMContainer");
         $content = (string)$WADMObject->content;
-        $contentJson = json_decode($content);
+        $contentJson = json_decode($content, true);
 
         // Update the Datastream content
-        $items = $contentJson->first->items;
+        $items = $contentJson["first"]["items"];
         array_push($items, $annotationPID);
-        $contentJson->first->items = $items;
+        $contentJson["first"]["items"] = $items;
         $newContent = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         $WADMObject->content = $newContent;
 
@@ -148,10 +190,19 @@ class AnnotationContainer implements interfaceAnnotationContainer
     }
 
     private function getDatastreamContent($repository, $pid, $datastreamID){
-        $object = $repository->getObject($pid);
-        $WADMObject = $object->getDatastream($datastreamID);
-        $content = (string)$WADMObject->content;
-        return $content;
+        try{
+            $object = $repository->getObject($pid);
+            $WADMObject = $object->getDatastream($datastreamID);
+            $content = (string)$WADMObject->content;
+
+            watchdog('islandora_web_annotations', $pid . 'ds content' . $content);
+            return $content;
+        }
+        catch (Exception $e) {
+            watchdog('islandora_web_annotations', 'ds content not found for ' . $pid);
+            return "NofFound";
+        }
+
     }
 
     private function getAnnotationContainerJsonLD($containerID)

@@ -1,9 +1,8 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: nat
- * Date: 15/11/16
- * Time: 1:53 PM
+ * @file
+ * Annotation implementation based on Web Annotation Protocol
  */
 
 require_once('interfaceAnnotation.php');
@@ -44,15 +43,27 @@ class Annotation implements interfaceAnnotation
     }
 
 
-    public function updateAnnotation($annotationID){
+    public function updateAnnotation($annotationData){
 
+        $annotationPID = $annotationData["pid"];
+        $updatedContent = $this->getAnnotationJsonLD($annotationData);
 
+        $connection = islandora_get_tuque_connection();
+        $repository = $connection->repository;
+        $object = $repository->getObject($annotationPID);
+        $WADMObject = $object->getDatastream("WADM");
+        $WADMObject->content = $updatedContent;
+
+        $output = array('status' => "Success", "msg"=> "annotation updated");
+        $output = json_encode($output);
+        return $output;
     }
 
 
     public function deleteAnnotation($annotationID){
-
-
+        $connection = islandora_get_tuque_connection();
+        $repository = $connection->repository;
+        $repository->purgeObject($annotationID);
     }
 
 

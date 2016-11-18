@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: nat
- * Date: 15/11/16
- * Time: 11:50 AM
+ * @file
+ * Annotation intreface based on Web Annotation Protocol
  */
 
 interface interfaceAnnotation {

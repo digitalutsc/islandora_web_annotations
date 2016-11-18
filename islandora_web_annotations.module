@@ -52,6 +52,24 @@ function islandora_web_annotations_menu() {
         'type' => MENU_CALLBACK,
     );
 
+    $items['islandora_web_annotations/update'] = array(
+        'title' => 'Update Annotation',
+        'description' => 'Update Annotation',
+        'page callback' => 'updateAnnotation',
+        'access callback' => TRUE,
+        'file' => 'includes/AnnotationController.php',
+        'type' => MENU_CALLBACK,
+    );
+
+    $items['islandora_web_annotations/delete'] = array(
+        'title' => 'Delete Annotation',
+        'description' => 'Delete Annotation',
+        'page callback' => 'deleteAnnotation',
+        'access callback' => TRUE,
+        'file' => 'includes/AnnotationController.php',
+        'type' => MENU_CALLBACK,
+    );
+
     return $items;
 }
 
