@@ -13,15 +13,7 @@ interface interfaceAnnotationContainer {
      * @param $objectID
      * @return json  - container representation
      */
-    public function createAnnotationContainer($objectID);
-
-    /**
-     * Deletes the Annotation Container, including all annotations listed in the container
-     *
-     * @param $annotationContainerID
-     * @return string - status info
-     */
-    public function deleteAnnotationContainer($annotationContainerID);
+    public function createAnnotationContainer($targetObjectID, $annotationData);
 
 
     /**
@@ -33,12 +25,21 @@ interface interfaceAnnotationContainer {
     public function getAnnotationContainer($annotationContainerID);
 
     /**
+     * Deletes the Annotation Container, including all annotations listed in the container
+     *
+     * @param $annotationContainerID
+     * @return string - status info
+     */
+    public function deleteAnnotationContainer($annotationContainerID);
+
+
+    /**
      * Adds the annotation to the AnnotationContainer/Collection, then creates an annotation object by calling the Annotation class
      *
      * @param $annotationInfo
      * @return mixed
      */
-    public function createAnnotation($annotationInfo);
+    public function createAnnotation($targetObjectID, $annotationData);
 
 
     /**

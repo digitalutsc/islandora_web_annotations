@@ -5,6 +5,8 @@
  * AnnotaionContainer implementation based on Web Annotation Protocol
  */
 
+require_once('AnnotationConstants.php');
+require_once('AnnotationUtil.php');
 require_once('interfaceAnnotationContainer.php');
 require_once('Annotation.php');
 module_load_include('inc', 'islandora', 'includes/solution_packs');
@@ -12,44 +14,136 @@ module_load_include('inc', 'islandora', 'includes/solution_packs');
 
 class AnnotationContainer implements interfaceAnnotationContainer
 {
-    public function createAnnotation($annotationID){
-        $targetObjectID = isset($_POST['targetPid']) ? $_POST['targetPid'] : '';
-        $annotationData =  isset($_POST['annotationData']) ? $_POST['annotationData'] : '';
+    var $repository;
 
+    function __construct() {
+        $connection = islandora_get_tuque_connection();
+        $this->repository = $connection->repository;
+    }
 
+    /**
+     *
+     * @param $annotationData
+     * @return none
+     */
+    public function createAnnotationContainer($targetObjectID, $annotationData){
+
+        try {
+
+            $target = $annotationData["context"];
+
+            $object = $this->repository->constructObject("islandora");
+            $object->label = "AnnotationContainer for " . $targetObjectID;
+            $object->models = array(AnnotationConstants::WADMContainer_CONTENT_MODEL);
+            $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', AnnotationConstants::WADMContainer_CONTENT_MODEL);
+            $object->relationships->add(FEDORA_RELS_EXT_URI, 'isAnnotationContainerOf', $targetObjectID);
+            $dsid = AnnotationConstants::WADMContainer_DSID;
+
+            $ds = $object->constructDatastream($dsid, 'M');
+            $ds->label = $dsid;
+            $ds->mimetype = AnnotationConstants::ANNOTATION_MIMETYPE;
+
+            $targetPageID = $target . "/annotations/?page=0";
+            $test = $this->getAnnotationContainerJsonLD($targetPageID);
+            $ds->setContentFromString($test);
+            $object->ingestDatastream($ds);
+            $this->repository->ingestObject($object);
+
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : createAnnotationContainer: created a new annotationContainer: %t', array('%t' => $object->id), WATCHDOG_INFO);
+        }
+        catch (Exception $e) {
+            watchdog(AnnotationConstants::MODULE_NAME, 'Error adding annotation container object: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
+            throw $e;
+        }
+
+        return $object->id;
+    }
+
+    public function getAnnotationContainer($targetObjectID){
+
+        $annotationContainerID = $this->getAnnotationContainerPID($targetObjectID);
+
+        // If Container does not exist, respond with that message
+        if($annotationContainerID == "None"){
+            $response = array('status' => "Success", "msg" => "Annotation Container does not exist for " . $targetObjectID);
+            $response = json_encode($response);
+            return $response;
+        }
+        else {
+
+            // Get Datastream content
+            $object = $this->repository->getObject($annotationContainerID);
+            $WADMObject = $object->getDatastream(AnnotationConstants::WADMContainer_DSID);
+            $content = (string)$WADMObject->content;
+            $contentJson = json_decode($content, true);
+            $items = $contentJson["first"]["items"];
+
+            // Loop through each item and get the item info
+            $newArray = array();
+            for($i = 0; $i < count($items); $i++) {
+                $object = $this->repository->getObject($items[$i]);
+                $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
+                $dsContent = (string)$WADMObject->content;
+
+                if($dsContent != "NotFound")
+                {
+                    $dsContentJson = json_decode($dsContent);
+                    $data = $dsContentJson->data;
+                    $data->pid = $items[$i];
+                    array_push($newArray, $data);
+                }
+            }
+
+            $totalItems = count($items);
+            $contentJson["first"]["items"] = $newArray;
+            $contentJson["total"] = count($items);
+            $contentJson["@id"] = $annotationContainerID;
+
+            $annotationContainerWithItems  = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : getAnnotationContainer: Returning @totalItems annotations  for @argetObjectID', array('@totalItems' => $totalItems, '@targetObjectID'=> $targetObjectID), WATCHDOG_INFO);
+
+            return $annotationContainerWithItems;
+        }
+    }
+
+    public function deleteAnnotationContainer($annotationContainerID){
+        $connection = islandora_get_tuque_connection();
+        $repository = $connection->repository;
+        $repository->purgeObject($annotationContainerID);
+    }
+
+    /**
+     * Creates a new annotation and annotaion container if needed
+     * Aims to conform to : https://www.w3.org/TR/annotation-protocol/#create-a-new-annotation
+     *
+     * @param $targetObjectID
+     * @param $annotationData
+     * @return jsonld of the annotation that was created
+     */
+    public function createAnnotation($targetObjectID, $annotationData){
         // If annotationContainer does not exist, create the container
         $annotationContainerID = $this->getAnnotationContainerPID($targetObjectID);
         if($annotationContainerID == "None"){
-            $annotationContainerID = $this->createAnnotationContainer($targetObjectID);
-            watchdog('islandora_web_annotations', 'Annotation container created ' . $annotationContainerID);
+            $annotationContainerID = $this->createAnnotationContainer($targetObjectID, $annotationData);
         }
         else {
-            watchdog('islandora_web_annotations', 'Annotation container already exists ' . $annotationContainerID);
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: createAnnotation: Annotation container already exists: @$annotationContainerID', array('@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
         }
 
         // Add annotation
-        $oAnnotation = new Annotation();
-        $annotationPID = $oAnnotation->createAnnotation($annotationContainerID, $annotationData);
+        $oAnnotation = new Annotation($this->repository);
+        $annotationInfo = $oAnnotation->createAnnotation($annotationContainerID, $annotationData);
 
-        // Update Container
-        $this->addContainerItem($annotationContainerID, $annotationPID);
+        // Update the container
+        $this->addContainerItem($annotationContainerID, $annotationInfo[0]);
 
-        //ToDo: Have to error check
-        $output = array('status' => "Success", "msg"=> "annotation created", "$annotationContainerID" => $annotationContainerID);
-        $output = json_encode($output);
-        return $output;
-
+        return $annotationInfo[1];
     }
 
     public function deleteAnnotation($annotationContainerID, $annotationID){
-
-        // Remove it from container
-        $connection = islandora_get_tuque_connection();
-        $repository = $connection->repository;
-
         // Get Datastream content
-        $object = $repository->getObject($annotationContainerID);
-        $WADMObject = $object->getDatastream("WADMContainer");
+        $object = $this->repository->getObject($annotationContainerID);
+        $WADMObject = $object->getDatastream(AnnotationConstants::WADMContainer_DSID);
         $content = (string)$WADMObject->content;
         $contentJson = json_decode($content, true);
         $items = $contentJson["first"]["items"];
@@ -66,164 +160,77 @@ class AnnotationContainer implements interfaceAnnotationContainer
         $updatedContent = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         $WADMObject->content = $updatedContent;
 
-
-        watchdog('islandora_web_annotations', 'Deleted ' . $annotationID . "from the annotation container: " . $annotationContainerID);
+        watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: deleteAnnotation: Annotation with id @annotationID was removed from annotationContainer with id @annotationContainerID', array('@annotationID'=>$annotationID, '@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
 
         // Delete the object
-        // Add annotation
         $oAnnotation = new Annotation();
-        $annotationPID = $oAnnotation->deleteAnnotation($annotationID);
+        $oAnnotation->deleteAnnotation($annotationID);
 
         // Return message
         $output = array('status' => "Success", "msg"=> "The following annotation was deleted: " . $annotationID);
         $output = json_encode($output);
 
         return $output;
-
     }
 
-    public function createAnnotationContainer($targetObjectID){
-
-        $connection = islandora_get_tuque_connection();
-        $repository = $connection->repository;
-
-        try {
-
-            $object = $repository->constructObject("islandora");
-            $object->label = "sample title";
-            $object->models = array('islandora:WADMContainerCModel');
-            $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:WADMContainerCModel');
-            $object->relationships->add(FEDORA_RELS_EXT_URI, 'isAnnotationContainerOf', $targetObjectID);
-            $dsid = 'WADMContainer';
-
-            $ds = $object->constructDatastream($dsid, 'M');
-            $ds->label = $dsid;
-            $ds->mimetype = 'application/ld+json';
-
-            $test = $this->getAnnotationContainerJsonLD("example annotation container");
-
-            $ds->setContentFromString($test);
-            $object->ingestDatastream($ds);
-            $repository->ingestObject($object);
-
-            watchdog('islandora_web_annotations', 'Add new annotation container: %t', array('%t' => $object->id), WATCHDOG_INFO);
-        }
-        catch (Exception $e) {
-            watchdog('islandora_web_annotations', 'Error adding annotation container object: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
-        }
-
-        return $object->id;
-    }
-
-    public function deleteAnnotationContainer($annotationContainerID){
-        $connection = islandora_get_tuque_connection();
-        $repository = $connection->repository;
-        $repository->purgeObject($annotationContainerID);
-    }
-
-    public function getAnnotationContainer($objectID){
-        $targetObjectID = isset($_GET['targetPid']) ? $_GET['targetPid'] : '';
-        $annotationContainerID = $this->getAnnotationContainerPID($targetObjectID);
-
-        // If annotationContainer does not exist, create the container
-        if($annotationContainerID == "None"){
-            $output = array('status' => "Success", "annotationContainerPID" => $annotationContainerID, "targetObjectID" => $targetObjectID);
-            $output = json_encode($output);
-            return $output;
-        }
-        else {
-
-            $connection = islandora_get_tuque_connection();
-            $repository = $connection->repository;
-
-            // Get Datastream content
-            $object = $repository->getObject($annotationContainerID);
-            $WADMObject = $object->getDatastream("WADMContainer");
-            $content = (string)$WADMObject->content;
-            $contentJson = json_decode($content, true);
-            $items = $contentJson["first"]["items"];
-
-            $newArray = array();
-            for($i = 0; $i < count($items); $i++) {
-
-                $dsContent = $this->getDatastreamContent($repository, $items[$i], "WADM");
-                if($dsContent != "NotFound")
-                {
-                    $dsContentJson = json_decode($dsContent);
-                    $data = $dsContentJson->data;
-                    $data->pid = $items[$i];
-                    array_push($newArray, $data);
-                }
-            }
-
-            $contentJson["first"]["items"] = $newArray;
-            $contentJson["@id"] = $annotationContainerID;
-
-            $annotationContainerWithItems  = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-
-            watchdog('islandora_web_annotations', 'getAnnotationContainer json' . $annotationContainerWithItems);
-            return $annotationContainerWithItems;
-        }
-    }
-
+    /**
+     * Get annotation container datastream
+     * Add annotationpid to the items
+     *
+     * @param $annotationContainerID
+     * @param $annotationPID
+     */
     private function addContainerItem($annotationContainerID, $annotationPID)
     {
-        // Get annotation container
-        // Add annotationpid to the items
-        $connection = islandora_get_tuque_connection();
-        $repository = $connection->repository;
-
-        // Get Datastream content
-        $object = $repository->getObject($annotationContainerID);
-        $WADMObject = $object->getDatastream("WADMContainer");
-        $content = (string)$WADMObject->content;
-        $contentJson = json_decode($content, true);
-
-        // Update the Datastream content
-        $items = $contentJson["first"]["items"];
-        array_push($items, $annotationPID);
-        $contentJson["first"]["items"] = $items;
-        $newContent = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        $WADMObject->content = $newContent;
-
-        watchdog('islandora_web_annotations', 'addContainerItem' . $newContent);
-    }
-
-    private function getDatastreamContent($repository, $pid, $datastreamID){
-        try{
-            $object = $repository->getObject($pid);
-            $WADMObject = $object->getDatastream($datastreamID);
+        try {
+            // Get Datastream content
+            $object = $this->repository->getObject($annotationContainerID);
+            $WADMObject = $object->getDatastream(AnnotationConstants::WADMContainer_DSID);
             $content = (string)$WADMObject->content;
+            $contentJson = json_decode($content, true);
 
-            watchdog('islandora_web_annotations', $pid . 'ds content' . $content);
-            return $content;
+            // Update the Datastream content
+            $items = $contentJson["first"]["items"];
+            array_push($items, $annotationPID);
+            $contentJson["first"]["items"] = $items;
+            $newContent = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $WADMObject->content = $newContent;
+
+            watchdog(AnnotationConstants::MODULE_NAME , 'AnnotationContainer : addContainerItem: Added the following item to the container: @annotationContainerID' , array("@annotationContainerID" => $annotationContainerID), WATCHDOG_INFO);
         }
-        catch (Exception $e) {
-            watchdog('islandora_web_annotations', 'ds content not found for ' . $pid);
-            return "NofFound";
+        catch(Exception $e){
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : addContainerItem: Failed to add new item to the container: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
         }
+
 
     }
 
-    private function getAnnotationContainerJsonLD($containerID)
+    private function getAnnotationContainerJsonLD($targetPageID)
     {
+        $containerID = AnnotationUtil::generateUUID();
+
         $data = array(
-            "@context" => array("http://www.w3.org/ns/anno.jsonld", "http://www.w3.org/ns/ldp.jsonld"),
+            "@context" => array(ONTOLOGY_CONTEXT_ANNOTATION, ONTOLOGY_CONTEXT_LDP),
             "@id" => $containerID,
             "@type" => array("BasicContainer", "AnnotationCollection"),
             "total" => "0",
-            "label" => "A Container for Web Annotations",
-            "first" => (object) array("id" => $containerID, "type" => "AnnotationPage", "items" => array())
+            "label" => "annotationContainer for " . $targetPageID,
+            "first" => (object) array("id" => $targetPageID, "type" => AnnotationConstants::ANNOTATION_CLASS_2, "items" => array())
         );
         $annotationContainerJsonLD = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         return $annotationContainerJsonLD;
 
     }
 
+    /**
+     * Searches the Solr to see if the object already has an annotation container.  If so, it returns the annotation container PID.
+     *
+     * @param $objectPID
+     * @return string
+     */
     private function getAnnotationContainerPID($objectPID)
     {
-
-        $url = parse_url('localhost:8080/solr');
+        $url = parse_url(variable_get('islandora_solr_url', 'localhost:8080/solr'));
 
         $qualifier = 'RELS_EXT_isAnnotationContainerOf_uri_s:' . '"' . "info:fedora/" . $objectPID . '"';
         $query = "$qualifier";
@@ -244,7 +251,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $json = json_decode($results->getRawResponse(), TRUE);
         }
         catch (Exception $e) {
-            watchdog_exception('Islandora Oralhistories', $e, 'Got an exception while searching transcripts for callback.', array(), WATCHDOG_ERROR);
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : getAnnotationContainerPID: Got an exception while quering Solr: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
         }
 
         $annotationConatinerPID = "None";
@@ -253,9 +260,9 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $annotationConatinerPID = $json['response']['docs'][0]["PID"];
         }
 
-        $dump = print_r($json['response'], true);
+        $responseInfo = print_r($json['response'], true);
+        watchdog(AnnotationConstants::MODULE_NAME , 'AnnotationContainer : getAnnotationContainerPID: @responseInfo' , array("@responseInfo" => $responseInfo), WATCHDOG_INFO);
 
-        watchdog('islandora_web_annotations', 'Result from solr search: ' . $dump);
         return $annotationConatinerPID;
     }
 }
