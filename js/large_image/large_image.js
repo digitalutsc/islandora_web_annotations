@@ -19,14 +19,13 @@ jQuery(document).ready(function() {
     openSeaDragonDiv.wrap('<div class="islandora-openseadragon" id="openseadragon-wrapper"></div>');
 
 
-    var addButton = jQuery('<button id="add-annotation-button" onclick="anno.activateSelector();">Add Annotation</button>');
+    var saveButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotations()"></button>');
+    saveButton.appendTo(jQuery("#openseadragon-wrapper"));
+
+
+    var addButton = jQuery('<button id="add-annotation-button" title="Add Annotation" class="annotator-adder-actions__button h-icon-add" onclick="anno.activateSelector();"></button>');
     addButton.appendTo(jQuery("#openseadragon-wrapper"));
 
-    //var saveButton = jQuery('<button id="save-annotation-button" onclick="saveAnnotations()">Save Annotation</button>');
-    //saveButton.appendTo(jQuery("#openseadragon-wrapper"));
-
-    var saveButton = jQuery('<button id="load-annotation-button" onclick="getAnnotations()">Load Annotation</button>');
-    saveButton.appendTo(jQuery("#openseadragon-wrapper"));
 
     var os_viewer = Drupal.settings.islandora_open_seadragon_viewer;
     anno.makeAnnotatable(os_viewer);
@@ -93,7 +92,7 @@ function updateAnnotation(annotation)
             alert("Error in updating annotation.");
         },
         success: function(data) {
-            alert("Successfully updating annotation: " + data);
+            alert("Successfully updated the annotation: " + data);
         }
     });
 

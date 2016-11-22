@@ -70,6 +70,15 @@ function islandora_web_annotations_menu() {
         'type' => MENU_CALLBACK,
     );
 
+    $items['islandora_web_annotations/install'] = array(
+        'title' => 'Install Annotation Module Objects',
+        'description' => 'Install Annotation Module Objects',
+        'page callback' => 'installRequiredObjects',
+        'access callback' => TRUE,
+        'file' => 'includes/AnnotationController.php',
+        'type' => MENU_CALLBACK,
+    );
+
     return $items;
 }
 

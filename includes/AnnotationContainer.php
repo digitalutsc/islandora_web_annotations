@@ -29,9 +29,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
     public function createAnnotationContainer($targetObjectID, $annotationData){
 
         try {
-
             $target = $annotationData["context"];
-
             $object = $this->repository->constructObject("islandora");
             $object->label = "AnnotationContainer for " . $targetObjectID;
             $object->models = array(AnnotationConstants::WADMContainer_CONTENT_MODEL);
@@ -44,14 +42,13 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $ds->mimetype = AnnotationConstants::ANNOTATION_MIMETYPE;
 
             $targetPageID = $target . "/annotations/?page=0";
-            $test = $this->getAnnotationContainerJsonLD($targetPageID);
+            $test = $this->getAnnotationContainerJsonLD($targetObjectID, $targetPageID);
             $ds->setContentFromString($test);
             $object->ingestDatastream($ds);
             $this->repository->ingestObject($object);
 
             watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : createAnnotationContainer: created a new annotationContainer: %t', array('%t' => $object->id), WATCHDOG_INFO);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             watchdog(AnnotationConstants::MODULE_NAME, 'Error adding annotation container object: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
             throw $e;
         }
@@ -68,8 +65,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $response = array('status' => "Success", "msg" => "Annotation Container does not exist for " . $targetObjectID);
             $response = json_encode($response);
             return $response;
-        }
-        else {
+        } else {
 
             // Get Datastream content
             $object = $this->repository->getObject($annotationContainerID);
@@ -85,12 +81,11 @@ class AnnotationContainer implements interfaceAnnotationContainer
                 $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
                 $dsContent = (string)$WADMObject->content;
 
-                if($dsContent != "NotFound")
-                {
+                if($dsContent != "NotFound") {
                     $dsContentJson = json_decode($dsContent);
-                    $data = $dsContentJson->data;
-                    $data->pid = $items[$i];
-                    array_push($newArray, $data);
+                    $body = $dsContentJson->body;
+                    $body->pid = $items[$i];
+                    array_push($newArray, $body);
                 }
             }
 
@@ -125,8 +120,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
         $annotationContainerID = $this->getAnnotationContainerPID($targetObjectID);
         if($annotationContainerID == "None"){
             $annotationContainerID = $this->createAnnotationContainer($targetObjectID, $annotationData);
-        }
-        else {
+        } else {
             watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: createAnnotation: Annotation container already exists: @$annotationContainerID', array('@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
         }
 
@@ -197,24 +191,24 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $WADMObject->content = $newContent;
 
             watchdog(AnnotationConstants::MODULE_NAME , 'AnnotationContainer : addContainerItem: Added the following item to the container: @annotationContainerID' , array("@annotationContainerID" => $annotationContainerID), WATCHDOG_INFO);
-        }
-        catch(Exception $e){
+        } catch(Exception $e){
             watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : addContainerItem: Failed to add new item to the container: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
+            throw $e;
         }
 
 
     }
 
-    private function getAnnotationContainerJsonLD($targetPageID)
+    private function getAnnotationContainerJsonLD($targetObjectID, $targetPageID)
     {
         $containerID = AnnotationUtil::generateUUID();
 
         $data = array(
-            "@context" => array(ONTOLOGY_CONTEXT_ANNOTATION, ONTOLOGY_CONTEXT_LDP),
+            "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION, AnnotationConstants::ONTOLOGY_CONTEXT_LDP),
             "@id" => $containerID,
             "@type" => array("BasicContainer", "AnnotationCollection"),
             "total" => "0",
-            "label" => "annotationContainer for " . $targetPageID,
+            "label" => "annotationContainer for " . $targetObjectID,
             "first" => (object) array("id" => $targetPageID, "type" => AnnotationConstants::ANNOTATION_CLASS_2, "items" => array())
         );
         $annotationContainerJsonLD = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
@@ -249,14 +243,13 @@ class AnnotationContainer implements interfaceAnnotationContainer
         try {
             $results = $solr->search($query, 0, 1000, $params);
             $json = json_decode($results->getRawResponse(), TRUE);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : getAnnotationContainerPID: Got an exception while quering Solr: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
+            throw $e;
         }
 
         $annotationConatinerPID = "None";
-        if(count($json['response']['docs']) >= 1)
-        {
+        if(count($json['response']['docs']) >= 1) {
             $annotationConatinerPID = $json['response']['docs'][0]["PID"];
         }
 
