@@ -14,11 +14,12 @@ function installIslandoraObjects()
     try{
         $connection = islandora_get_tuque_connection();
 
-        $object1 = installObject($connection, AnnotationConstants::WADM_CONTENT_MODEL, "webannotation_ds_composite_model.xml");
+        $object1 = installObject($connection, AnnotationConstants::WADM_CONTENT_MODEL, AnnotationConstants::WADM_CONTENT_MODEL_LABEL, "webannotation_ds_composite_model.xml");
         $message1 = "Installed " . $object1;
 
-        $object2 = installObject($connection, AnnotationConstants::WADMContainer_CONTENT_MODEL, "webannotation_container_ds_composite_model.xml");
+        $object2 = installObject($connection, AnnotationConstants::WADMContainer_CONTENT_MODEL, AnnotationConstants::WADMContainer_CONTENT_MODEL_LABEL, "webannotation_ds_composite_model.xml");
         $message2 = "Installed " . $object2;
+
 
         return $message1 . ".  " . $message2 . ". ";
     } catch(Exception $e) {
@@ -27,12 +28,12 @@ function installIslandoraObjects()
 }
 
 
-function installObject($connection, $contentModel, $composite_model_fileName)
+function installObject($connection, $contentModel, $contentModelLabel, $composite_model_fileName)
 {
     try{
-        $object = $connection->repository->constructObject("islandora:" . $contentModel);
+        $object = $connection->repository->constructObject($contentModel);
         $object->owner = 'fedoraAdmin';
-        $object->label = $contentModel;
+        $object->label = $contentModelLabel;
         $object->models = array("fedora-system:ContentModel-3.0");
 
         $ds_composite_datastream = $object->constructDatastream('DS-COMPOSITE-MODEL', 'X');

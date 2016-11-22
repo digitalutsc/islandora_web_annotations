@@ -90,8 +90,8 @@ function deleteAnnotation(){
 }
 
 function installRequiredObjects(){
-    $content = "This request will attempt to install islandora:WADMCModel and islandora:WADMContainerCModel Content Models.";
-    $content = $content . "\n\nIf the Content Model already exists, the attempt will fail";
+    $content = "This request will attempt to install islandora:WADMCModel and islandora:WADMContainerCModel Content Models.  ";
+    $content = $content . "If the Content Model already exists, the attempt will fail.  ";
     $content = $content . "Result: " . installIslandoraObjects();
     return $content;
 }
