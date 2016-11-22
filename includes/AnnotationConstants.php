@@ -14,6 +14,9 @@ class AnnotationConstants
     const ANNOTATION_CLASS_2 = "AnnotationPage";
     const WADM_DSID = "WADM";
     const WADM_CONTENT_MODEL = "islandora:WADMCModel";
+    const WADM_CONTENT_MODEL_LABEL = "Islandora Web Annotation Content Model";
     const WADMContainer_DSID = "WADMContainer";
     const WADMContainer_CONTENT_MODEL = "islandora:WADMContainerCModel";
+    const WADMContainer_CONTENT_MODEL_LABEL = "Islandora Web Annotation Container Content Model";
+
 }

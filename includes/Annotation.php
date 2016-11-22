@@ -79,7 +79,7 @@ class Annotation implements interfaceAnnotation
             "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION),
             "@id" => AnnotationUtil::generateUUID(),
             "@type" => AnnotationConstants::ANNOTATION_CLASS_1,
-            "data" => (object) $annotationData,
+            "body" => (object) $annotationData,
             "target" => $target
 
         );
