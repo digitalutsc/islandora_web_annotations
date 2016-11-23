@@ -1,3 +1,11 @@
+/**
+* @file
+* Contains style related to annotations buttons
+* Drived from  https://github.com/hypothesis/h/blob/master/h/static/styles/vendor/icomoon.css
+* Uses https://github.com/hypothesis/h/blob/master/h/static/styles/vendor/fonts/h.woff
+*/
+
+
 @font-face {
     font-family: 'h';
     src: url('../../lib/css/hypothesis/fonts/h.woff') format('woff');

@@ -1,3 +1,8 @@
+/**
+* @file
+* Contains style to handle viewer related requirements and to to position annotation buttons for open sea dragon viewer (large image)
+*/
+
 #load-annotation-button {
     position:absolute;
     top: 0px;
