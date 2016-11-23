@@ -38,6 +38,7 @@ $context->conditions = array(
         'islandora:sp_web_archive_collection' => 0,
         'islandora:sp_pdf_collection' => 0,
         'ir:citationCollection' => 0,
+        'islandora:oralhistories_collection' => 0,
       ),
     ),
   ),
@@ -49,6 +50,10 @@ $context->reactions = array(
     'sites/all/modules/islandora_web_annotations/lib' => array(
       'sites/all/modules/islandora_web_annotations/lib/css/annotorious.css' => 'sites/all/modules/islandora_web_annotations/lib/css/annotorious.css',
     ),
+    'sites/all/modules/islandora_web_annotations/css' => array(
+      'sites/all/modules/islandora_web_annotations/css/base/base.css' => 'sites/all/modules/islandora_web_annotations/css/base/base.css',
+      'sites/all/modules/islandora_web_annotations/css/basic_image/basic_image.css' => 'sites/all/modules/islandora_web_annotations/css/basic_image/basic_image.css',
+    ),
   ),
   'js_path' => array(
     'sites/all/libraries/web-annotaions/libs/annotorious/js' => array(),
@@ -56,6 +61,7 @@ $context->reactions = array(
       'sites/all/modules/islandora_web_annotations/lib/js/annotorious.min.js' => 'sites/all/modules/islandora_web_annotations/lib/js/annotorious.min.js',
     ),
     'sites/all/modules/islandora_web_annotations/js' => array(
+      'sites/all/modules/islandora_web_annotations/js/base/base.js' => 'sites/all/modules/islandora_web_annotations/js/base/base.js',
       'sites/all/modules/islandora_web_annotations/js/basic_image/basic_image.js' => 'sites/all/modules/islandora_web_annotations/js/basic_image/basic_image.js',
     ),
   ),
