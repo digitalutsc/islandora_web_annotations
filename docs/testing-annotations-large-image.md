@@ -9,6 +9,7 @@
 When you isntall this module, you will get a Notices such as "Notice: Use of undefined constant ISLANDORA_REST_OBJECT_GET_PERM - assumed 'ISLANDORA_REST_OBJECT_GET_PERM'".  Please ignore that for now.  There is an issue created with the module about this.
 
 * Install [islandora_web_annotations] (https://github.com/digitalutsc/islandora_web_annotations) drupal module
+* Go to localhost:8000/islandora_web_annotations/install to install the required islandora content model objects
 
 * annotorious.github.io library does not work with the OpenSeaDragon versions less than 1.0.  [v2.0.0 OpenSeaDragon] (https://github.com/openseadragon/openseadragon/releases/tag/v2.0.0) is recommended.  Note that this is NOT the recommended version for islandora_openseadragon module.  
 
@@ -41,6 +42,7 @@ $context->conditions = array(
         'islandora:sp_basic_image_collection' => 0,
         'islandora:sp_pdf_collection' => 0,
         'ir:citationCollection' => 0,
+        'islandora:oralhistories_collection' => 0,
       ),
     ),
   ),
@@ -54,6 +56,7 @@ $context->reactions = array(
     ),
     'sites/all/modules/islandora_web_annotations/css' => array(
       'sites/all/modules/islandora_web_annotations/css/large_image/large_image.css' => 'sites/all/modules/islandora_web_annotations/css/large_image/large_image.css',
+      'sites/all/modules/islandora_web_annotations/css/base/base.css' => 'sites/all/modules/islandora_web_annotations/css/base/base.css',
     ),
   ),
   'js_path' => array(
@@ -63,6 +66,7 @@ $context->reactions = array(
     ),
     'sites/all/modules/islandora_web_annotations/js' => array(
       'sites/all/modules/islandora_web_annotations/js/large_image/large_image.js' => 'sites/all/modules/islandora_web_annotations/js/large_image/large_image.js',
+      'sites/all/modules/islandora_web_annotations/js/base/base.js' => 'sites/all/modules/islandora_web_annotations/js/base/base.js',
     ),
   ),
 );
