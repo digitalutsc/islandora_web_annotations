@@ -8,6 +8,7 @@
 When you isntall this module, you will get a Notices such as "Notice: Use of undefined constant ISLANDORA_REST_OBJECT_GET_PERM - assumed 'ISLANDORA_REST_OBJECT_GET_PERM'".  Please ignore that for now.  There is an issue created with the module about this.
 
 * Install [islandora_web_annotations] (https://github.com/digitalutsc/islandora_web_annotations) drupal module
+* Go to localhost:8000/islandora_web_annotations/install to install the required islandora content model objects
 
 ## Creating the context needed by basic_image annotations
 Go to admin/structure/context and import the following context.
