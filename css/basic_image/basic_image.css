@@ -1,0 +1,11 @@
+/**
+* @file
+* Contains style to position annotation buttons for basic image
+*/
+
+#load-annotation-button {
+    position: absolute;
+    top: 135px;
+    left: 32px;
+}
+
