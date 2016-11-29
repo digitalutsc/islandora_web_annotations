@@ -10,14 +10,21 @@ jQuery(document).ready(function() {
     var m_image = jQuery("div[class='islandora-basic-image-content']").find("img[typeof='foaf:Image']").first();
     jQuery(m_image).unwrap();
 
-    var loadAnnotationsButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsBasicImage()"></button>');
-    loadAnnotationsButton.appendTo(jQuery(".islandora-basic-image-content")[0]);
+    if(Drupal.settings.islandora_web_annotations.view == true) {
+        var loadAnnotationsButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsBasicImage()"></button>');
+        loadAnnotationsButton.appendTo(jQuery(".islandora-basic-image-content")[0]);
+    }
 
     anno.makeAnnotatable(m_image[0]);
 
     anno.addHandler("onAnnotationCreated", function(annotation) {
-        var objectPID = getBasicImagePID();
-        createAnnotation(objectPID, annotation);
+        if(Drupal.settings.islandora_web_annotations.create == true) {
+            var objectPID = getBasicImagePID();
+            createAnnotation(objectPID, annotation);
+        } else {
+            alert("You do not have permissions to save annotations for basic image.");
+        }
+
     });
 
     anno.addHandler("onAnnotationUpdated", function(annotation) {
@@ -30,6 +37,19 @@ jQuery(document).ready(function() {
 
     jQuery(".annotorious-hint").css("left", "45px");
 
+    // Apply permissions to edit, delete annotations
+    anno.addHandler("onPopupShown", function() {
+        jQuery(".annotorious-popup-button-edit").hide();
+        jQuery(".annotorious-popup-button-delete").hide();
+
+        if(Drupal.settings.islandora_web_annotations.edit_any == true || Drupal.settings.islandora_web_annotations.edit_own == true) {
+            jQuery(".annotorious-popup-button-edit").show();
+        }
+        if(Drupal.settings.islandora_web_annotations.delete_any == true || Drupal.settings.islandora_web_annotations.delete_own == true) {
+            jQuery(".annotorious-popup-button-delete").show();
+        }
+    });
+
 });
 
 
@@ -40,8 +60,7 @@ function getAnnotationsBasicImage() {
 
 
 function getBasicImagePID() {
-    var objectURL = Drupal.settings.urlIsAjaxTrusted;
-    objectURL = Object.keys(objectURL)[0];
+    var objectURL = window.location.href;
     var objectPID = objectURL.substr(objectURL.lastIndexOf('/') + 1);
     objectPID = objectPID.replace("%3A", ":");
     return objectPID;

@@ -23,12 +23,15 @@ jQuery(document).ready(function() {
     openSeaDragonDiv.wrap('<div class="islandora-openseadragon" id="openseadragon-wrapper"></div>');
 
 
-    var saveButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsLargeImage()"></button>');
-    saveButton.appendTo(jQuery("#openseadragon-wrapper"));
+    if(Drupal.settings.islandora_web_annotations.view == true) {
+        var saveButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsLargeImage()"></button>');
+        saveButton.appendTo(jQuery("#openseadragon-wrapper"));
+    }
 
-
-    var addButton = jQuery('<button id="add-annotation-button" title="Add Annotation" class="annotator-adder-actions__button h-icon-add" onclick="anno.activateSelector();"></button>');
-    addButton.appendTo(jQuery("#openseadragon-wrapper"));
+    if(Drupal.settings.islandora_web_annotations.create == true) {
+        var addButton = jQuery('<button id="add-annotation-button" title="Add Annotation" class="annotator-adder-actions__button h-icon-add" onclick="anno.activateSelector();"></button>');
+        addButton.appendTo(jQuery("#openseadragon-wrapper"));
+    }
 
 
     var os_viewer = Drupal.settings.islandora_open_seadragon_viewer;
@@ -48,9 +51,21 @@ jQuery(document).ready(function() {
     });
 
     anno.addHandler("onAnnotationRemoved", function(annotation) {
-        deleteAnnotation(annotation);
+            deleteAnnotation(annotation);
     });
 
+    // Apply permissions to edit, delete annotations
+    anno.addHandler("onPopupShown", function() {
+        jQuery(".annotorious-popup-button-edit").hide();
+        jQuery(".annotorious-popup-button-delete").hide();
+
+        if(Drupal.settings.islandora_web_annotations.edit_any == true || Drupal.settings.islandora_web_annotations.edit_own == true) {
+            jQuery(".annotorious-popup-button-edit").show();
+        }
+        if(Drupal.settings.islandora_web_annotations.delete_any == true || Drupal.settings.islandora_web_annotations.delete_own == true) {
+            jQuery(".annotorious-popup-button-delete").show();
+        }
+    });
 });
 
 
