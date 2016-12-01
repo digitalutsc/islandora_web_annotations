@@ -97,7 +97,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $contentJson["@id"] = $annotationContainerID;
 
             $annotationContainerWithItems  = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : getAnnotationContainer: Returning @totalItems annotations  for @targetObjectID' . $annotationContainerWithItems, array('@totalItems' => $totalItems, '@targetObjectID'=> $targetObjectID), WATCHDOG_INFO);
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : getAnnotationContainer: Returning @totalItems annotations  for @targetObjectID', array('@totalItems' => $totalItems, '@targetObjectID'=> $targetObjectID), WATCHDOG_INFO);
 
             return $annotationContainerWithItems;
         }
