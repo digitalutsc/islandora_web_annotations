@@ -129,6 +129,10 @@ function islandora_web_annotations_permission() {
  * Send user access related information to js for access control
  */
 function islandora_web_annotations_init() {
+    global $user;
+    $username = $user->name;
+
+
     $view = user_access(ISLANDORA_WEB_ANNOTATION_VIEW);
     $create = user_access(ISLANDORA_WEB_ANNOTATION_CREATE);
     $edit_any = user_access(ISLANDORA_WEB_ANNOTATION_EDIT_ANY);
@@ -136,7 +140,7 @@ function islandora_web_annotations_init() {
     $edit_own = user_access(ISLANDORA_WEB_ANNOTATION_EDIT_OWN);
     $delete_own = user_access(ISLANDORA_WEB_ANNOTATION_DELETE_OWN);
 
-    drupal_add_js(array('islandora_web_annotations' => array('view' => $view, 'create'=>$create, 'edit_any'=>$edit_any, 'delete_any'=>$delete_any, 'edit_own'=>$edit_own, 'delete_own'=>$delete_own)), array('type' => 'setting'));
+    drupal_add_js(array('islandora_web_annotations' => array('user'=>$username, 'view' => $view, 'create'=>$create, 'edit_any'=>$edit_any, 'delete_any'=>$delete_any, 'edit_own'=>$edit_own, 'delete_own'=>$delete_own)), array('type' => 'setting'));
 }
 
 

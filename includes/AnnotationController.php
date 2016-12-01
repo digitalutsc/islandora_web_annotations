@@ -18,9 +18,10 @@ function createAnnotation(){
     {
         $targetObjectID = isset($_POST['targetPid']) ? $_POST['targetPid'] : '';
         $annotationData =  isset($_POST['annotationData']) ? $_POST['annotationData'] : '';
+        $annotationMetadata =  isset($_POST['metadata']) ? $_POST['metadata'] : '';
 
         $oAnnotationContainer = new AnnotationContainer();
-        $output = $oAnnotationContainer->createAnnotation($targetObjectID, $annotationData);
+        $output = $oAnnotationContainer->createAnnotation($targetObjectID, $annotationData, $annotationMetadata);
     } catch(Exception $e) {
         watchdog(AnnotationConstants::MODULE_NAME, 'Error in createAnnotation: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
         $output = array('status' => "Fail", "msg"=> "Failed to create annotation for targetObjectID " . $targetObjectID);
@@ -58,9 +59,10 @@ function updateAnnotation(){
         parse_str(file_get_contents("php://input"), $putVars);
         $annotationData = $putVars['annotationData'] ? $putVars['annotationData'] : '';
         $annotationID = $annotationData["pid"];
+        $annotationMetadata = $putVars['metadata'] ? $putVars['metadata'] : '';
 
         $oAnnotation = new Annotation();
-        $output = $oAnnotation->updateAnnotation($annotationData);
+        $output = $oAnnotation->updateAnnotation($annotationData, $annotationMetadata);
     } catch(Exception $e) {
 
         $output = array('status' => "Fail", "msg"=> "Failed to updateAnnotation with annotation with PID " . $annotationID);

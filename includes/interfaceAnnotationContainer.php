@@ -39,7 +39,7 @@ interface interfaceAnnotationContainer {
      * @param $annotationInfo
      * @return mixed
      */
-    public function createAnnotation($targetObjectID, $annotationData);
+    public function createAnnotation($targetObjectID, $annotationData, $annotationMetadata);
 
 
     /**

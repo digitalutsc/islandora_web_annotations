@@ -20,11 +20,11 @@ jQuery(document).ready(function() {
     anno.addHandler("onAnnotationCreated", function(annotation) {
         if(Drupal.settings.islandora_web_annotations.create == true) {
             var objectPID = getBasicImagePID();
+            annotation.pid = "New";
             createAnnotation(objectPID, annotation);
         } else {
             alert("You do not have permissions to save annotations for basic image.");
         }
-
     });
 
     anno.addHandler("onAnnotationUpdated", function(annotation) {
@@ -37,18 +37,8 @@ jQuery(document).ready(function() {
 
     jQuery(".annotorious-hint").css("left", "45px");
 
-    // Apply permissions to edit, delete annotations
-    anno.addHandler("onPopupShown", function() {
-        jQuery(".annotorious-popup-button-edit").hide();
-        jQuery(".annotorious-popup-button-delete").hide();
+    executeCommonLoadOperations();
 
-        if(Drupal.settings.islandora_web_annotations.edit_any == true || Drupal.settings.islandora_web_annotations.edit_own == true) {
-            jQuery(".annotorious-popup-button-edit").show();
-        }
-        if(Drupal.settings.islandora_web_annotations.delete_any == true || Drupal.settings.islandora_web_annotations.delete_own == true) {
-            jQuery(".annotorious-popup-button-delete").show();
-        }
-    });
 
 });
 

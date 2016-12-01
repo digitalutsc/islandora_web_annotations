@@ -43,6 +43,7 @@ jQuery(document).ready(function() {
 
     anno.addHandler("onAnnotationCreated", function(annotation) {
         var targetObjectId = Drupal.settings.islandoraOpenSeadragon.pid;
+        annotation.pid = "New";
         createAnnotation(targetObjectId, annotation);
     });
 
@@ -54,18 +55,7 @@ jQuery(document).ready(function() {
             deleteAnnotation(annotation);
     });
 
-    // Apply permissions to edit, delete annotations
-    anno.addHandler("onPopupShown", function() {
-        jQuery(".annotorious-popup-button-edit").hide();
-        jQuery(".annotorious-popup-button-delete").hide();
-
-        if(Drupal.settings.islandora_web_annotations.edit_any == true || Drupal.settings.islandora_web_annotations.edit_own == true) {
-            jQuery(".annotorious-popup-button-edit").show();
-        }
-        if(Drupal.settings.islandora_web_annotations.delete_any == true || Drupal.settings.islandora_web_annotations.delete_own == true) {
-            jQuery(".annotorious-popup-button-delete").show();
-        }
-    });
+    executeCommonLoadOperations();
 });
 
 
