@@ -85,6 +85,8 @@ class AnnotationContainer implements interfaceAnnotationContainer
                     $dsContentJson = json_decode($dsContent);
                     $body = $dsContentJson->body;
                     $body->pid = $items[$i];
+                    $body->creator = $dsContentJson->creator;
+                    $body->created = $dsContentJson->created;
                     array_push($newArray, $body);
                 }
             }
@@ -95,7 +97,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $contentJson["@id"] = $annotationContainerID;
 
             $annotationContainerWithItems  = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : getAnnotationContainer: Returning @totalItems annotations  for @argetObjectID', array('@totalItems' => $totalItems, '@targetObjectID'=> $targetObjectID), WATCHDOG_INFO);
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : getAnnotationContainer: Returning @totalItems annotations  for @targetObjectID', array('@totalItems' => $totalItems, '@targetObjectID'=> $targetObjectID), WATCHDOG_INFO);
 
             return $annotationContainerWithItems;
         }
@@ -115,7 +117,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
      * @param $annotationData
      * @return jsonld of the annotation that was created
      */
-    public function createAnnotation($targetObjectID, $annotationData){
+    public function createAnnotation($targetObjectID, $annotationData, $annotationMetadata){
         // If annotationContainer does not exist, create the container
         $annotationContainerID = $this->getAnnotationContainerPID($targetObjectID);
         if($annotationContainerID == "None"){
@@ -126,7 +128,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
 
         // Add annotation
         $oAnnotation = new Annotation($this->repository);
-        $annotationInfo = $oAnnotation->createAnnotation($annotationContainerID, $annotationData);
+        $annotationInfo = $oAnnotation->createAnnotation($annotationContainerID, $annotationData, $annotationMetadata);
 
         // Update the container
         $this->addContainerItem($annotationContainerID, $annotationInfo[0]);

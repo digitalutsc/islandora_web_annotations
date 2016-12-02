@@ -23,7 +23,7 @@ class Annotation implements interfaceAnnotation
         }
     }
 
-    public function createAnnotation($annotationContainerID, $annotationData){
+    public function createAnnotation($annotationContainerID, $annotationData, $annotationMetadata){
 
         try {
             $object = $this->repository->constructObject("islandora");
@@ -37,7 +37,9 @@ class Annotation implements interfaceAnnotation
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfAnnotationContainer', $annotationContainerID);
             $dsid = AnnotationConstants::WADM_DSID;
 
-            $annotationJsonLD = $this->getAnnotationJsonLD($annotationData);
+            $annotationJsonLDData = $this->getAnnotationJsonLD("create", $annotationData, $annotationMetadata);
+            $annotationJsonLD = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
 
             $ds = $object->constructDatastream($dsid, 'M');
             $ds->label = $dsid;
@@ -46,6 +48,10 @@ class Annotation implements interfaceAnnotation
             $object->ingestDatastream($ds);
             $this->repository->ingestObject($object);
             $annotationPID =  $object->id;
+
+            // Update JsonLD with PID info
+            $annotationJsonLDData["pid"] = $annotationPID;
+            $annotationJsonLD = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
             watchdog(AnnotationConstants::MODULE_NAME , 'Annotation : createAnnotation: Added new annotation @annotationPID', array("@annotationPID" => $annotationPID), WATCHDOG_INFO);
         } catch (Exception $e) {
@@ -56,9 +62,12 @@ class Annotation implements interfaceAnnotation
         return array($annotationPID, $annotationJsonLD);
     }
 
-    public function updateAnnotation($annotationData){
+    public function updateAnnotation($annotationData, $annotationMetadata){
         $annotationPID = $annotationData["pid"];
-        $updatedContent = $this->getAnnotationJsonLD($annotationData);
+
+        $annotationJsonLDData = $this->getAnnotationJsonLD("update", $annotationData, $annotationMetadata);
+        $updatedContent = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
 
         $object = $this->repository->getObject($annotationPID);
         $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
@@ -72,7 +81,7 @@ class Annotation implements interfaceAnnotation
         watchdog(AnnotationConstants::MODULE_NAME, 'Annotation: deleteAnnotation: Annotation with id @deleteAnnotation was deleted from repoistory.', array('@annotationID'=>$annotationID), WATCHDOG_INFO);
     }
 
-    private function getAnnotationJsonLD($annotationData)
+    private function getAnnotationJsonLD($actionType, $annotationData, $annotationMetadata)
     {
         $target = $annotationData["context"];
         $data = array(
@@ -80,11 +89,23 @@ class Annotation implements interfaceAnnotation
             "@id" => AnnotationUtil::generateUUID(),
             "@type" => AnnotationConstants::ANNOTATION_CLASS_1,
             "body" => (object) $annotationData,
-            "target" => $target
+            "target" => $target,
+            "pid" => "New"
 
         );
-        $output = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        return $output;
+
+        if($actionType == "create") {
+            $now = date("Y-m-d H:i:s");
+            $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $now);
+        }
+        if($actionType == "update"){
+            $now = date("Y-m-d H:i:s");
+
+            $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $annotationMetadata["created"], 'modifiedBy' => $annotationMetadata["author"], 'modified' => $now);
+        }
+
+        $data = array_merge($data, $metadata);
+        return $data;
     }
 
 }
