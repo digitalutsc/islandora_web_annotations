@@ -130,8 +130,12 @@ function islandora_web_annotations_permission() {
  */
 function islandora_web_annotations_init() {
     global $user;
-    $username = $user->name;
+    $username = "anonymous";
 
+    if (isset($user->name)) {
+        watchdog("annotations", "not anno");
+        $username = $user->name;
+    }
 
     $view = user_access(ISLANDORA_WEB_ANNOTATION_VIEW);
     $create = user_access(ISLANDORA_WEB_ANNOTATION_CREATE);
