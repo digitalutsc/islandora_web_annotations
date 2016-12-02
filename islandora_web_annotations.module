@@ -133,7 +133,6 @@ function islandora_web_annotations_init() {
     $username = "anonymous";
 
     if (isset($user->name)) {
-        watchdog("annotations", "not anno");
         $username = $user->name;
     }
 
