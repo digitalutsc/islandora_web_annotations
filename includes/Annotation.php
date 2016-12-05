@@ -49,6 +49,10 @@ class Annotation implements interfaceAnnotation
             $this->repository->ingestObject($object);
             $annotationPID =  $object->id;
 
+            // Create Derivative
+            $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);
+            $this->createUpdateDerivative($object, $contentXML);
+
             // Update JsonLD with PID info
             $annotationJsonLDData["pid"] = $annotationPID;
             $annotationJsonLD = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
@@ -72,6 +76,11 @@ class Annotation implements interfaceAnnotation
         $object = $this->repository->getObject($annotationPID);
         $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
         $WADMObject->content = $updatedContent;
+
+
+        // Update Derivative
+        $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);
+        $this->createUpdateDerivative($object, $contentXML);
 
         return $updatedContent;
     }
@@ -106,6 +115,54 @@ class Annotation implements interfaceAnnotation
 
         $data = array_merge($data, $metadata);
         return $data;
+    }
+
+    function createUpdateDerivative(AbstractObject $object, $contentXML){
+        try
+        {
+
+            $dsid = 'WADM_SEARCH';
+            $datastream = isset($object[$dsid]) ? $object[$dsid] : $object->constructDatastream($dsid);
+            $datastream->label = 'WADM_SEARCH';
+            $datastream->mimeType = 'text/xml';
+
+            $filename = $dsid . '.xml';
+            $dest = file_build_uri($filename);
+
+            $file = file_save_data($contentXML, $dest, FILE_EXISTS_REPLACE);
+
+            watchdog(AnnotationConstants::MODULE_NAME, 'does it get hereeee');
+
+            AnnotationUtil::add_datastream($object, $dsid, $file->uri);
+
+            watchdog(AnnotationConstants::MODULE_NAME, 'does it get hereeee2222');
+
+            file_delete($file);
+
+        }
+        catch (exception $e) {
+            watchdog(AnnotationConstants::MODULE_NAME, 'Unable to create vtt indexing datastream: ' . $e->getmessage());
+        }
+    }
+
+    function generateDerivativeContent($annotationData, $annotationMetadata){
+        $target = $annotationData["context"];
+        $pos = strrpos($target, '/');
+        $targetID = $pos === false ? $target : substr($target, $pos + 1);
+
+        $textvalue = $annotationData["text"];
+        $creator = $annotationMetadata["creator"];
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><annotation></annotation>');
+
+        $xml->addChild('title', "Annotation for " . $targetID);
+        $xml->addChild('target', $target);
+        $xml->addChild('creator', $creator);
+        $xml->addChild('textvalue', $textvalue);
+
+        $contentXML = $xml->asXML();
+
+        return $contentXML;
     }
 
 }
