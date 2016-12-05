@@ -118,8 +118,7 @@ class Annotation implements interfaceAnnotation
     }
 
     function createUpdateDerivative(AbstractObject $object, $contentXML){
-        try
-        {
+        try {
 
             $dsid = 'WADM_SEARCH';
             $datastream = isset($object[$dsid]) ? $object[$dsid] : $object->constructDatastream($dsid);
@@ -131,16 +130,13 @@ class Annotation implements interfaceAnnotation
 
             $file = file_save_data($contentXML, $dest, FILE_EXISTS_REPLACE);
 
-            watchdog(AnnotationConstants::MODULE_NAME, 'does it get hereeee');
 
             AnnotationUtil::add_datastream($object, $dsid, $file->uri);
 
-            watchdog(AnnotationConstants::MODULE_NAME, 'does it get hereeee2222');
 
             file_delete($file);
 
-        }
-        catch (exception $e) {
+        } catch (exception $e) {
             watchdog(AnnotationConstants::MODULE_NAME, 'Unable to create vtt indexing datastream: ' . $e->getmessage());
         }
     }
