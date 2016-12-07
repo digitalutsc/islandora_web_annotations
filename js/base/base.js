@@ -54,6 +54,8 @@ function createAnnotation(targetObjectId, annotationData) {
             alert("Successfully created annotation: " + data);
         }
     });
+
+    insertLabelForNewAnnotation(annotationData);
 }
 
 // We need to update the current annnotation datastore with pid and other info to preform operations and enforce access
@@ -83,10 +85,16 @@ function getAnnotations(targetObjectId) {
             alert("Error in loading annotations");
         },
         success: function(data) {
+
+            // Label related
+            var canvasInfo = getCanvasInfo();
+            var canvas = canvasInfo[0];
+            var contentType = canvasInfo[1];
+            var htmlBlock = "<ul id='annotation-list' style='list-style-type: none;'>";
+
+            // Extract data
             var jsonData = JSON.parse(data);
-
             annotationContainerID = jsonData["@id"];
-
             var annotations = jsonData.first.items;
 
             for(var i = 0; i< annotations.length; i++)
@@ -95,16 +103,18 @@ function getAnnotations(targetObjectId) {
                 try {
                     var src = annotations[i].src;
                     var text = annotations[i].text;
+
+                    htmlBlock = htmlBlock + "<li> [" + i + "] " + text + "</li>";
+
                     var context = annotations[i].context;
                     var type = annotations[i].shapes[0].type;
-                    var x1 = annotations[i].shapes[0].geometry.x;
-                    var y1 = annotations[i].shapes[0].geometry.y;
-                    var width1 = annotations[i].shapes[0].geometry.width;
-                    var height1 = annotations[i].shapes[0].geometry.height;
+                    var x1 = Number(annotations[i].shapes[0].geometry.x);
+                    var y1 = Number(annotations[i].shapes[0].geometry.y);
+                    var width1 = Number(annotations[i].shapes[0].geometry.width);
+                    var height1 = Number(annotations[i].shapes[0].geometry.height);
                     var pid = annotations[i].pid;
                     var creator = annotations[i].creator;
                     var created = annotations[i].created;
-
 
                     var myAnnotation = {
                         src: src,
@@ -114,7 +124,7 @@ function getAnnotations(targetObjectId) {
                         created: created,
                         shapes: [{
                             type: type,
-                            geometry: {x: Number(x1), y: Number(y1), width: Number(width1), height: Number(height1)}
+                            geometry: {x: x1, y: y1, width: width1, height: height1}
                         }],
                         editable: true,
                         context: context
@@ -123,10 +133,12 @@ function getAnnotations(targetObjectId) {
                 } catch(e){
                     alert("Error in inserting an annotation");
                 }
-
-
+                insertLabel(contentType, i, canvas, x1, y1, width1, height1);
 
             }
+
+            htmlBlock = htmlBlock + "</ul>";
+            insertAnnotationDataBlock(htmlBlock, contentType);
         }
     });
 }
@@ -189,4 +201,63 @@ function deleteAnnotation(annotationData) {
         }
     });
 
+}
+
+
+/**
+ *
+ * @param htmlBlock
+ * @param contentType
+ */
+function insertAnnotationDataBlock(htmlBlock, contentType) {
+    jQuery('<div><h2>Annotations</h2>' + htmlBlock + '</div>').appendTo(jQuery(".islandora-" + contentType + "-metadata"));
+}
+
+function insertLabelForNewAnnotation(annotation) {
+    var i = anno.getAnnotations().length;
+    var x1 = Number(annotation.shapes[0].geometry.x);
+    var y1 = Number(annotation.shapes[0].geometry.y);
+    var width1 = Number(annotation.shapes[0].geometry.width);
+    var height1 = Number(annotation.shapes[0].geometry.height);
+    var canvasInfo = getCanvasInfo();
+
+    insertLabel(canvasInfo[1], i, canvasInfo[0], x1, y1, width1, height1);
+}
+
+/**
+ *
+ * @param contentType: basic-image, large-image
+ * @param i - index of the annotation
+ * @param canvas -
+ * @param x1 - x position of the annotation
+ * @param y1 - y position of the annotation
+ * @param width1 - width of the annotation box
+ * @param height1 - height of the annotation box
+ */
+function insertLabel(contentType, i, canvas, x1, y1, width1, height1) {
+    var decimalX = x1 + width1;
+    var decimalY = y1 + height1;
+
+    if(contentType == "large-image") {
+        var eleSpan = document.createElement("span");
+        var eleText = document.createTextNode(i);     // Create a text node
+        eleSpan.appendChild(eleText);
+        eleSpan.className = "marker-large-mage";
+
+        Drupal.settings.islandora_open_seadragon_viewer.addOverlay({
+            element: eleSpan,
+            location: new OpenSeadragon.Rect(decimalX - 0.035, decimalY - 0.035, 0.035, 0.035)
+        });
+    } else {
+        var canvasWidth = canvas.width;
+        var canvasHeight = canvas.height;
+
+        var pixelX = (decimalX * canvasWidth) - 20;
+        var pixelY = (decimalY * canvasHeight) - 20;
+
+        jQuery('<span class="marker">' + i + '</span>').css({
+            top: pixelY,
+            left: pixelX
+        }).appendTo(jQuery(jQuery(canvas).parent()));
+    }
 }

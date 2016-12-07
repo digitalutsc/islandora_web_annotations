@@ -63,3 +63,8 @@ function getAnnotationsLargeImage() {
     var targetObjectId = Drupal.settings.islandoraOpenSeadragon.pid;
     getAnnotations(targetObjectId);
 }
+
+function getCanvasInfo(){
+    var largeImageCanvas = jQuery(".islandora-large-image-content").find("canvas")[0];
+    return [largeImageCanvas, "large-image"];
+}
