@@ -86,6 +86,7 @@ function getAnnotations(targetObjectId) {
             alert("Error in loading annotations");
         },
         success: function(data) {
+            anno.removeAll();
 
             // Label related
             var canvas = jQuery(".islandora-"+ g_contentType + "-content").find("canvas")[0]
@@ -220,7 +221,7 @@ function insertAnnotationDataBlockItem(pid, i, text) {
 }
 
 function insertLabelForNewAnnotation(pid, annotation) {
-    var i = anno.getAnnotations().length - 1;
+    var i = anno.getAnnotations().length;
     var x1 = Number(annotation.shapes[0].geometry.x);
     var y1 = Number(annotation.shapes[0].geometry.y);
     var width1 = Number(annotation.shapes[0].geometry.width);
