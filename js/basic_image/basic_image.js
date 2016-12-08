@@ -5,6 +5,8 @@
  *
  */
 
+var g_contentType = "basic-image";
+
 jQuery(document).ready(function() {
 
     var m_image = jQuery("div[class='islandora-basic-image-content']").find("img[typeof='foaf:Image']").first();
@@ -55,7 +57,3 @@ function getBasicImagePID() {
     return objectPID;
 }
 
-function getCanvasInfo(){
-    var canvas = jQuery(".islandora-basic-image-content").find("canvas")[0];
-    return [canvas, "basic-image"];
-}
