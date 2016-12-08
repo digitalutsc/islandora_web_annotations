@@ -295,8 +295,8 @@ function deleteLabelAndDataBlockItem(annotationID) {
 function deleteAllLabelsAndBlockItems(){
     if(g_contentType == "large-image"){
         var labels = jQuery('span[id^="label_islandora"]');
-        for (var j = 0; j < labels.count; j++){
-            var labelID =  labels[j];
+        for (var j = 0; j < labels.length; j++){
+            var labelID =  labels[j].id;
             Drupal.settings.islandora_open_seadragon_viewer.removeOverlay(labelID);
         }
     } else {
