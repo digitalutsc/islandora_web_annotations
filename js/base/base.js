@@ -86,7 +86,10 @@ function getAnnotations(targetObjectId) {
             alert("Error in loading annotations");
         },
         success: function(data) {
+
+            // In case user has inserted items before loading, remove them to reload those items
             anno.removeAll();
+            deleteAllLabelsAndBlockItems();
 
             // Label related
             var canvas = jQuery(".islandora-"+ g_contentType + "-content").find("canvas")[0]
@@ -287,4 +290,18 @@ function deleteLabelAndDataBlockItem(annotationID) {
     }
     // Remove Block Item
     jQuery(document.getElementById("block_label_" + annotationID)).remove();
+}
+
+function deleteAllLabelsAndBlockItems(){
+    if(g_contentType == "large-image"){
+        var labels = jQuery('span[id^="label_islandora"]');
+        for (var j = 0; j < labels.count; j++){
+            var labelID =  labels[j];
+            Drupal.settings.islandora_open_seadragon_viewer.removeOverlay(labelID);
+        }
+    } else {
+        jQuery('span[id^="label_islandora"]').remove();
+    }
+
+    jQuery("#annotation-list").remove();
 }
