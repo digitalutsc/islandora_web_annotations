@@ -303,5 +303,5 @@ function deleteAllLabelsAndBlockItems(){
         jQuery('span[id^="label_islandora"]').remove();
     }
 
-    jQuery("#annotation-list").remove();
+    jQuery("#annotation-list").parent().remove();
 }
