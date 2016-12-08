@@ -5,6 +5,8 @@
  *
  */
 
+var g_contentType = "large-image";
+
 jQuery(document).ready(function() {
 
     // Replace id

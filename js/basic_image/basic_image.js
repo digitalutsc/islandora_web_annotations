@@ -5,6 +5,8 @@
  *
  */
 
+var g_contentType = "basic-image";
+
 jQuery(document).ready(function() {
 
     var m_image = jQuery("div[class='islandora-basic-image-content']").find("img[typeof='foaf:Image']").first();
@@ -48,10 +50,10 @@ function getAnnotationsBasicImage() {
     getAnnotations(objectPID);
 }
 
-
 function getBasicImagePID() {
     var objectURL = window.location.href;
     var objectPID = objectURL.substr(objectURL.lastIndexOf('/') + 1);
     objectPID = objectPID.replace("%3A", ":");
     return objectPID;
 }
+
