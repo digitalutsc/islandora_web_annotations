@@ -40,7 +40,6 @@ class Annotation implements interfaceAnnotation
             $annotationJsonLDData = $this->getAnnotationJsonLD("create", $annotationData, $annotationMetadata);
             $annotationJsonLD = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
-
             $ds = $object->constructDatastream($dsid, 'M');
             $ds->label = $dsid;
             $ds->mimetype = AnnotationConstants::ANNOTATION_MIMETYPE;
@@ -48,7 +47,6 @@ class Annotation implements interfaceAnnotation
             $object->ingestDatastream($ds);
             $this->repository->ingestObject($object);
             $annotationPID =  $object->id;
-
 
             // Create Derivative
             $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);
@@ -79,11 +77,14 @@ class Annotation implements interfaceAnnotation
         $annotationJsonLDData = $this->getAnnotationJsonLD("update", $annotationData, $annotationMetadata);
         $updatedContent = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
-
         $object = $this->repository->getObject($annotationPID);
         $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
         $WADMObject->content = $updatedContent;
 
+        // Get WADM ds checksum
+        $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
+        $checksum =  $WADMObject->checksum;
+        $annotationJsonLDData["checksum"] = $checksum;
 
         // Update Derivative
         $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);

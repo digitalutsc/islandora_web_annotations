@@ -191,6 +191,9 @@ function updateAnnotation(annotationData) {
             var jsonData = JSON.parse(data);
             var status = jsonData.status;
             var annoInfo = jsonData.data;
+            var checksum = annoInfo.checksum;
+            updateAnnotationInfo(annotationPID, checksum);
+
             if(status == "success") {
                 alert("Successfully updated the annotation: " + JSON.stringify(annoInfo));
             } else if(status == "conflict"){
@@ -202,6 +205,18 @@ function updateAnnotation(annotationData) {
     });
 
 }
+
+// Update AnnotatoinDatastore
+function updateAnnotationInfo(pid, checksum) {
+    var annotations = anno.getAnnotations()
+    for(var j = 0; j < annotations.length; j++){
+        if(annotations[j].pid == pid) {
+            annotations[j].checksum = checksum;
+            break;
+        }
+    }
+}
+
 
 function deleteAnnotation(annotationData) {
     var annotationID = annotationData.pid;
