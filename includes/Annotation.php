@@ -49,12 +49,19 @@ class Annotation implements interfaceAnnotation
             $this->repository->ingestObject($object);
             $annotationPID =  $object->id;
 
+
             // Create Derivative
             $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);
             $this->createUpdateDerivative($object, $contentXML);
 
             // Update JsonLD with PID info
             $annotationJsonLDData["pid"] = $annotationPID;
+
+            // Get WADM ds checksum
+            $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
+            $checksum =  $WADMObject->checksum;
+
+            $annotationJsonLDData["checksum"] = $checksum;
             $annotationJsonLD = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
             watchdog(AnnotationConstants::MODULE_NAME , 'Annotation : createAnnotation: Added new annotation @annotationPID', array("@annotationPID" => $annotationPID), WATCHDOG_INFO);
@@ -82,12 +89,30 @@ class Annotation implements interfaceAnnotation
         $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);
         $this->createUpdateDerivative($object, $contentXML);
 
-        return $updatedContent;
+        return $annotationJsonLDData;
     }
 
     public function deleteAnnotation($annotationID){
         $this->repository->purgeObject($annotationID);
         watchdog(AnnotationConstants::MODULE_NAME, 'Annotation: deleteAnnotation: Annotation with id @deleteAnnotation was deleted from repoistory.', array('@annotationID'=>$annotationID), WATCHDOG_INFO);
+    }
+
+    /**
+     * Gets the current checksum and compares it with the ETag checksum to check if the datastream has been alstered
+     * @param $annotationID
+     * @param $ETag
+     * @return bool - If conflict exists, return true, else false
+     */
+    public function checkEditConflict($annotationID, $ETag){
+        $object = $this->repository->getObject($annotationID);
+        $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
+        $checksum = $WADMObject->checksum;
+
+        if (strcmp($checksum, $ETag) !== 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private function getAnnotationJsonLD($actionType, $annotationData, $annotationMetadata)
@@ -117,7 +142,7 @@ class Annotation implements interfaceAnnotation
         return $data;
     }
 
-    function createUpdateDerivative(AbstractObject $object, $contentXML){
+    private function createUpdateDerivative(AbstractObject $object, $contentXML){
         try {
 
             $dsid = 'WADM_SEARCH';
@@ -141,7 +166,7 @@ class Annotation implements interfaceAnnotation
         }
     }
 
-    function generateDerivativeContent($annotationData, $annotationMetadata){
+    private function generateDerivativeContent($annotationData, $annotationMetadata){
         $target = $annotationData["context"];
         $pos = strrpos($target, '/');
         $targetID = $pos === false ? $target : substr($target, $pos + 1);
