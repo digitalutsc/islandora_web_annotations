@@ -80,6 +80,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
                 $object = $this->repository->getObject($items[$i]);
                 $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
                 $dsContent = (string)$WADMObject->content;
+                $checksum = $WADMObject->checksum;
 
                 if($dsContent != "NotFound") {
                     $dsContentJson = json_decode($dsContent);
@@ -87,6 +88,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
                     $body->pid = $items[$i];
                     $body->creator = $dsContentJson->creator;
                     $body->created = $dsContentJson->created;
+                    $body->checksum = $checksum;
                     array_push($newArray, $body);
                 }
             }
@@ -163,7 +165,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
         $oAnnotation->deleteAnnotation($annotationID);
 
         // Return message
-        $output = array('status' => "Success", "msg"=> "The following annotation was deleted: " . $annotationID);
+        $output = array('status' => "success", "data"=> "The following annotation was deleted: " . $annotationID);
         $output = json_encode($output);
 
         return $output;

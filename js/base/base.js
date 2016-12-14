@@ -50,7 +50,9 @@ function createAnnotation(targetObjectId, annotationData) {
             var pid = jsonData.pid;
             var creator = jsonData.creator;
             var created = jsonData.created;
-            updateNewAnnotationInfo(pid, creator, created);
+            var checksum = jsonData.checksum;
+
+            updateNewAnnotationInfo(pid, creator, created, checksum);
             insertLabelForNewAnnotation(pid, annotationData);
             alert("Successfully created annotation: " + data);
         }
@@ -60,13 +62,14 @@ function createAnnotation(targetObjectId, annotationData) {
 }
 
 // We need to update the current annnotation datastore with pid and other info to preform operations and enforce access
-function updateNewAnnotationInfo(pid, creator, created) {
+function updateNewAnnotationInfo(pid, creator, created, checksum) {
     var annotations = anno.getAnnotations()
     for(var j = 0; j < annotations.length; j++){
         if(annotations[j].pid == "New") {
             annotations[j].pid = pid;
             annotations[j].creator = creator;
             annotations[j].created = created;
+            annotations[j].checksum = checksum;
             break;
         }
     }
@@ -117,6 +120,7 @@ function getAnnotations(targetObjectId) {
                     var height1 = Number(annotations[i].shapes[0].geometry.height);
                     var creator = annotations[i].creator;
                     var created = annotations[i].created;
+                    var checksum = annotations[i].checksum;
 
                     var myAnnotation = {
                         src: src,
@@ -124,6 +128,7 @@ function getAnnotations(targetObjectId) {
                         pid: pid,
                         creator: creator,
                         created: created,
+                        checksum: checksum,
                         shapes: [{
                             type: type,
                             geometry: {x: x1, y: y1, width: width1, height: height1}
@@ -150,6 +155,8 @@ function updateAnnotation(annotationData) {
     var user = Drupal.settings.islandora_web_annotations.user;
     var creator = annotationData.creator;
     var created = annotationData.created;
+    var checksum = annotationData.checksum;
+
     var metadata = {}
     metadata.author = user;
     metadata.creator = creator;
@@ -158,16 +165,23 @@ function updateAnnotation(annotationData) {
     // Do not want data duplicated
     delete annotationData.creator;
     delete annotationData.created;
+    delete annotationData.checksum;
+
 
     var annotationPID = annotationData.pid;
     var annotation = {
         annotationPID: annotationPID,
         metadata: metadata,
         annotationData: annotationData
+
     };
 
     jQuery.ajax({
         url: 'http://localhost:8000/islandora_web_annotations/update',
+        beforeSend: function (request)
+        {
+            request.setRequestHeader("If-Match", checksum);
+        },
         dataType: 'json',
         type: 'PUT',
         data: annotation,
@@ -175,22 +189,55 @@ function updateAnnotation(annotationData) {
             alert("Error in updating annotation.");
         },
         success: function(data) {
-            alert("Successfully updated the annotation: " + data);
+            var jsonData = JSON.parse(data);
+            var status = jsonData.status;
+            var annoInfo = jsonData.data;
+            var checksum = annoInfo.checksum;
+            updateAnnotationInfo(annotationPID, checksum);
+
+            if(status == "success") {
+                alert("Successfully updated the annotation: " + JSON.stringify(annoInfo));
+            } else if(status == "conflict"){
+                    alert("There was an edit conflict.  Please copy your changes, reload the annotations and try again");
+            } else {
+                alert("Unable to update.  Error info: " . JSON.stringify(annoInfo));
+            }
         }
     });
 
 }
 
+// Update AnnotatoinDatastore
+function updateAnnotationInfo(pid, checksum) {
+    var annotations = anno.getAnnotations()
+    for(var j = 0; j < annotations.length; j++){
+        if(annotations[j].pid == pid) {
+            annotations[j].checksum = checksum;
+            break;
+        }
+    }
+}
+
+
 function deleteAnnotation(annotationData) {
     var annotationID = annotationData.pid;
+    var checksum = annotationData.checksum;
+
     var annotation = {
         annotationID: annotationID,
         annotationContainerID: annotationContainerID,
         annotationData: annotationData
     };
 
+    // annotationData data - in case it fails to delete
+    delete annotationData.checksum;
+
     jQuery.ajax({
         url: 'http://localhost:8000/islandora_web_annotations/delete',
+        beforeSend: function (request)
+        {
+            request.setRequestHeader("If-Match", checksum);
+        },
         dataType: 'json',
         type: 'DELETE',
         data: annotation,
@@ -198,7 +245,16 @@ function deleteAnnotation(annotationData) {
             alert("Error in deleting annotation.");
         },
         success: function(data) {
-            alert("Successfully deleted the annotation: " + data);
+            var jsonData = JSON.parse(data);
+            var status = jsonData.status;
+            var annoInfo = jsonData.data;
+            if(status == "success") {
+                alert("Success: " + JSON.stringify(annoInfo));
+            } else if(status == "conflict"){
+                alert("There was an edit conflict.  Please reload the annotations to view the changes.  You can try again to delete.");
+            } else {
+                alert("Unable to delete.  Error info: " . JSON.stringify(annoInfo));
+            }
         }
     });
 
