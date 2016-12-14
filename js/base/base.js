@@ -52,7 +52,7 @@ function createAnnotation(targetObjectId, annotationData) {
             var created = jsonData.created;
             var checksum = jsonData.checksum;
 
-            updateNewAnnotationInfo(pid, creator, created);
+            updateNewAnnotationInfo(pid, creator, created, checksum);
             insertLabelForNewAnnotation(pid, annotationData);
             alert("Successfully created annotation: " + data);
         }
@@ -62,13 +62,14 @@ function createAnnotation(targetObjectId, annotationData) {
 }
 
 // We need to update the current annnotation datastore with pid and other info to preform operations and enforce access
-function updateNewAnnotationInfo(pid, creator, created) {
+function updateNewAnnotationInfo(pid, creator, created, checksum) {
     var annotations = anno.getAnnotations()
     for(var j = 0; j < annotations.length; j++){
         if(annotations[j].pid == "New") {
             annotations[j].pid = pid;
             annotations[j].creator = creator;
             annotations[j].created = created;
+            annotations[j].checksum = checksum;
             break;
         }
     }
