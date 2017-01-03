@@ -7,10 +7,8 @@
 require_once('AnnotationConstants.php');
 require_once('Annotation.php');
 require_once('AnnotationContainer.php');
-require_once('Installation.php');
 
 //ToDo: Need to validate input vars
-
 
 function createAnnotation(){
     $targetObjectID = null;
@@ -112,11 +110,4 @@ function deleteAnnotation(){
     }
     drupal_json_output($output);
     drupal_exit();
-}
-
-function installRequiredObjects(){
-    $content = "This request will attempt to install islandora:WADMCModel and islandora:WADMContainerCModel Content Models.  ";
-    $content = $content . "If the Content Model already exists, the attempt will fail.  ";
-    $content = $content . "Result: " . installIslandoraObjects();
-    return $content;
 }
