@@ -5,12 +5,11 @@
  * AnnotaionContainer implementation based on Web Annotation Protocol
  */
 
-require_once('AnnotationConstants.php');
-require_once('AnnotationUtil.php');
-require_once('interfaceAnnotationContainer.php');
-require_once('Annotation.php');
+require_once(__DIR__ . '/AnnotationConstants.php');
+require_once(__DIR__ . '/AnnotationUtil.php');
+require_once(__DIR__ . '/interfaceAnnotationContainer.php');
+require_once(__DIR__ . '/Annotation.php');
 module_load_include('inc', 'islandora', 'includes/solution_packs');
-
 
 class AnnotationContainer implements interfaceAnnotationContainer
 {
@@ -161,7 +160,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
         watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: deleteAnnotation: Annotation with id @annotationID was removed from annotationContainer with id @annotationContainerID', array('@annotationID'=>$annotationID, '@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
 
         // Delete the object
-        $oAnnotation = new Annotation();
+        $oAnnotation = new Annotation($this->repository);
         $oAnnotation->deleteAnnotation($annotationID);
 
         // Return message

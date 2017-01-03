@@ -2,3 +2,4 @@ name = Islandora Web Annotations
 description = Islandora Web Annotations
 core = 7.x
 files[] = islandora_web_annotations.module
+files[] = tests/islandora_annotations_ingest_purge.test
