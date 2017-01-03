@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Hooks for installing/unintstalling this module.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * @see islandora_oralhistories_islandora_required_objects()
+ */
+
+function islandora_web_annotations_install() {
+    module_load_include('inc', 'islandora', 'includes/solution_packs');
+    islandora_install_solution_pack('islandora_web_annotations');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function islandora_web_annotations_uninstall() {
+    module_load_include('inc', 'islandora', 'includes/solution_packs');
+    islandora_install_solution_pack('islandora_web_annotations', 'uninstall');
+}
