@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * @file
+ * Attempts to create and delete an annotation container and an annotation.
+ */
+
+require_once(__DIR__ . '../../includes/AnnotationContainer.php');
+
+class IslandoraWebAnnotationsIngestTestCase extends IslandoraWebTestCase {
+    /**
+     * Get test information.
+     *
+     * @see IslandoraWebTestCase::getInfo()
+     */
+    public static function getInfo() {
+        return array(
+            'name' => 'WebAnnotations Create/Delete',
+            'description' => 'Ingests and purges an annotation resource from the fixtures.',
+            'group' => 'Islandora Web Annotations',
+        );
+    }
+
+    /**
+     * Set up the test environment.
+     *
+     * @see IslandoraWebTestCase::setUp()
+     */
+    public function setUp() {
+        parent::setUp(array(
+            'islandora',
+            'islandora_web_annotations',
+        ));
+    }
+
+    /**
+     * Create an annotation container and annotation
+     * Verify that it was created by checking the datastremms
+     */
+
+    public function testIngestPurgeBasicWebAnnotation() {
+        $targetObjectID = "islandora:TestTarget";
+        $annotationData["context"] = "test context";
+        $annotationData["body"] = "test annotation body";
+        $annotationData["text"] = "test annotation";
+        $annotationMetadata["creator"] = "admin";
+
+        // Create Annotation Container
+        $oAnnotationContainer = new AnnotationContainer();
+        $annotationContainerID = $oAnnotationContainer->createAnnotationContainer($targetObjectID, $annotationData);
+
+        // Verify Annotation Container
+        $object = islandora_object_load($annotationContainerID);
+        $this->assertFedoraObject($object, "valid fedora object");
+
+        $datastreams = array(
+            'RELS-EXT',
+            'DC',
+            AnnotationConstants::WADMContainer_DSID
+        );
+        $result = $this->assertDatastreams($object, $datastreams);
+        $this->assertTrue($result, t("Annotation Container successfully created."));
+
+        // Creation Annotation
+        $oAnnotation = new Annotation(null);
+        $annotationInfo = $oAnnotation->createAnnotation($annotationContainerID, $annotationData, $annotationMetadata);
+        $annotationID = $annotationInfo[0];
+
+        // Verify Annotation
+        $datastreams2 = array(
+            'RELS-EXT',
+            'DC',
+            AnnotationConstants::WADM_DSID,
+        );
+
+        $object2 = islandora_object_load($annotationID);
+        $result = $this->assertDatastreams($object2, $datastreams2);
+        $this->assertTrue($result, t("Annotation successfully created."));
+
+        // Delete Annotation
+        $oAnnotationContainer->deleteAnnotation($annotationContainerID, $annotationID);
+        $oAnnotationContainer->deleteAnnotationContainer($annotationContainerID);
+    }
+
+}
