@@ -31,6 +31,8 @@ before_install:
 script:
   - ant -buildfile sites/all/modules/islandora_web_annotations/build.xml lint
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_web_annotations
-  - drush coder-review --reviews=production,security,i18n,potx islandora_web_annotations
+  # Temporarily commenting out coder-review line while issue with development vagrant is
+  # resolved.  See https://github.com/Islandora-Labs/islandora_vagrant/issues/119
+  # - drush coder-review --reviews=production,security,i18n,potx islandora_web_annotations
   - phpcpd --names *.module,*.inc,*.test sites/all/modules/islandora_web_annotations
 
