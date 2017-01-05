@@ -1,5 +1,11 @@
 name = Islandora Web Annotations
-description = Islandora Web Annotations
+description = "Islandora Web Annotations"
+package = Islandora
+version = 7.x-dev
 core = 7.x
+dependencies[] = context
+dependencies[] = context_addassets
+dependencies[] = context_ui
+dependencies[] = islandora_context
 files[] = islandora_web_annotations.module
 files[] = tests/islandora_annotations_ingest_purge.test
