@@ -31,6 +31,11 @@ before_install:
   - drush en --user=1 --yes islandora_web_annotations
   - drush en --user=1 --yes islandora_context
 
+  - drush dl --user=1 --yes context
+  - drush en --user=1 --yes context
+  - drush dl --user=1 --yes context_addassets
+  - drush en --user=1 --yes context_addassets
+
 script:
   - ant -buildfile sites/all/modules/islandora_web_annotations/build.xml lint
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_web_annotations
