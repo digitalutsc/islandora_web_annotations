@@ -29,6 +29,9 @@ class Annotation implements interfaceAnnotation
             $object = $this->repository->constructObject("islandora");
 
             $target = $annotationData["context"];
+            $target = str_replace("%3A",":",$target);
+            $annotationData["context"] = $target;
+
             $targetPID = substr($target, strrpos($target, '/') + 1);
 
             $object->label = "Annotation for " . $targetPID;
@@ -171,6 +174,7 @@ class Annotation implements interfaceAnnotation
         $target = $annotationData["context"];
         $pos = strrpos($target, '/');
         $targetID = $pos === false ? $target : substr($target, $pos + 1);
+        $targetID = str_replace("%3A",":",$targetID);
 
         $textvalue = $annotationData["text"];
         $creator = $annotationMetadata["creator"];
@@ -178,7 +182,7 @@ class Annotation implements interfaceAnnotation
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><annotation></annotation>');
 
         $xml->addChild('title', "Annotation for " . $targetID);
-        $xml->addChild('target', $target);
+        $xml->addChild('target', $targetID);
         $xml->addChild('creator', $creator);
         $xml->addChild('textvalue', $textvalue);
 
