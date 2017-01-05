@@ -96,7 +96,7 @@ function getAnnotations(targetObjectId) {
 
             // Label related
             var canvas = jQuery(".islandora-"+ g_contentType + "-content").find("canvas")[0]
-            var htmlBlock = "<ul id='annotation-list' style='list-style-type: none;'>";
+            var htmlBlock = "";
 
             // Extract data
             var jsonData = JSON.parse(data);
@@ -144,7 +144,7 @@ function getAnnotations(targetObjectId) {
             }
 
             htmlBlock = htmlBlock + "</ul>";
-            insertAnnotationDataBlock(htmlBlock, g_contentType);
+            insertUpdateAnnotationDataBlock(htmlBlock);
         }
     });
 }
@@ -267,17 +267,15 @@ function deleteAnnotation(annotationData) {
  * @param htmlBlock
  * @param contentType
  */
-function insertAnnotationDataBlock(htmlBlock, contentType) {
+function insertUpdateAnnotationDataBlock(htmlBlock) {
     // If not already installed
     if(jQuery("#annotation-list").length == 0) {
-        jQuery('<div><h2>Annotations</h2>' + htmlBlock + '</div>').appendTo(jQuery(".islandora-" + contentType + "-metadata"));
+        jQuery('<div><h2>Annotations</h2><ul id="annotation-list" style="list-style-type: none;">' + htmlBlock + '</ul></div>').appendTo(jQuery(".islandora-" + g_contentType + "-metadata"));
+    } else {
+        jQuery(htmlBlock).appendTo(jQuery("#annotation-list"));
     }
 }
 
-function insertAnnotationDataBlockItem(pid, i, text) {
-    var htmlItem = "<li id='block_label_"+ pid + "'> [" + i + "] " + text + "</li>";
-    jQuery(htmlItem).appendTo(jQuery("#annotation-list"));
-}
 
 function insertLabelForNewAnnotation(pid, annotation) {
     var i = anno.getAnnotations().length;
@@ -290,7 +288,8 @@ function insertLabelForNewAnnotation(pid, annotation) {
     insertLabel(g_contentType, i, pid, canvas, x1, y1, width1, height1);
 
     var text = annotation.text;
-    insertAnnotationDataBlockItem(pid, i, text)
+    var htmlItem = "<li id='block_label_"+ pid + "'> [" + i + "] " + text + "</li>";
+    insertUpdateAnnotationDataBlock(htmlItem);
 }
 
 /**
