@@ -9,13 +9,24 @@ var g_contentType = "basic-image";
 
 jQuery(document).ready(function() {
 
-    var m_image = jQuery("div[class='islandora-basic-image-content']").find("img[typeof='foaf:Image']").first();
-    jQuery(m_image).unwrap();
-
     if(Drupal.settings.islandora_web_annotations.view == true) {
         var loadAnnotationsButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsBasicImage()"></button>');
         loadAnnotationsButton.appendTo(jQuery(".islandora-basic-image-content")[0]);
     }
+
+    if(Drupal.settings.islandora_web_annotations.create == true) {
+        var addButton = jQuery('<button id="add-annotation-button" class="annotator-adder-actions__button h-icon-add" title="Add Annotation" onclick="initBasicImageAnnotation();"></button>');
+        addButton.appendTo(jQuery(".islandora-basic-image-content")[0]);
+    }
+
+    executeCommonLoadOperations();
+
+});
+
+
+function initBasicImageAnnotation(){
+    var m_image = jQuery("div[class='islandora-basic-image-content']").find("img[typeof='foaf:Image']").first();
+    jQuery(m_image).unwrap();
 
     anno.makeAnnotatable(m_image[0]);
 
@@ -37,15 +48,15 @@ jQuery(document).ready(function() {
         deleteAnnotation(annotation);
     });
 
+    jQuery("#add-annotation-button").remove();
     jQuery(".annotorious-hint").css("left", "45px");
 
-    executeCommonLoadOperations();
-
-
-});
-
+}
 
 function getAnnotationsBasicImage() {
+    if(jQuery(".annotorious-hint-icon").is(":visible")=== false) {
+        initBasicImageAnnotation();
+    }
     var objectPID = getBasicImagePID();
     getAnnotations(objectPID);
 }

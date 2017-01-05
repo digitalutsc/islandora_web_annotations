@@ -9,3 +9,8 @@
     left: 32px;
 }
 
+#add-annotation-button {
+    position:absolute;
+    top: 135px;
+    left:82px;
+}
