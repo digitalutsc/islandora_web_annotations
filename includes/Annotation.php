@@ -26,7 +26,7 @@ class Annotation implements interfaceAnnotation
     public function createAnnotation($annotationContainerID, $annotationData, $annotationMetadata){
 
         try {
-            $object = $this->repository->constructObject("islandora");
+            $object = $this->repository->constructObject("annotation");
 
             $target = $annotationData["context"];
             $target = str_replace("%3A",":",$target);

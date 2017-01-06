@@ -29,7 +29,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
 
         try {
             $target = $annotationData["context"];
-            $object = $this->repository->constructObject("islandora");
+            $object = $this->repository->constructObject("annotation");
             $object->label = "AnnotationContainer for " . $targetObjectID;
             $object->models = array(AnnotationConstants::WADMContainer_CONTENT_MODEL);
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', AnnotationConstants::WADMContainer_CONTENT_MODEL);
