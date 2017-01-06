@@ -7,6 +7,7 @@
  */
 
 var annotationContainerID = null;
+var label_prefix = "label_anno";
 
 function executeCommonLoadOperations() {
     // Apply permissions to edit, delete annotations
@@ -198,7 +199,7 @@ function updateAnnotation(annotationData) {
             if(status == "success") {
                 alert("Successfully updated the annotation: " + JSON.stringify(annoInfo));
             } else if(status == "conflict"){
-                    alert("There was an edit conflict.  Please copy your changes, reload the annotations and try again");
+                alert("There was an edit conflict.  Please copy your changes, reload the annotations and try again");
             } else {
                 alert("Unable to update.  Error info: " . JSON.stringify(annoInfo));
             }
@@ -307,7 +308,7 @@ function insertLabel(contentType, i, pid, canvas, x1, y1, width1, height1) {
     var decimalY = y1 + height1;
 
     // If already exists, then return
-    if(jQuery(document.getElementById("label_" + pid)).length >= 1){
+    if(jQuery(document.getElementById(label_prefix + pid)).length >= 1){
         return;
     }
 
@@ -316,7 +317,7 @@ function insertLabel(contentType, i, pid, canvas, x1, y1, width1, height1) {
         var eleText = document.createTextNode(i);     // Create a text node
         eleSpan.appendChild(eleText);
         eleSpan.className = "marker-large-mage";
-        eleSpan.setAttribute("id", "label_" + pid);
+        eleSpan.setAttribute("id", label_prefix + pid);
 
         Drupal.settings.islandora_open_seadragon_viewer.addOverlay({
             element: eleSpan,
@@ -329,7 +330,7 @@ function insertLabel(contentType, i, pid, canvas, x1, y1, width1, height1) {
         var pixelX = (decimalX * canvasWidth) - 20;
         var pixelY = (decimalY * canvasHeight) - 20;
 
-        jQuery('<span class="marker" id="label_'+ pid +'">' + i + '</span>').css({
+        jQuery('<span class="marker" id="' + label_prefix + pid +'">' + i + '</span>').css({
             top: pixelY,
             left: pixelX
         }).appendTo(jQuery(jQuery(canvas).parent()));
@@ -339,9 +340,9 @@ function insertLabel(contentType, i, pid, canvas, x1, y1, width1, height1) {
 function deleteLabelAndDataBlockItem(annotationID) {
     // Remove Label
     if(g_contentType == "large-image"){
-        Drupal.settings.islandora_open_seadragon_viewer.removeOverlay("label_" + annotationID);
+        Drupal.settings.islandora_open_seadragon_viewer.removeOverlay(label_prefix+ annotationID);
     } else {
-        jQuery(document.getElementById("label_" + annotationID)).remove();
+        jQuery(document.getElementById(label_prefix + annotationID)).remove();
     }
     // Remove Block Item
     jQuery(document.getElementById("block_label_" + annotationID)).remove();
@@ -349,13 +350,13 @@ function deleteLabelAndDataBlockItem(annotationID) {
 
 function deleteAllLabelsAndBlockItems(){
     if(g_contentType == "large-image"){
-        var labels = jQuery('span[id^="label_islandora"]');
+        var labels = jQuery('span[id^="'+ label_prefix + '"]');
         for (var j = 0; j < labels.length; j++){
             var labelID =  labels[j].id;
             Drupal.settings.islandora_open_seadragon_viewer.removeOverlay(labelID);
         }
     } else {
-        jQuery('span[id^="label_islandora"]').remove();
+        jQuery('span[id^="'+ label_prefix + '"]').remove();
     }
 
     jQuery("#annotation-list").parent().remove();
