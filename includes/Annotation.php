@@ -69,7 +69,7 @@ class Annotation implements interfaceAnnotation
         } catch (Exception $e) {
             watchdog(AnnotationConstants::MODULE_NAME, 'Error adding annotation object: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
             throw $e;
-       }
+        }
 
         return array($annotationPID, $annotationJsonLD);
     }
@@ -122,6 +122,11 @@ class Annotation implements interfaceAnnotation
     private function getAnnotationJsonLD($actionType, $annotationData, $annotationMetadata)
     {
         $target = $annotationData["context"];
+        $PID = $annotationData['pid'];
+
+        // We don't need this info in the file
+        unset($annotationData['pid']);
+
         $data = array(
             "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION),
             "@id" => AnnotationUtil::generateUUID(),
@@ -138,7 +143,7 @@ class Annotation implements interfaceAnnotation
         }
         if($actionType == "update"){
             $now = date("Y-m-d H:i:s");
-
+            $data["pid"] = $PID;
             $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $annotationMetadata["created"], 'modifiedBy' => $annotationMetadata["author"], 'modified' => $now);
         }
 
@@ -156,12 +161,9 @@ class Annotation implements interfaceAnnotation
 
             $filename = $dsid . '.xml';
             $dest = file_build_uri($filename);
-
             $file = file_save_data($contentXML, $dest, FILE_EXISTS_REPLACE);
 
-
             AnnotationUtil::add_datastream($object, $dsid, $file->uri);
-
 
             file_delete($file);
 
