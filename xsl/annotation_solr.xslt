@@ -9,7 +9,9 @@
             <field name="annotation_value">
                 <xsl:value-of select="$content//textvalue"/>
             </field>
-
+            <field name="annotation_parent">
+                <xsl:value-of select="$content//target"/>
+            </field>
     </xsl:template>
 
 </xsl:stylesheet>
