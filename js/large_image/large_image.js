@@ -39,8 +39,12 @@ jQuery(document).ready(function() {
     var os_viewer = Drupal.settings.islandora_open_seadragon_viewer;
     anno.makeAnnotatable(os_viewer);
 
+    // This is a fix to address the annotation positioning (#6) related to issue in FireFox, not an issue in Chrome
     anno.addHandler('onEditorShown', function(annotation) {
-        window.pageYOffset = 0;
+        var isChrome = !!window.chrome;
+        if(!isChrome){
+            window.pageYOffset = 0;
+        }
     });
 
     anno.addHandler("onAnnotationCreated", function(annotation) {
