@@ -19,7 +19,7 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 ## Configuration
 
-This module requires specific configurations for different content models and 'solution packs.  Please see the [project wiki documentation](https://github.com/digitalutsc/islandora_web_annotations/wiki) for guides on how to configure for specific content models and solution packs.
+This module requires specific configurations for different content models and solution packs.  Please see the [project wiki documentation](https://github.com/digitalutsc/islandora_web_annotations/wiki) for guides on how to configure for specific content models and solution packs.
 
 ## Maintainers/Sponsors
 Current maintainers:
