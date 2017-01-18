@@ -81,6 +81,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
                     $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
                 } catch(Exception $e){
                     watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : getAnnotationContainer: Unable to find annotation object with id ' . $items[$i]);
+                    continue;
                 }
                 $dsContent = (string)$WADMObject->content;
                 $checksum = $WADMObject->checksum;

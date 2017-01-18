@@ -194,7 +194,8 @@ function updateAnnotation(annotationData) {
             var status = jsonData.status;
             var annoInfo = jsonData.data;
             var checksum = annoInfo.checksum;
-            updateAnnotationInfo(annotationPID, checksum);
+            var updatedText = annoInfo.body.text;
+            updateAnnotationInfo(annotationPID, checksum, updatedText);
 
             if(status == "success") {
                 alert("Successfully updated the annotation: " + JSON.stringify(annoInfo));
@@ -209,11 +210,15 @@ function updateAnnotation(annotationData) {
 }
 
 // Update AnnotatoinDatastore
-function updateAnnotationInfo(pid, checksum) {
+function updateAnnotationInfo(pid, checksum, updatedText) {
     var annotations = anno.getAnnotations()
     for(var j = 0; j < annotations.length; j++){
         if(annotations[j].pid == pid) {
             annotations[j].checksum = checksum;
+
+            var currentText = document.getElementById("block_label_" + pid).innerHTML;
+            var labelNumber = currentText.substring(0, 4);
+            document.getElementById("block_label_" + pid).innerHTML = labelNumber + " " + updatedText;
             break;
         }
     }
