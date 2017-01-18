@@ -76,8 +76,12 @@ class AnnotationContainer implements interfaceAnnotationContainer
             // Loop through each item and get the item info
             $newArray = array();
             for($i = 0; $i < count($items); $i++) {
-                $object = $this->repository->getObject($items[$i]);
-                $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
+                try{
+                    $object = $this->repository->getObject($items[$i]);
+                    $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
+                } catch(Exception $e){
+                    watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : getAnnotationContainer: Unable to find annotation object with id ' . $items[$i]);
+                }
                 $dsContent = (string)$WADMObject->content;
                 $checksum = $WADMObject->checksum;
 
