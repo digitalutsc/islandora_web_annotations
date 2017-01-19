@@ -168,6 +168,12 @@ class AnnotationContainer implements interfaceAnnotationContainer
         $oAnnotation = new Annotation($this->repository);
         $oAnnotation->deleteAnnotation($annotationID);
 
+        // If there are no annotations, delete the annotationContainer
+        if (count($items) == 0) {
+          watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: deleteAnnotation:  Zero annotations remaining, removing annotationContainer with id @annotationContainerID', array('@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
+          $this->deleteAnnotationContainer($annotationContainerID);
+        }
+
         // Return message
         $output = array('status' => "success", "data"=> "The following annotation was deleted: " . $annotationID);
         $output = json_encode($output);
