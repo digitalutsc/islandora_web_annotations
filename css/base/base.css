@@ -82,3 +82,11 @@ span.marker-large-mage {
     vertical-align: middle;
     cursor: pointer;
 }
+
+
+/* Issue-54 */
+
+.annotorious-editor, .annotorious-popup {
+    max-height: 300px;
+    overflow-y: auto;
+}
