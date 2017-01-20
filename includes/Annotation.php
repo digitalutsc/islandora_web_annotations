@@ -30,6 +30,8 @@ class Annotation implements interfaceAnnotation
 
             $target = $annotationData["context"];
             $target = str_replace("%3A",":",$target);
+            $target = str_replace("#","",$target)
+            ;
             $annotationData["context"] = $target;
 
             $targetPID = substr($target, strrpos($target, '/') + 1);
@@ -98,7 +100,7 @@ class Annotation implements interfaceAnnotation
 
     public function deleteAnnotation($annotationID){
         $this->repository->purgeObject($annotationID);
-        watchdog(AnnotationConstants::MODULE_NAME, 'Annotation: deleteAnnotation: Annotation with id @deleteAnnotation was deleted from repoistory.', array('@annotationID'=>$annotationID), WATCHDOG_INFO);
+        watchdog(AnnotationConstants::MODULE_NAME, 'Annotation: deleteAnnotation: Annotation with id @annotationID was deleted from repoistory.', array('@annotationID'=>$annotationID), WATCHDOG_INFO);
     }
 
     /**

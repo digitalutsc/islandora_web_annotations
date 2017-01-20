@@ -13,6 +13,8 @@
  */
 
 require_once('includes/AnnotationConstants.php');
+require_once('includes/AnnotationContainer.php');
+require_once('includes/AnnotationUtil.php');
 
 define('ISLANDORA_WEB_ANNOTATION_VIEW', 'View Web Annotations');
 define('ISLANDORA_WEB_ANNOTATION_CREATE', 'Create Web Annotations');
@@ -144,6 +146,39 @@ function islandora_web_annotations_islandora_required_objects(IslandoraTuque $co
         return null;
     }
 }
+
+/**
+ * Remove an item from the annotation container
+ * @param AbstractObject $object
+ * @param array $context
+ */
+
+function islandora_web_annotations_islandora_object_alter(AbstractObject $object, array &$context) {
+    // If delete action
+    if($context["action"] == "purge"){
+        $object_content_models = $object->relationships->get('info:fedora/fedora-system:def/model#', 'hasModel');
+        $type = $object_content_models[0]["object"]["value"];
+
+        // If it is an annotation
+        if($type == "islandora:WADMCModel"){
+            // Get the target PID, needed to get the container
+            $WADM_SEARCH_Object = $object->getDatastream("WADM");
+            $content = $WADM_SEARCH_Object->content;
+            $contentJson = json_decode($content);
+            $targetURL = $contentJson->target;
+            $targetPID = AnnotationUtil::getPIDfromURL($targetURL);
+
+            // Get the container
+            $oAnnotationContainer = new AnnotationContainer();
+            $annotationContainerID = $oAnnotationContainer->getAnnotationContainerPID($targetPID);
+
+            // Remove the annotation from the container
+            $annoID = $object->id;
+            $oAnnotationContainer->removeItem($annotationContainerID, $annoID);
+        }
+    }
+}
+
 
 function installObject($connection, $contentModel, $contentModelLabel, $composite_model_fileName){
     try{
