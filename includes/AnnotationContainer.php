@@ -151,7 +151,6 @@ class AnnotationContainer implements interfaceAnnotationContainer
         $output = array('status' => "success", "data"=> "The following annotation was deleted: " . $annotationID);
         $output = json_encode($output);
 
-
         return $output;
     }
 
@@ -183,7 +182,6 @@ class AnnotationContainer implements interfaceAnnotationContainer
             watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: deleteAnnotation:  Zero annotations remaining, removing annotationContainer with id @annotationContainerID', array('@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
             $this->deleteAnnotationContainer($annotationContainerID);
         }
-
     }
 
     /**

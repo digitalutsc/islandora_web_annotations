@@ -154,26 +154,27 @@ function islandora_web_annotations_islandora_required_objects(IslandoraTuque $co
  */
 
 function islandora_web_annotations_islandora_object_alter(AbstractObject $object, array &$context) {
-
+    // If delete action
     if($context["action"] == "purge"){
-
         $object_content_models = $object->relationships->get('info:fedora/fedora-system:def/model#', 'hasModel');
         $type = $object_content_models[0]["object"]["value"];
 
+        // If it is an annotation
         if($type == "islandora:WADMCModel"){
+
+            // Get the target PID, needed to get the container
             $WADM_SEARCH_Object = $object->getDatastream("WADM");
             $content = $WADM_SEARCH_Object->content;
-
             $contentJson = json_decode($content);
             $targetURL = $contentJson->target;
+            $targetPID = AnnotationUtil::getPIDfromURL($targetURL);
 
-            $targetPID = AnnotationUtil::add_datastream($targetURL);
-
+            // Get the container
             $oAnnotationContainer = new AnnotationContainer();
             $annotationContainerID = $oAnnotationContainer->getAnnotationContainerPID($targetPID);
 
+            // Remove the annotation from the container
             $annoID = $object->id;
-
             $oAnnotationContainer->removeItem($annotationContainerID, $annoID);
         }
     }
