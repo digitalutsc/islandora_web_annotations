@@ -143,13 +143,27 @@ class AnnotationContainer implements interfaceAnnotationContainer
     }
 
     public function deleteAnnotation($annotationContainerID, $annotationID){
+        // Delete the object
+        $oAnnotation = new Annotation($this->repository);
+        $oAnnotation->deleteAnnotation($annotationID);
+
+        // Return message
+        $output = array('status' => "success", "data"=> "The following annotation was deleted: " . $annotationID);
+        $output = json_encode($output);
+
+
+        return $output;
+    }
+
+    // When an annotation is deleted, the item must be removed the Container
+    // This function will be called by the islandora_web_annotations_islandora_object_alter hook
+    public function removeItem($annotationContainerID, $annotationID){
         // Get Datastream content
         $object = $this->repository->getObject($annotationContainerID);
         $WADMObject = $object->getDatastream(AnnotationConstants::WADMContainer_DSID);
         $content = (string)$WADMObject->content;
         $contentJson = json_decode($content, true);
         $items = $contentJson["first"]["items"];
-
 
         // Remove the annotation from items
         if(($key = array_search($annotationID, $items)) !== false) {
@@ -164,21 +178,12 @@ class AnnotationContainer implements interfaceAnnotationContainer
 
         watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: deleteAnnotation: Annotation with id @annotationID was removed from annotationContainer with id @annotationContainerID', array('@annotationID'=>$annotationID, '@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
 
-        // Delete the object
-        $oAnnotation = new Annotation($this->repository);
-        $oAnnotation->deleteAnnotation($annotationID);
-
         // If there are no annotations, delete the annotationContainer
         if (count($items) == 0) {
-          watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: deleteAnnotation:  Zero annotations remaining, removing annotationContainer with id @annotationContainerID', array('@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
-          $this->deleteAnnotationContainer($annotationContainerID);
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: deleteAnnotation:  Zero annotations remaining, removing annotationContainer with id @annotationContainerID', array('@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
+            $this->deleteAnnotationContainer($annotationContainerID);
         }
 
-        // Return message
-        $output = array('status' => "success", "data"=> "The following annotation was deleted: " . $annotationID);
-        $output = json_encode($output);
-
-        return $output;
     }
 
     /**
@@ -236,7 +241,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
      * @param $objectPID
      * @return string
      */
-    private function getAnnotationContainerPID($objectPID)
+    public function getAnnotationContainerPID($objectPID)
     {
         $url = parse_url(variable_get('islandora_solr_url', 'localhost:8080/solr'));
 

@@ -30,6 +30,8 @@ class Annotation implements interfaceAnnotation
 
             $target = $annotationData["context"];
             $target = str_replace("%3A",":",$target);
+            $target = str_replace("#","",$target)
+            ;
             $annotationData["context"] = $target;
 
             $targetPID = substr($target, strrpos($target, '/') + 1);

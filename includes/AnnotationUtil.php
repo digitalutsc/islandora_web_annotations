@@ -91,4 +91,11 @@ class AnnotationUtil
             );
         }
     }
+
+    public static function getPIDfromURL($url) {
+        $url = str_replace("%3A",":",$url);
+        $url = str_replace("#","",$url);
+        $targetPID = substr($url, strrpos($url, '/') + 1);
+        return $targetPID;
+    }
 }
