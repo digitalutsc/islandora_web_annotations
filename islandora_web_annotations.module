@@ -148,7 +148,7 @@ function islandora_web_annotations_islandora_required_objects(IslandoraTuque $co
 }
 
 /**
- * Remove an
+ * Remove an item from the annotation container
  * @param AbstractObject $object
  * @param array $context
  */
@@ -161,7 +161,6 @@ function islandora_web_annotations_islandora_object_alter(AbstractObject $object
 
         // If it is an annotation
         if($type == "islandora:WADMCModel"){
-
             // Get the target PID, needed to get the container
             $WADM_SEARCH_Object = $object->getDatastream("WADM");
             $content = $WADM_SEARCH_Object->content;
