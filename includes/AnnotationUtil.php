@@ -77,7 +77,7 @@ class AnnotationUtil
                 'success' => FALSE,
                 'messages' => array(
                     array(
-                        'message' => t('Oral Histories solution pack failed to add @dsid datastream for @pid. Error message: @message<br/>Stack: @stack'),
+                        'message' => t('Islandora Web Annotations failed to add @dsid datastream for @pid. Error message: @message<br/>Stack: @stack'),
                         'message_sub' => array(
                             '@dsid' => $datastream_id,
                             '@pid' => $object->id,
