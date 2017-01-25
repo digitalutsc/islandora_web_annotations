@@ -39,7 +39,7 @@ function createAnnotation(targetObjectId, annotationData) {
     };
 
     jQuery.ajax({
-        url: 'http://localhost:8000/islandora_web_annotations/create',
+        url: location.protocol + '//' + location.host + '/islandora_web_annotations/create',
         dataType: 'json',
         type: 'POST',
         data: annotation,
@@ -80,9 +80,8 @@ function getAnnotations(targetObjectId) {
     var annotation = {
         targetPid: targetObjectId
     };
-
     jQuery.ajax({
-        url: 'http://localhost:8000/islandora_web_annotations/get',
+        url: location.protocol + '//' + location.host + '/islandora_web_annotations/get',
         dataType: 'json',
         type: 'GET',
         data: annotation,
@@ -178,7 +177,7 @@ function updateAnnotation(annotationData) {
     };
 
     jQuery.ajax({
-        url: 'http://localhost:8000/islandora_web_annotations/update',
+        url: location.protocol + '//' + location.host +'/islandora_web_annotations/update',
         beforeSend: function (request)
         {
             request.setRequestHeader("If-Match", checksum);
@@ -239,7 +238,7 @@ function deleteAnnotation(annotationData) {
     delete annotationData.checksum;
 
     jQuery.ajax({
-        url: 'http://localhost:8000/islandora_web_annotations/delete',
+        url: location.protocol + '//' + location.host + '/islandora_web_annotations/delete',
         beforeSend: function (request)
         {
             request.setRequestHeader("If-Match", checksum);
