@@ -13,6 +13,8 @@
 
 function islandora_web_annotations_install() {
     module_load_include('inc', 'islandora', 'includes/solution_packs');
+    // Set variable defaults
+    variable_set('islandora_web_annotations_verbose', FALSE);
     islandora_install_solution_pack('islandora_web_annotations');
 }
 
@@ -21,5 +23,9 @@ function islandora_web_annotations_install() {
  */
 function islandora_web_annotations_uninstall() {
     module_load_include('inc', 'islandora', 'includes/solution_packs');
+    $variables = array(
+      'islandora_web_annotations_verbose',
+    );
+    array_map('variable_del', $variables);
     islandora_install_solution_pack('islandora_web_annotations', 'uninstall');
 }

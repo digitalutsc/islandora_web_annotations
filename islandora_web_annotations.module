@@ -68,6 +68,16 @@ function islandora_web_annotations_menu() {
         'type' => MENU_CALLBACK,
     );
 
+    $items['admin/islandora/web_annotations'] = array(
+        'title' => 'Web Annotations',
+        'description' => 'Web Annotation related configuraiton options',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('islandora_web_annotations_admin'),
+        'access arguments' => array('administer site configuration'),
+        'file' => 'includes/admin.form.inc',
+        'type' => MENU_NORMAL_ITEM,
+    );
+
     return $items;
 }
 
