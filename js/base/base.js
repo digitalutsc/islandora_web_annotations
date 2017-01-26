@@ -8,6 +8,7 @@
 
 var annotationContainerID = null;
 var label_prefix = "label_anno";
+var b_annotationsShown = false;
 
 function executeCommonLoadOperations() {
     // Apply permissions to edit, delete annotations
@@ -77,6 +78,14 @@ function updateNewAnnotationInfo(pid, creator, created, checksum) {
 }
 
 function getAnnotations(targetObjectId) {
+    // getAnnotations is converted to a Toggle - issue#70
+    if(b_annotationsShown == true) {
+        anno.removeAll();
+        deleteAllLabelsAndBlockItems();
+        b_annotationsShown = false;
+        return;
+    }
+
     var annotation = {
         targetPid: targetObjectId
     };
@@ -147,6 +156,7 @@ function getAnnotations(targetObjectId) {
             insertUpdateAnnotationDataBlock(htmlBlock);
         }
     });
+    b_annotationsShown = true;
 }
 
 function updateAnnotation(annotationData) {
