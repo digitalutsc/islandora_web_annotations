@@ -285,7 +285,7 @@ function deleteAnnotation(annotationData) {
 function insertUpdateAnnotationDataBlock(htmlBlock) {
     // If not already installed
     if(jQuery("#annotation-list").length == 0) {
-        jQuery('<div><h2>Annotations</h2><ul id="annotation-list" style="list-style-type: none;">' + htmlBlock + '</ul></div>').appendTo(jQuery(".islandora-" + g_contentType + "-metadata"));
+        jQuery('<div><h2>Annotations</h2><ul id="annotation-list" style="list-style-type: none;">' + htmlBlock + '</ul></div>').appendTo(jQuery("#block-system-main"));
     } else {
         jQuery(htmlBlock).appendTo(jQuery("#annotation-list"));
     }
