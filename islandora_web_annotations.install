@@ -14,7 +14,7 @@
 function islandora_web_annotations_install() {
     module_load_include('inc', 'islandora', 'includes/solution_packs');
     // Set variable defaults
-    variable_set('islandora_web_annotations_verbose', FALSE)
+    variable_set('islandora_web_annotations_verbose', FALSE);
     islandora_install_solution_pack('islandora_web_annotations');
 }
 
