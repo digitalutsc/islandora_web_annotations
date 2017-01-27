@@ -36,7 +36,8 @@ function initBasicImageAnnotation(){
             annotation.pid = "New";
             createAnnotation(objectPID, annotation);
         } else {
-            alert("You do not have permissions to save annotations for basic image.");
+            var msg = "You do not have permissions to save annotations for basic image.";
+            verbose_alert(msg, msg);
         }
     });
 

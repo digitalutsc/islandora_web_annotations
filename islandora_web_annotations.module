@@ -131,7 +131,9 @@ function islandora_web_annotations_init() {
     $edit_own = user_access(ISLANDORA_WEB_ANNOTATION_EDIT_OWN);
     $delete_own = user_access(ISLANDORA_WEB_ANNOTATION_DELETE_OWN);
 
-    drupal_add_js(array('islandora_web_annotations' => array('user'=>$username, 'view' => $view, 'create'=>$create, 'edit_any'=>$edit_any, 'delete_any'=>$delete_any, 'edit_own'=>$edit_own, 'delete_own'=>$delete_own)), array('type' => 'setting'));
+    $verbose_messages = variable_get('islandora_web_annotations_verbose', FALSE);
+
+    drupal_add_js(array('islandora_web_annotations' => array('user'=>$username, 'view' => $view, 'create'=>$create, 'edit_any'=>$edit_any, 'delete_any'=>$delete_any, 'edit_own'=>$edit_own, 'delete_own'=>$delete_own, 'verbose_messages' =>$verbose_messages)), array('type' => 'setting'));
 }
 
 
