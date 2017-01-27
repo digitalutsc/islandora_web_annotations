@@ -45,7 +45,9 @@ function createAnnotation(targetObjectId, annotationData) {
         type: 'POST',
         data: annotation,
         error: function() {
-            alert("Error in creating annotation.");
+            //alert("Error in creating annotation.");
+            var msg = "Error in creating annotation.";
+            verbose_alert(msg, msg);
         },
         success: function(data) {
             var jsonData = JSON.parse(data);
@@ -56,7 +58,10 @@ function createAnnotation(targetObjectId, annotationData) {
 
             updateNewAnnotationInfo(pid, creator, created, checksum);
             insertLabelForNewAnnotation(pid, annotationData);
-            alert("Successfully created annotation: " + data);
+            //alert("Successfully created annotation: " + data);
+            var verbose_msg = "Successfully created annotation: " + data;
+            var shor_msg = "Successfully created annotation.";
+            verbose_alert("Successfully created annotation: " + data);
         }
     });
 
@@ -95,7 +100,9 @@ function getAnnotations(targetObjectId) {
         type: 'GET',
         data: annotation,
         error: function() {
-            alert("Error in loading annotations");
+            //alert("Error in loading annotations");
+            var msg = "Error in loading annotations";
+            verbose_alert(msg, msg);
         },
         success: function(data) {
 
@@ -147,7 +154,9 @@ function getAnnotations(targetObjectId) {
                     };
                     anno.addAnnotation(myAnnotation);
                 } catch(e){
-                    alert("Error in inserting an annotation");
+                    //alert("Error in inserting an annotation");
+                    var msg = "Error in inserting an annotation";
+                    verbose_alert(msg, msg);
                 }
                 insertLabel(g_contentType, i+1, pid, canvas, x1, y1, width1, height1);
             }
@@ -196,7 +205,10 @@ function updateAnnotation(annotationData) {
         type: 'PUT',
         data: annotation,
         error: function() {
-            alert("Error in updating annotation.");
+            //alert("Error in updating annotation.");
+            var msg = "Error in updating annotation.";
+            verbose_alert(msg, msg);
+
         },
         success: function(data) {
             var jsonData = JSON.parse(data);
@@ -207,11 +219,20 @@ function updateAnnotation(annotationData) {
             updateAnnotationInfo(annotationPID, checksum, updatedText);
 
             if(status == "success") {
-                alert("Successfully updated the annotation: " + JSON.stringify(annoInfo));
+                //alert("Successfully updated the annotation: " + JSON.stringify(annoInfo));
+                var verbose_message = "Successfully updated the annotation: " + JSON.stringify(annoInfo);
+                var short_message = "Update successful.";
+                verbose_alert(short_message, verbose_message);
+
             } else if(status == "conflict"){
-                alert("There was an edit conflict.  Please copy your changes, reload the annotations and try again");
+                //alert("There was an edit conflict.  Please copy your changes, reload the annotations and try again");
+                var msg = "There was an edit conflict.  Please copy your changes, reload the annotations and try again";
+                verbose_alert(msg, msg);
             } else {
-                alert("Unable to update.  Error info: " . JSON.stringify(annoInfo));
+                //alert("Unable to update.  Error info: " . JSON.stringify(annoInfo));
+                var verbose_message = "Unable to update.  Error info: " . JSON.stringify(annoInfo);
+                var short_message = "Error: Unable to update.";
+                verbose_alert(short_massage, verbose_message);
             }
         }
     });
@@ -257,25 +278,35 @@ function deleteAnnotation(annotationData) {
         type: 'DELETE',
         data: annotation,
         error: function() {
-            alert("Error in deleting annotation.");
+            //alert("Error in deleting annotation.");
+            var msg = "Error in deleting annotation.";
+            verbose_alert(msg, msg);
+
         },
         success: function(data) {
             var jsonData = JSON.parse(data);
             var status = jsonData.status;
             var annoInfo = jsonData.data;
             if(status == "success") {
-                alert("Success: " + JSON.stringify(annoInfo));
+                //alert("Success: " + JSON.stringify(annoInfo));
+                var verbose_message = "Success: " + JSON.stringify(annoInfo);
+                var short_message = "Success:  Annotation deleted.";
+                verbose_alert(short_message, verbose_message);
             } else if(status == "conflict"){
-                alert("There was an edit conflict.  Please reload the annotations to view the changes.  You can try again to delete.");
+                //alert("There was an edit conflict.  Please reload the annotations to view the changes.  You can try again to delete.");
+                var msg = "There was an edit conflict.  Please reload the annotations to view the changes.  You can try again to delete.";
+                verbose_alert(msg, msg);
             } else {
-                alert("Unable to delete.  Error info: " . JSON.stringify(annoInfo));
+                //alert("Unable to delete.  Error info: " . JSON.stringify(annoInfo));
+                var verbose_message = "Unable to delete.  Error info: " . JSON.stringify(annoInfo);
+                var short_message = "Error: Unable to delete.";
+                verbose_alert(short_message, verbose_message);
             }
         }
     });
 
     deleteLabelAndDataBlockItem(annotationID);
 }
-
 
 /**
  *
@@ -374,4 +405,13 @@ function deleteAllLabelsAndBlockItems(){
     }
 
     jQuery("#annotation-list").parent().remove();
+}
+
+function verbose_alert(short_message, verbose_message) {
+    var verbose_flag = Drupal.settings.islandora_web_annotations.verbose_messages;
+    if(verbose_flag){
+        alert(verbose_message);
+    } else {
+        alert(short_message);
+    }
 }
