@@ -45,7 +45,6 @@ function createAnnotation(targetObjectId, annotationData) {
         type: 'POST',
         data: annotation,
         error: function() {
-            //alert("Error in creating annotation.");
             var msg = "Error in creating annotation.";
             verbose_alert(msg, msg);
         },
@@ -58,9 +57,8 @@ function createAnnotation(targetObjectId, annotationData) {
 
             updateNewAnnotationInfo(pid, creator, created, checksum);
             insertLabelForNewAnnotation(pid, annotationData);
-            //alert("Successfully created annotation: " + data);
-            var verbose_message = "Successfully created annotation: " + data;
-            var short_message = "Successfully created annotation.";
+            var verbose_message = "Annotation successfully created: " + data;
+            var short_message = "Annotation successfully created.";
             verbose_alert(short_message, verbose_message);
         }
     });
@@ -100,7 +98,6 @@ function getAnnotations(targetObjectId) {
         type: 'GET',
         data: annotation,
         error: function() {
-            //alert("Error in loading annotations");
             var msg = "Error in loading annotations";
             verbose_alert(msg, msg);
         },
@@ -154,7 +151,6 @@ function getAnnotations(targetObjectId) {
                     };
                     anno.addAnnotation(myAnnotation);
                 } catch(e){
-                    //alert("Error in inserting an annotation");
                     var msg = "Error in inserting an annotation";
                     verbose_alert(msg, msg);
                 }
@@ -205,7 +201,6 @@ function updateAnnotation(annotationData) {
         type: 'PUT',
         data: annotation,
         error: function() {
-            //alert("Error in updating annotation.");
             var msg = "Error in updating annotation.";
             verbose_alert(msg, msg);
 
@@ -219,17 +214,13 @@ function updateAnnotation(annotationData) {
             updateAnnotationInfo(annotationPID, checksum, updatedText);
 
             if(status == "success") {
-                //alert("Successfully updated the annotation: " + JSON.stringify(annoInfo));
                 var verbose_message = "Successfully updated the annotation: " + JSON.stringify(annoInfo);
                 var short_message = "Update successful.";
                 verbose_alert(short_message, verbose_message);
-
             } else if(status == "conflict"){
-                //alert("There was an edit conflict.  Please copy your changes, reload the annotations and try again");
                 var msg = "There was an edit conflict.  Please copy your changes, reload the annotations and try again";
                 verbose_alert(msg, msg);
             } else {
-                //alert("Unable to update.  Error info: " . JSON.stringify(annoInfo));
                 var verbose_message = "Unable to update.  Error info: " . JSON.stringify(annoInfo);
                 var short_message = "Error: Unable to update.";
                 verbose_alert(short_massage, verbose_message);
@@ -278,7 +269,7 @@ function deleteAnnotation(annotationData) {
         type: 'DELETE',
         data: annotation,
         error: function() {
-            //alert("Error in deleting annotation.");
+
             var msg = "Error in deleting annotation.";
             verbose_alert(msg, msg);
 
@@ -288,16 +279,13 @@ function deleteAnnotation(annotationData) {
             var status = jsonData.status;
             var annoInfo = jsonData.data;
             if(status == "success") {
-                //alert("Success: " + JSON.stringify(annoInfo));
                 var verbose_message = "Success: " + JSON.stringify(annoInfo);
                 var short_message = "Success:  Annotation deleted.";
                 verbose_alert(short_message, verbose_message);
             } else if(status == "conflict"){
-                //alert("There was an edit conflict.  Please reload the annotations to view the changes.  You can try again to delete.");
                 var msg = "There was an edit conflict.  Please reload the annotations to view the changes.  You can try again to delete.";
                 verbose_alert(msg, msg);
             } else {
-                //alert("Unable to delete.  Error info: " . JSON.stringify(annoInfo));
                 var verbose_message = "Unable to delete.  Error info: " . JSON.stringify(annoInfo);
                 var short_message = "Error: Unable to delete.";
                 verbose_alert(short_message, verbose_message);
