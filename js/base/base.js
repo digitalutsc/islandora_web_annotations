@@ -59,9 +59,9 @@ function createAnnotation(targetObjectId, annotationData) {
             updateNewAnnotationInfo(pid, creator, created, checksum);
             insertLabelForNewAnnotation(pid, annotationData);
             //alert("Successfully created annotation: " + data);
-            var verbose_msg = "Successfully created annotation: " + data;
-            var shor_msg = "Successfully created annotation.";
-            verbose_alert("Successfully created annotation: " + data);
+            var verbose_message = "Successfully created annotation: " + data;
+            var short_message = "Successfully created annotation.";
+            verbose_alert(short_message, verbose_message);
         }
     });
 
