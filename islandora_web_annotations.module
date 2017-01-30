@@ -70,7 +70,7 @@ function islandora_web_annotations_menu() {
 
     $items['admin/islandora/web_annotations'] = array(
         'title' => 'Web Annotations',
-        'description' => 'Web Annotation related configuraiton options',
+        'description' => 'Web Annotation related configuration options',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('islandora_web_annotations_admin'),
         'access arguments' => array('administer site configuration'),
