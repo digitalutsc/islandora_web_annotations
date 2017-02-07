@@ -14,12 +14,22 @@ function createAnnotation(){
     $targetObjectID = null;
     try
     {
-        $targetObjectID = isset($_POST['targetPid']) ? $_POST['targetPid'] : '';
-        $annotationData =  isset($_POST['annotationData']) ? $_POST['annotationData'] : '';
-        $annotationMetadata =  isset($_POST['metadata']) ? $_POST['metadata'] : '';
+        parse_str(file_get_contents("php://input"), $postVars);
+        $json = $postVars['json'] ? $postVars['json'] : '';
+        $targetObjectID = $postVars['targetPid'] ? $postVars['targetPid'] : '';
 
-        $oAnnotationContainer = new AnnotationContainer();
-        $output = $oAnnotationContainer->createAnnotation($targetObjectID, $annotationData, $annotationMetadata);
+        if($targetObjectID != '') {
+            $annotationData =  isset($_POST['annotationData']) ? $_POST['annotationData'] : '';
+            $annotationMetadata =  isset($_POST['metadata']) ? $_POST['metadata'] : '';
+
+            $oAnnotationContainer = new AnnotationContainer();
+            $output = $oAnnotationContainer->createAnnotation($targetObjectID, $annotationData, $annotationMetadata);
+        } else if($json != '') {
+            createAnnotationForVideo($json);
+            return;
+        } else {
+            throw new Exception("Delete request not valid.");
+        }
     } catch(Exception $e) {
         watchdog(AnnotationConstants::MODULE_NAME, 'Error in createAnnotation: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
         $output = array('status' => "Fail", "msg"=> "Failed to create annotation for targetObjectID " . $targetObjectID);
@@ -27,6 +37,62 @@ function createAnnotation(){
     }
 
     drupal_json_output($output);
+    drupal_exit();
+}
+
+function createAnnotationForVideo($json){
+    $annotationData = json_decode($json, true);
+    $uri = $annotationData["uri"];
+    $created = $annotationData["created"];
+
+    $annotationData["context"] = $uri;
+
+    $annotationMetadata["created"] = $created;
+    $annotationMetadata["author"] = "Nat";
+
+    $targetPID = substr($uri, strrpos($uri, '/') + 1);
+
+    $oAnnotationContainer = new AnnotationContainer();
+    $output = $oAnnotationContainer->createAnnotation($targetPID, $annotationData, $annotationMetadata);
+
+    $annotationData = json_decode($output, true);
+
+    $arrResult["rows"] = [];
+    array_push(  $arrResult["rows"], $annotationData);
+    $arrResult["total"] = 1;
+
+    $output = json_encode($arrResult);
+
+    watchdog(AnnotationConstants::MODULE_NAME, "Video Annotations - createAnnotationForVideo " . $output);
+
+    echo $output;
+    drupal_exit();
+}
+
+function searchAnnotations(){
+    $targetObjectURI = isset($_GET['uri']) ? $_GET['uri'] : '';
+    $targetObjectID = substr($targetObjectURI, strrpos($targetObjectURI, '/') + 1);
+
+    $oAnnotationContainer = new AnnotationContainer();
+    $AnnotationContainerPID = $oAnnotationContainer->getAnnotationContainerPID($targetObjectID);
+    $output = $oAnnotationContainer->getAnnotationContainer($targetObjectID);
+
+    $annotationData = json_decode($output, true);
+    $items = $annotationData["first"]["items"];
+
+    $arrResult["rows"] = [];
+
+    for($i = 0; $i < count($items); $i++) {
+        $items[$i]["annotationContainerID"] = $AnnotationContainerPID;
+        array_push(  $arrResult["rows"], $items[$i]);
+    }
+
+    $arrResult["total"] = count($items);
+    $output = json_encode($arrResult);
+
+    watchdog(AnnotationConstants::MODULE_NAME, "Video Annotations - searchForAnnotations " . $output);
+
+    echo $output;
     drupal_exit();
 }
 
@@ -49,17 +115,33 @@ function getAnnotationContainer(){
     drupal_exit();
 }
 
-
 function updateAnnotation(){
     $annotationPID = null;
 
     try {
         parse_str(file_get_contents("php://input"), $putVars);
-        $annotationData = $putVars['annotationData'] ? $putVars['annotationData'] : '';
-        $annotationID = $annotationData["pid"];
-        $annotationMetadata = $putVars['metadata'] ? $putVars['metadata'] : '';
+        $annotationID = $putVars['annotationPID'] ? $putVars['annotationPID'] : '';
+        $json = $putVars['json'] ? $putVars['json'] : '';
 
-        $ETag = $_SERVER['HTTP_IF_MATCH'];
+        if($annotationID != '') {
+            $annotationData = $putVars['annotationData'] ? $putVars['annotationData'] : '';
+            $annotationMetadata = $putVars['metadata'] ? $putVars['metadata'] : '';
+            $ETag = $_SERVER['HTTP_IF_MATCH'];
+        } else if($json != '') {
+            $annotationData = json_decode($json, true);
+            $uri = $annotationData["uri"];
+            $created = $annotationData["created"];
+
+            $annotationData["context"] = $uri;
+            $annotationMetadata["created"] = $created;
+            $annotationMetadata["author"] = "Nat";
+
+            $annotationID  = $annotationData["pid"];
+            $ETag = $annotationData["checksum"];
+        } else {
+            throw new Exception("Delete request not valid.");
+        }
+
         $oAnnotation = new Annotation();
         $bConflict = $oAnnotation->checkEditConflict($annotationID, $ETag);
 
@@ -88,8 +170,20 @@ function deleteAnnotation(){
     try {
         parse_str(file_get_contents("php://input"), $deleteVars);
         $annotationID = $deleteVars['annotationID'] ? $deleteVars['annotationID'] : '';
-        $annotationContainerID = $deleteVars['annotationContainerID'] ? $deleteVars['annotationContainerID'] : '';
-        $ETag = $_SERVER['HTTP_IF_MATCH'];
+        $json = $deleteVars['json'] ? $deleteVars['json'] : '';
+
+        if($annotationID != '') {
+            $annotationID = $deleteVars['annotationID'] ? $deleteVars['annotationID'] : '';
+            $annotationContainerID = $deleteVars['annotationContainerID'] ? $deleteVars['annotationContainerID'] : '';
+            $ETag = $_SERVER['HTTP_IF_MATCH'];
+        } else if($json != '') {
+            $annotationData = json_decode($json, true);
+            $annotationID  = $annotationData["pid"];
+            $annotationContainerID  = $annotationData["annotationContainerID"];
+            $ETag = $annotationData["checksum"];
+        } else {
+            throw new Exception("Delete request not valid.");
+        }
 
         // Delete the object
         $oAnnotation = new Annotation();

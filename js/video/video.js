@@ -6,9 +6,11 @@ jQuery(document).ready(function() {
     jQuery("#islandora_videojs_html5_api").addClass("video-js");
     jQuery("#islandora_videojs_html5_api").attr("preload", "none");
 
-
     preload="none"
 
+    var objectUri = window.location.href;
+    objectUri = objectUri.replace("%3A", ":");
+    objectUri = objectUri.replace("#", "");
 
     var options = {
         optionsAnnotator: {
@@ -18,23 +20,19 @@ jQuery(document).ready(function() {
 
             store: {
                 // The endpoint of the store on your server.
-                //prefix: 'http://afstore.aws.af.cm/annotator',
-                prefix: 'http://danielcebrian.com/annotations/api',
+                prefix: "http://localhost:8000/islandora_web_annotations",
+                emulateJSON: true,
+                annotationData: {uri:objectUri},
 
-                annotationData: {uri:'http://danielcebrian.com/annotations/demo.html'},
-
-                /*urls: {
-                 // These are the default URLs.
-                 create:  '/create',
-                 read:    '/read/:id',
-                 update:  '/update/:id',
-                 destroy: '/destroy/:id',
-                 search:  '/search'
-                 },*/
+                urls: {
+                    create: '/create',
+                    update: '/update',
+                    destroy: '/delete'
+                },
 
                 loadFromSearch:{
-                    limit:10000,
-                    uri: 'http://danielcebrian.com/annotations/demo.html',
+                    limit:100,
+                    uri: objectUri,
                 }
             },
             richText: {
@@ -54,15 +52,48 @@ jQuery(document).ready(function() {
         optionsOVA: {posBigNew:'none'/*,NumAnnotations:20*/},
     }
 
-
-
     //Load the plugin Open Video Annotation
-    var ova = new OpenVideoAnnotation.Annotator(jQuery("div[class='islandora-video-content']")[0], options);
+    try {
+        var targetDiv = jQuery("#islandora_videojs").parent().parent();
+        ova = new OpenVideoAnnotation.Annotator(targetDiv, options);
+    }
+    catch(e){
+        alert(e)
+    }
 
     //change the user (Experimental)
     ova.setCurrentUser("Nat");
     $('#username').change(function () {
         ova.setCurrentUser($(this).val());
+    });
+
+    ova.annotator.subscribe('annotationViewerShown', function(viewer, annotations){
+        if(jQuery(".annotator-hl.active").length > 0) {
+            var left = jQuery(".annotator-hl.active").first().find("div").first().css("left");
+            left = left.substr(0, left.length - 2);
+            var width = jQuery(".annotator-hl.active").first().find("div").first().width();
+            var newleft = Number(left) + Number(width) / 2;
+            jQuery(".annotator-viewer").first().css({left: newleft + "px"});
+
+            var top = jQuery(".annotator-hl.active").first().find("div").first().css("top");
+            top = top.substr(0, top.length - 2);
+            top = Number(top) + 30;
+            jQuery(".annotator-viewer").first().css({top: top + "px"});
+        } else {
+            if(jQuery(".vjs-selectionbar-RS").first().is(":visible") === true) {
+                var left = jQuery(".vjs-selectionbar-RS").first().css("left");
+                left = left.substr(0, left.length - 2);
+                var width = jQuery(".vjs-selectionbar-RS").first().width();
+                var newleft = Number(left) + Number(width) / 2;
+                jQuery(".annotator-viewer").first().css({left: newleft + "px"});
+
+                var height = jQuery("#islandora_videojs_html5_api").height();
+                var top = height - 20;
+                jQuery(".annotator-viewer").first().css({top: top + "px"});
+            }
+        }
+
+
     });
 
 });
