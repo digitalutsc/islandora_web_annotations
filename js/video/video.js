@@ -54,7 +54,8 @@ jQuery(document).ready(function() {
 
     //Load the plugin Open Video Annotation
     try {
-        var targetDiv = jQuery("#islandora_videojs").parent().parent();
+
+        var targetDiv = jQuery(".video-js").first().parent().parent();
         ova = new OpenVideoAnnotation.Annotator(targetDiv, options);
     }
     catch(e){
