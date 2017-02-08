@@ -82,19 +82,29 @@ jQuery(document).ready(function() {
             jQuery(".annotator-viewer").first().css({top: top + "px"});
         } else {
             if(jQuery(".vjs-selectionbar-RS").first().is(":visible") === true) {
-                var left = jQuery(".vjs-selectionbar-RS").first().css("left");
-                left = left.substr(0, left.length - 2);
-                var width = jQuery(".vjs-selectionbar-RS").first().width();
-                var newleft = Number(left) + Number(width) / 2;
-                jQuery(".annotator-viewer").first().css({left: newleft + "px"});
-
-                var height = jQuery("#islandora_videojs_html5_api").height();
-                var top = height - 20;
-                jQuery(".annotator-viewer").first().css({top: top + "px"});
+                positionAnnotatorForm(".annotator-viewer");
             }
         }
+    });
 
+    ova.annotator.subscribe('annotationEditorShown', function(viewer, annotations){
+        if(jQuery(".islandora-oralhistories-object").length > 0){
+            positionAnnotatorForm(".annotator-editor");
+        }
 
     });
 
 });
+
+function positionAnnotatorForm(formSelector){
+    var left = jQuery(".vjs-selectionbar-RS").first().css("left");
+    left = left.substr(0, left.length - 2);
+    var width = jQuery(".vjs-selectionbar-RS").first().width();
+    var newleft = Number(left) + Number(width) / 2;
+    jQuery(formSelector).first().css({left: newleft + "px"});
+
+    var height = jQuery(document.getElementsByTagName("video")[0]).height();
+    var top = height - 20;
+    jQuery(formSelector).first().css({top: top + "px"});
+
+}
