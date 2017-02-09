@@ -60,7 +60,7 @@ $handler->display->display_options['arguments']['annotation_parent']['summary_op
 /* Display: Block */
 $handler = $view->new_display('block', 'Block', 'block_1');
 
-$views['usage_collection'] = $view;
+$views['islandora_web_annotations'] = $view;
 
   return $views;
 }
