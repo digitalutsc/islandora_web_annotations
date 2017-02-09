@@ -1,7 +1,21 @@
 
+var user = "anonymous";
+
 jQuery(document).ready(function() {
     $ = jQuery;
-    //Options to load in Open Video Annotation, for all the plugins
+    user = Drupal.settings.islandora_web_annotations.user;
+
+    // Hide Lib related permission fields
+    jQuery(".annotator-checkbox").hide();
+
+    if(Drupal.settings.islandora_web_annotations.view === false){
+        jQuery(".vjs-showannotations-annotation").hide();
+        jQuery(".vjs-statistics-annotation").hide();
+    }
+
+    if(Drupal.settings.islandora_web_annotations.create == false) {
+        jQuery(".vjs-new-annotation").hide();
+    }
 
     jQuery("#islandora_videojs_html5_api").addClass("video-js");
     jQuery("#islandora_videojs_html5_api").attr("preload", "none");
@@ -15,21 +29,16 @@ jQuery(document).ready(function() {
     var options = {
         optionsAnnotator: {
             permissions: { },
-
-            //auth: {tokenUrl:'http://catch.aws.af.cm/annotator/token'},
-
             store: {
                 // The endpoint of the store on your server.
                 prefix: "http://localhost:8000/islandora_web_annotations",
                 emulateJSON: true,
                 annotationData: {uri:objectUri},
-
                 urls: {
                     create: '/create',
                     update: '/update',
                     destroy: '/delete'
                 },
-
                 loadFromSearch:{
                     limit:100,
                     uri: objectUri,
@@ -63,13 +72,14 @@ jQuery(document).ready(function() {
     }
 
     //change the user (Experimental)
-    ova.setCurrentUser("Nat");
+    ova.setCurrentUser(user);
     $('#username').change(function () {
         ova.setCurrentUser($(this).val());
     });
 
     ova.annotator.subscribe('annotationViewerShown', function(viewer, annotations){
         if(jQuery(".annotator-hl.active").length > 0) {
+            applyPermissionsOnView(annotations);
             var left = jQuery(".annotator-hl.active").first().find("div").first().css("left");
             left = left.substr(0, left.length - 2);
             var width = jQuery(".annotator-hl.active").first().find("div").first().width();
@@ -80,6 +90,7 @@ jQuery(document).ready(function() {
             top = top.substr(0, top.length - 2);
             top = Number(top) + 30;
             jQuery(".annotator-viewer").first().css({top: top + "px"});
+
         } else {
             if(jQuery(".vjs-selectionbar-RS").first().is(":visible") === true) {
                 positionAnnotatorForm(".annotator-viewer");
@@ -95,6 +106,22 @@ jQuery(document).ready(function() {
     });
 
 });
+
+function applyPermissionsOnView(annotations){
+
+    var createdByMe = (user == annotations[0].user) ? true:false;
+
+    jQuery(".annotator-edit").hide();
+    jQuery(".annotator-delete").hide();
+
+    if(Drupal.settings.islandora_web_annotations.edit_any === true || (Drupal.settings.islandora_web_annotations.edit_own === true && createdByMe === true)) {
+        jQuery(".annotator-edit").show();
+    }
+    if(Drupal.settings.islandora_web_annotations.delete_any === true || (Drupal.settings.islandora_web_annotations.delete_own === true && createdByMe === true)) {
+        jQuery(".annotator-delete").show();
+    }
+
+}
 
 function positionAnnotatorForm(formSelector){
     var left = jQuery(".vjs-selectionbar-RS").first().css("left");
