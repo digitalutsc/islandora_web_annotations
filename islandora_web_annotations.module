@@ -131,6 +131,17 @@ function islandora_web_annotations_permission() {
     );
 }
 
+
+/**
+ * Implements hook_views_api().
+ */
+function islandora_web_annotations_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'islandora_web_annotations') . '/views',
+  );
+}
+
 /**
  * Send user access related information to js for access control
  */
