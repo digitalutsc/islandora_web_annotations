@@ -138,7 +138,7 @@ function islandora_web_annotations_permission() {
 function islandora_web_annotations_views_api() {
   return array(
     'api' => 3,
-    'path' => drupal_get_path('module', 'islandora_web_annotations') . 'includes/views',
+    'path' => drupal_get_path('module', 'islandora_web_annotations') . '/includes/views',
   );
 }
 
