@@ -166,7 +166,7 @@ function islandora_web_annotations_init() {
 }
 
 
-function islandora_web_annotations_islandora_install_solution_pack(IslandoraTuque $connection) {
+function islandora_web_annotations_islandora_required_objects(IslandoraTuque $connection) {
     try{
 
         $object1 = installObject($connection, AnnotationConstants::WADM_CONTENT_MODEL, AnnotationConstants::WADM_CONTENT_MODEL_LABEL, "webannotation_ds_composite_model.xml");
