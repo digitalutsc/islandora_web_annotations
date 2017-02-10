@@ -166,7 +166,7 @@ function islandora_web_annotations_init() {
 }
 
 
-function islandora_web_annotations_islandora_required_objects(IslandoraTuque $connection) {
+function islandora_web_annotations_islandora_install_solution_pack(IslandoraTuque $connection) {
     try{
 
         $object1 = installObject($connection, AnnotationConstants::WADM_CONTENT_MODEL, AnnotationConstants::WADM_CONTENT_MODEL_LABEL, "webannotation_ds_composite_model.xml");
@@ -194,7 +194,7 @@ function islandora_web_annotations_islandora_required_objects(IslandoraTuque $co
  * @param array $context
  */
 
-function islandora_web_annotations_islandora_solution_pack(AbstractObject $object, array &$context) {
+function islandora_web_annotations_islandora_object_alter(AbstractObject $object, array &$context) {
     // If delete action
     if($context["action"] == "purge"){
         $object_content_models = $object->relationships->get('info:fedora/fedora-system:def/model#', 'hasModel');
