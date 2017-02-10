@@ -78,8 +78,8 @@ jQuery(document).ready(function() {
     });
 
     ova.annotator.subscribe('annotationViewerShown', function(viewer, annotations){
+        applyPermissionsOnView(annotations);
         if(jQuery(".annotator-hl.active").length > 0) {
-            applyPermissionsOnView(annotations);
             var left = jQuery(".annotator-hl.active").first().find("div").first().css("left");
             left = left.substr(0, left.length - 2);
             var width = jQuery(".annotator-hl.active").first().find("div").first().width();
