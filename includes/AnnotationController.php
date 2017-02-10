@@ -42,16 +42,18 @@ function createAnnotation(){
 
 function createAnnotationForVideo($json){
     $annotationData = json_decode($json, true);
-    $uri = $annotationData["uri"];
-    $created = $annotationData["created"];
 
+    // Set annotationData - required by json-ld
+    $uri = $annotationData["uri"];
     $annotationData["context"] = $uri;
 
+    // Set Metadata - required by json-ld
+    $created = $annotationData["created"];
+    $user = $annotationData["user"];
     $annotationMetadata["created"] = $created;
-    $annotationMetadata["author"] = "Nat";
+    $annotationMetadata["creator"] = $user;
 
     $targetPID = substr($uri, strrpos($uri, '/') + 1);
-
     $oAnnotationContainer = new AnnotationContainer();
     $output = $oAnnotationContainer->createAnnotation($targetPID, $annotationData, $annotationMetadata);
 
@@ -129,12 +131,17 @@ function updateAnnotation(){
             $ETag = $_SERVER['HTTP_IF_MATCH'];
         } else if($json != '') {
             $annotationData = json_decode($json, true);
+            // Set annotationData - required by json-ld
             $uri = $annotationData["uri"];
-            $created = $annotationData["created"];
-
             $annotationData["context"] = $uri;
+
+            // Set Metadata - required by json-ld
+            $created = $annotationData["created"];
+            $user = $annotationData["user"];
+            $author = $annotationData["author"];
             $annotationMetadata["created"] = $created;
-            $annotationMetadata["author"] = "Nat";
+            $annotationMetadata["creator"] = $user;
+            $annotationMetadata["author"] = $author;
 
             $annotationID  = $annotationData["pid"];
             $ETag = $annotationData["checksum"];

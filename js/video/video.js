@@ -105,6 +105,9 @@ jQuery(document).ready(function() {
 
     });
 
+    ova.annotator.subscribe('beforeAnnotationUpdated', function(annotation){
+        annotation.author = ova.currentUser;
+    });
 });
 
 function applyPermissionsOnView(annotations){
