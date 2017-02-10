@@ -194,7 +194,7 @@ function islandora_web_annotations_islandora_required_objects(IslandoraTuque $co
  * @param array $context
  */
 
-function islandora_web_annotations_islandora_solution_pack(AbstractObject $object, array &$context) {
+function islandora_web_annotations_islandora_object_alter(AbstractObject $object, array &$context) {
     // If delete action
     if($context["action"] == "purge"){
         $object_content_models = $object->relationships->get('info:fedora/fedora-system:def/model#', 'hasModel');
