@@ -108,6 +108,24 @@ jQuery(document).ready(function() {
     ova.annotator.subscribe('beforeAnnotationUpdated', function(annotation){
         annotation.author = ova.currentUser;
     });
+
+    ova.annotator.subscribe('annotationCreated', function(annotation){
+        var verbose_message = "Annotation successfully created: " + JSON.stringify(annotation);;
+        var short_message = "Annotation successfully created.";
+        verbose_alert(short_message, verbose_message);
+    });
+
+    ova.annotator.subscribe('annotationUpdated', function(annotation){
+        var verbose_message = "Successfully updated the annotation: " + JSON.stringify(annotation);
+        var short_message = "Update successful.";
+        verbose_alert(short_message, verbose_message);
+    });
+
+    ova.annotator.subscribe('annotationDeleted', function(annotation){
+        var verbose_message = "Annotation successfully deleted: " + JSON.stringify(annotation);
+        var short_message = "Annotation successfully deleted.";
+        verbose_alert(short_message, verbose_message);
+    });
 });
 
 function applyPermissionsOnView(annotations){
@@ -137,4 +155,13 @@ function positionAnnotatorForm(formSelector){
     var top = height - 20;
     jQuery(formSelector).first().css({top: top + "px"});
 
+}
+
+function verbose_alert(short_message, verbose_message) {
+    var verbose_flag = Drupal.settings.islandora_web_annotations.verbose_messages;
+    if(verbose_flag){
+        alert(verbose_message);
+    } else {
+        alert(short_message);
+    }
 }

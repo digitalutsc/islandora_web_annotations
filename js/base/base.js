@@ -221,7 +221,7 @@ function updateAnnotation(annotationData) {
                 var msg = "There was an edit conflict.  Please copy your changes, reload the annotations and try again";
                 verbose_alert(msg, msg);
             } else {
-                var verbose_message = "Unable to update.  Error info: " . JSON.stringify(annoInfo);
+                var verbose_message = "Unable to update.  Error info: " + JSON.stringify(annoInfo);
                 var short_message = "Error: Unable to update.";
                 verbose_alert(short_massage, verbose_message);
             }
@@ -279,14 +279,12 @@ function deleteAnnotation(annotationData) {
             var status = jsonData.status;
             var annoInfo = jsonData.data;
             if(status == "success") {
-                var verbose_message = "Success: " + JSON.stringify(annoInfo);
-                var short_message = "Success:  Annotation deleted.";
-                verbose_alert(short_message, verbose_message);
+                verbose_alert
             } else if(status == "conflict"){
                 var msg = "There was an edit conflict.  Please reload the annotations to view the changes.  You can try again to delete.";
                 verbose_alert(msg, msg);
             } else {
-                var verbose_message = "Unable to delete.  Error info: " . JSON.stringify(annoInfo);
+                var verbose_message = "Unable to delete.  Error info: "  + JSON.stringify(annoInfo);
                 var short_message = "Error: Unable to delete.";
                 verbose_alert(short_message, verbose_message);
             }
