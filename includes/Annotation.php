@@ -190,6 +190,14 @@ class Annotation implements interfaceAnnotation
         $xml->addChild('creator', $creator);
         $xml->addChild('textvalue', $textvalue);
 
+        // If video annotation
+        if (array_key_exists('rangeTime', $annotationData)) {
+            $rangeTimeStart = $annotationData["rangeTime"]["start"];
+            $xml->addChild('rangeTimeStart', $rangeTimeStart);
+            $rangeTimeEnd = $annotationData["rangeTime"]["end"];
+            $xml->addChild('rangeTimeEnd', $rangeTimeEnd);
+        }
+
         $contentXML = $xml->asXML();
 
         return $contentXML;
