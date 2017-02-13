@@ -12,6 +12,16 @@
             <field name="annotation_parent">
                 <xsl:value-of select="$content//target"/>
             </field>
+
+            <xsl:if test="$content//rangeTimeStart">
+                <field name="annotation_rangeTimeStart">
+                    <xsl:value-of select="$content//rangeTimeStart"/>
+                </field>
+                <field name="annotation_rangeTimeEnd">
+                    <xsl:value-of select="$content//rangeTimeEnd"/>
+                </field>
+            </xsl:if>
+
     </xsl:template>
 
 </xsl:stylesheet>
