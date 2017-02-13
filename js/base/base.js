@@ -350,10 +350,16 @@ function insertLabel(contentType, i, pid, canvas, x1, y1, width1, height1) {
         eleSpan.className = "marker-large-mage";
         eleSpan.setAttribute("id", label_prefix + pid);
 
+        var imagePoint = Drupal.settings.islandora_open_seadragon_viewer.viewport.viewportToImageCoordinates(decimalX, decimalY);
+
         Drupal.settings.islandora_open_seadragon_viewer.addOverlay({
             element: eleSpan,
-            location: new OpenSeadragon.Rect(decimalX - 0.035, decimalY - 0.035, 0.035, 0.035)
+            px: imagePoint.x,
+            py: imagePoint.y,
+            checkResize: false,
+            placement: OpenSeadragon.OverlayPlacement.BOTTOM_RIGHT
         });
+
     } else {
         var canvasWidth = canvas.width;
         var canvasHeight = canvas.height;
