@@ -25,7 +25,12 @@ function islandora_web_annotations_admin(array $form, array &$form_state) {
       '#description' => t('Provides verbose (alert) messages, useful when testing, debuging and developing.'),
       '#default_value' => variable_get('islandora_web_annotations_verbose', FALSE),
   );
-
+  $form['islandora_web_annotations_namespace'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Annotation Namespace'),
+      '#description' => t('Sets the namespace to use for annotation objects.  Defaults to \'annotation.\''),
+      '#default_value' => variable_get('islandora_web_annotations_namespace', 'annotation'),
+  );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['reset'] = array(
       '#type' => 'submit',
