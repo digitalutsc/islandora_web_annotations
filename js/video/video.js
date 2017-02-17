@@ -31,7 +31,7 @@ jQuery(document).ready(function() {
             permissions: { },
             store: {
                 // The endpoint of the store on your server.
-                prefix: "http://localhost:8000/islandora_web_annotations",
+                prefix: location.protocol + '//' + location.host + '/islandora_web_annotations',
                 emulateJSON: true,
                 annotationData: {uri:objectUri},
                 urls: {
