@@ -26,10 +26,10 @@ class AnnotationContainer implements interfaceAnnotationContainer
      * @return none
      */
     public function createAnnotationContainer($targetObjectID, $annotationData){
-
+      $annotation_namespace = variable_get('islandora_web_annotations_namespace', 'annotation');
         try {
             $target = $annotationData["context"];
-            $object = $this->repository->constructObject("annotation");
+            $object = $this->repository->constructObject($annotation_namespace);
             $object->label = "AnnotationContainer for " . $targetObjectID;
             $object->models = array(AnnotationConstants::WADMContainer_CONTENT_MODEL);
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', AnnotationConstants::WADMContainer_CONTENT_MODEL);

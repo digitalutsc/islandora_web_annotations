@@ -68,7 +68,7 @@ function islandora_web_annotations_menu() {
         'type' => MENU_CALLBACK,
     );
 
-    $items['admin/islandora/web_annotations'] = array(
+    $items['admin/islandora/tools/web_annotations'] = array(
         'title' => 'Web Annotations',
         'description' => 'Web Annotation related configuration options',
         'page callback' => 'drupal_get_form',
