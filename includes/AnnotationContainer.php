@@ -242,8 +242,8 @@ class AnnotationContainer implements interfaceAnnotationContainer
     public function getAnnotationContainerPID($objectPID)
     {
         $url = parse_url(variable_get('islandora_solr_url', 'localhost:8080/solr'));
-
-        $qualifier = 'RELS_EXT_isAnnotationContainerOf_uri_s:' . '"' . "info:fedora/" . $objectPID . '"';
+        $isAnnotationContainerOfSolrField = variable_get('islandora_web_annotations_isannotationcontainerof_solr_field', 'RELS_EXT_isAnnotationContainerOf_uri_s');
+        $qualifier = $isAnnotationContainerOfSolrField . ':' . '"' . "info:fedora/" . $objectPID . '"';
         $query = "$qualifier";
         $fields = array('PID');
 

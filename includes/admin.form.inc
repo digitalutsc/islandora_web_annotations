@@ -31,6 +31,13 @@ function islandora_web_annotations_admin(array $form, array &$form_state) {
       '#description' => t('Sets the namespace to use for annotation objects.  Defaults to \'annotation.\''),
       '#default_value' => variable_get('islandora_web_annotations_namespace', 'annotation'),
   );
+  $form['islandora_web_annotations_isannotationcontainerof_solr_field'] = array(
+      '#type' => 'textfield',
+      '#title' => t('The isAnnotationContainerOf Solr field'),
+      '#required' => TRUE,
+      '#description' => t('Sets the Solr field containing an object\'s isAnnotationContainerOf relationship.'),
+      '#default_value' => variable_get('islandora_web_annotations_isannotationcontainerof_solr_field', 'RELS_EXT_isAnnotationContainerOf_uri_s'),
+  );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['reset'] = array(
       '#type' => 'submit',
