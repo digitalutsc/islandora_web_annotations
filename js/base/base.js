@@ -269,7 +269,9 @@ function deleteAnnotation(annotationData) {
             var status = jsonData.status;
             var annoInfo = jsonData.data;
             if(status == "success") {
-                verbose_alert
+                var verbose_message = "Successfully deleted the annotation: " + JSON.stringify(annoInfo);
+                var short_message = "Annotation successfully deleted.";
+                verbose_alert(short_message, verbose_message);
             } else if(status == "conflict"){
                 var msg = "There was an edit conflict.  Please reload the annotations to view the changes.  You can try again to delete.";
                 verbose_alert(msg, msg);
