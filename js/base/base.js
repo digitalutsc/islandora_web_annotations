@@ -307,6 +307,10 @@ function insertUpdateAnnotationDataBlock(htmlBlock) {
     } else {
         jQuery(htmlBlock).appendTo(jQuery("#annotation-list"));
     }
+
+    if(Drupal.settings.islandora_web_annotations.hide_list_block == true){
+        jQuery("#annotation-list").parent().hide();
+    }
 }
 
 
