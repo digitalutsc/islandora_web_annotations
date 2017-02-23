@@ -84,7 +84,7 @@ function getAnnotations(targetObjectId) {
     // getAnnotations is converted to a Toggle - issue#70
     if(b_annotationsShown == true) {
         anno.removeAll();
-        deleteAllLabels();
+        deleteAllLabelsAndBlockItems();
         b_annotationsShown = false;
         return;
     }
@@ -105,10 +105,11 @@ function getAnnotations(targetObjectId) {
 
             // In case user has inserted items before loading, remove them to reload those items
             anno.removeAll();
-            deleteAllLabels();
+            deleteAllLabelsAndBlockItems();
 
             // Label related
             var canvas = jQuery(".islandora-"+ g_contentType + "-content").find("canvas")[0]
+            var htmlBlock = "";
 
             // Extract data
             var jsonData = JSON.parse(data);
@@ -120,6 +121,7 @@ function getAnnotations(targetObjectId) {
                     var pid = annotations[i].pid;
                     var src = annotations[i].src;
                     var text = annotations[i].text;
+                    htmlBlock = htmlBlock + "<li id='block_label_"+ pid + "' style='margin-bottom: 8px'> <b>[" + (i+1) + "]</b> " + text + "</li>";
 
                     var context = annotations[i].context;
                     var type = annotations[i].shapes[0].type;
@@ -152,6 +154,9 @@ function getAnnotations(targetObjectId) {
                 }
                 insertLabel(g_contentType, i+1, pid, canvas, x1, y1, width1, height1);
             }
+
+            htmlBlock = htmlBlock + "</ul>";
+            insertUpdateAnnotationDataBlock(htmlBlock);
 
         }
     });
@@ -230,6 +235,10 @@ function updateAnnotationInfo(pid, checksum, updatedText) {
     for(var j = 0; j < annotations.length; j++){
         if(annotations[j].pid == pid) {
             annotations[j].checksum = checksum;
+            var currentText = document.getElementById("block_label_" + pid).innerHTML;
+            currentText = currentText.trim()
+            var labelNumber = currentText.substring(4, 5);
+            document.getElementById("block_label_" + pid).innerHTML = "<b>[" + labelNumber + "]</b> " + updatedText + "</li>";
             break;
         }
     }
@@ -283,8 +292,24 @@ function deleteAnnotation(annotationData) {
         }
     });
 
-    deleteLabel(annotationID);
+    deleteLabelAndDataBlockItem(annotationID);
 }
+
+/**
+ *
+ * @param htmlBlock
+ * @param contentType
+ */
+function insertUpdateAnnotationDataBlock(htmlBlock) {
+    // If not already installed
+    if(jQuery("#annotation-list").length == 0) {
+        jQuery('<div><h2>Annotations</h2><ul id="annotation-list" style="list-style-type: none;">' + htmlBlock + '</ul></div>').appendTo(jQuery("#block-system-main"));
+    } else {
+        jQuery(htmlBlock).appendTo(jQuery("#annotation-list"));
+    }
+}
+
+
 
 function insertLabelForNewAnnotation(pid, annotation) {
     var i = anno.getAnnotations().length;
@@ -295,6 +320,10 @@ function insertLabelForNewAnnotation(pid, annotation) {
     var canvas = jQuery(".islandora-"+ g_contentType + "-content").find("canvas")[0]
 
     insertLabel(g_contentType, i, pid, canvas, x1, y1, width1, height1);
+
+    var text = annotation.text;
+    var htmlItem = "<li id='block_label_"+ pid + "' style='margin-bottom: 8px'><b> [" + i + "]</b> " + text + "</li>";
+    insertUpdateAnnotationDataBlock(htmlItem);
 }
 
 /**
@@ -347,16 +376,17 @@ function insertLabel(contentType, i, pid, canvas, x1, y1, width1, height1) {
     }
 }
 
-function deleteLabel(annotationID) {
+function deleteLabelAndDataBlockItem(annotationID) {
     // Remove Label
     if(g_contentType == "large-image"){
         Drupal.settings.islandora_open_seadragon_viewer.removeOverlay(label_prefix+ annotationID);
     } else {
         jQuery(document.getElementById(label_prefix + annotationID)).remove();
     }
+    jQuery(document.getElementById("block_label_" + annotationID)).remove();
 }
 
-function deleteAllLabels(){
+function deleteAllLabelsAndBlockItems(){
     if(g_contentType == "large-image"){
         var labels = jQuery('span[id^="'+ label_prefix + '"]');
         for (var j = 0; j < labels.length; j++){
@@ -366,6 +396,7 @@ function deleteAllLabels(){
     } else {
         jQuery('span[id^="'+ label_prefix + '"]').remove();
     }
+    jQuery("#annotation-list").parent().remove();
 }
 
 function verbose_alert(short_message, verbose_message) {
