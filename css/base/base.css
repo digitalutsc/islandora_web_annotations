@@ -93,3 +93,8 @@ span.marker-large-mage {
     max-height: 300px;
     overflow-y: auto;
 }
+
+/* Hide the list style of the html block */
+#annotation-list > li {
+    list-style-type: none;
+}
