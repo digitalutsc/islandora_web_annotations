@@ -25,6 +25,12 @@ function islandora_web_annotations_admin(array $form, array &$form_state) {
       '#description' => t('Provides verbose (alert) messages, useful when testing, debuging and developing.'),
       '#default_value' => variable_get('islandora_web_annotations_verbose', FALSE),
   );
+  $form['islandora_web_annotations_hide_list_block'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Hide Default Annotation List Block.'),
+      '#description' => t('When checked, the default list of annotations is hidden.  This will allow you to use a Solr view block instead.'),
+      '#default_value' => variable_get('islandora_web_annotations_hide_list_block', FALSE),
+  );
   $form['islandora_web_annotations_namespace'] = array(
       '#type' => 'textfield',
       '#title' => t('Annotation Namespace'),
