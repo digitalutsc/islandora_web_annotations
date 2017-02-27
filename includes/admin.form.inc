@@ -31,6 +31,12 @@ function islandora_web_annotations_admin(array $form, array &$form_state) {
       '#description' => t('When checked, the default list of annotations is hidden.  This will allow you to use a Solr view block instead.'),
       '#default_value' => variable_get('islandora_web_annotations_hide_list_block', FALSE),
   );
+  $form['islandora_web_annotations_load_true'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Load annotations by default for large images.'),
+      '#description' => t('When checked, annotations will be loaded by default for large images.  You will still be able to toggle annotations (view, hide).'),
+      '#default_value' => variable_get('islandora_web_annotations_load_true', FALSE),
+  );
   $form['islandora_web_annotations_namespace'] = array(
       '#type' => 'textfield',
       '#title' => t('Annotation Namespace'),
