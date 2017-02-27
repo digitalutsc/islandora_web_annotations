@@ -28,6 +28,10 @@ jQuery(document).ready(function() {
     if(Drupal.settings.islandora_web_annotations.view == true) {
         var saveButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsLargeImage()"></button>');
         saveButton.appendTo(jQuery("#openseadragon-wrapper"));
+
+        if(Drupal.settings.islandora_web_annotations.load_true == true){
+            getAnnotationsLargeImage();
+        }
     }
 
     if(Drupal.settings.islandora_web_annotations.create == true) {
