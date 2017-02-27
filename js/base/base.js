@@ -50,6 +50,11 @@ function createAnnotation(targetObjectId, annotationData) {
         },
         success: function(data) {
             var jsonData = JSON.parse(data);
+            var status = jsonData.status;
+            if(status && status == "Fail"){
+                alert("Error in creating annotation.  Please review your drupal log.");
+                return;
+            }
             var pid = jsonData.pid;
             var creator = jsonData.creator;
             var created = jsonData.created;
