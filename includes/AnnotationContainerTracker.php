@@ -20,6 +20,8 @@ class AnnotationContainerTracker {
     $this->containerList  = variable_get('islandora_web_annotations_inprocess');
     $pos = strpos($this->containerList, $targetObjectID);
 
+    $this->getLock();
+
     // Case 1: If AnnotationContainer found, return that container id.
     if($annotationContainerID != "None") {
         watchdog(AnnotationConstants::MODULE_NAME, "Case1: If AnnotationContainer found, return that container id");
@@ -38,7 +40,26 @@ class AnnotationContainerTracker {
       $annotationContainerID = $this->pollSolr($annotationContainer, $targetObjectID);
     }
 
+    lock_release('getAnnotationContainer');
+
     return $annotationContainerID;
+  }
+
+  private function getLock(){
+    $isLockAvailable = lock_acquire('getAnnotationContainer');
+    $start = microtime(true);
+
+    while($isLockAvailable == false){
+      sleep(2);
+      $isLockAvailable = lock_acquire('getAnnotationContainer');
+      $time_elapsed_secs = microtime(true) - $start;
+
+      if($time_elapsed_secs > 20){
+        $msg = "Timeout Exception.  Taking too long to get lock for getAnnotationContainer.";
+        watchdog(AnnotationConstants::MODULE_NAME, 'Error in AnnotationTracker -> getLock: %t', array('%t' => $msg), WATCHDOG_ERROR);
+        throw new Exception($msg);
+      }
+    }
   }
 
   private function pollSolr($annotationContainer, $targetObjectID){
@@ -56,9 +77,9 @@ class AnnotationContainerTracker {
         $time_elapsed_secs = microtime(true) - $start;
         watchdog(AnnotationConstants::MODULE_NAME, "Testing Container Not yet found for object " . $targetObjectID . " Elapsed time " . $time_elapsed_secs);
 
-        if($time_elapsed_secs > 15){
+        if($time_elapsed_secs > 20){
           $msg = "Timeout Exception.  Taking too long to find solr index of the AnnotationContainer for target object with PID " . $targetObjectID;
-          watchdog(AnnotationConstants::MODULE_NAME, 'Error in AnnotationTracker: %t', array('%t' => $msg), WATCHDOG_ERROR);
+          watchdog(AnnotationConstants::MODULE_NAME, 'Error in AnnotationTracker -> pollSolr: %t', array('%t' => $msg), WATCHDOG_ERROR);
           throw new Exception($msg);
         }
 
