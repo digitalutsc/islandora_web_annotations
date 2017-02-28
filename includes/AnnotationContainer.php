@@ -9,6 +9,7 @@ require_once(__DIR__ . '/AnnotationConstants.php');
 require_once(__DIR__ . '/AnnotationUtil.php');
 require_once(__DIR__ . '/interfaceAnnotationContainer.php');
 require_once(__DIR__ . '/Annotation.php');
+require_once(__DIR__ . '/AnnotationContainerTracker.php');
 module_load_include('inc', 'islandora', 'includes/solution_packs');
 
 class AnnotationContainer implements interfaceAnnotationContainer
@@ -124,13 +125,8 @@ class AnnotationContainer implements interfaceAnnotationContainer
      * @return jsonld of the annotation that was created
      */
     public function createAnnotation($targetObjectID, $annotationData, $annotationMetadata){
-        // If annotationContainer does not exist, create the container
-        $annotationContainerID = $this->getAnnotationContainerPID($targetObjectID);
-        if($annotationContainerID == "None"){
-            $annotationContainerID = $this->createAnnotationContainer($targetObjectID, $annotationData);
-        } else {
-            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer: createAnnotation: Annotation container already exists: @$annotationContainerID', array('@annotationContainerID'=>$annotationContainerID), WATCHDOG_INFO);
-        }
+        $annotationContainerTracker = new AnnotationContainerTracker();
+        $annotationContainerID = $annotationContainerTracker->getAnnotationContainer($this, $targetObjectID, $annotationData);
 
         // Add annotation
         $oAnnotation = new Annotation($this->repository);
