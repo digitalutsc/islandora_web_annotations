@@ -14,41 +14,32 @@ class AnnotationContainerTracker {
   }
 
   public function getAnnotationContainer($annotationContainer, $targetObjectID, $annotationData){
+    $this->getLock();
 
     $annotationContainerID = $annotationContainer->getAnnotationContainerPID($targetObjectID);
-
     $this->containerList  = variable_get('islandora_web_annotations_inprocess');
     $pos = strpos($this->containerList, $targetObjectID);
 
-    $this->getLock();
-
     // Case 1: If AnnotationContainer found, return that container id.
     if($annotationContainerID != "None") {
-        watchdog(AnnotationConstants::MODULE_NAME, "Case1: If AnnotationContainer found, return that container id");
-
     // Case 2: If AnnotationContainer ID not found, and not in the InProcess List, then create it and return it.
     } else if ($pos === false) {
-      watchdog(AnnotationConstants::MODULE_NAME, "Case 2: If AnnotationContainer ID not found, and not in the InProcess List, then create it and return it.");
-
-      $list = $this->containerList + "||" +  $targetObjectID;
+      $list = $this->containerList . "||" .  $targetObjectID;
       variable_set('islandora_web_annotations_inprocess', $list);
       $annotationContainerID = $annotationContainer->createAnnotationContainer($targetObjectID, $annotationData);
-
-      // Case 3 : If AnnotationContainer ID not found, and is in the InProcess List, then wait until it gets index and then return it.
+    // Case 3 : If AnnotationContainer ID not found, and is in the InProcess List, then wait until it gets index and then return it.
     } else {
-      watchdog(AnnotationConstants::MODULE_NAME, "Case 3 : If AnnotationContainer ID not found, and is in the InProcess List, then wait until it gets index and then return it.");
       $annotationContainerID = $this->pollSolr($annotationContainer, $targetObjectID);
     }
 
     lock_release('getAnnotationContainer');
-
     return $annotationContainerID;
   }
 
   private function getLock(){
-    $isLockAvailable = lock_acquire('getAnnotationContainer');
-    $start = microtime(true);
+    (bool) $isLockAvailable = lock_acquire('getAnnotationContainer');
 
+    $start = microtime(true);
     while($isLockAvailable == false){
       sleep(2);
       $isLockAvailable = lock_acquire('getAnnotationContainer');
@@ -75,7 +66,6 @@ class AnnotationContainerTracker {
 
         // If it takes too long to get indexed info, probably something wrong, log and throw exception
         $time_elapsed_secs = microtime(true) - $start;
-        watchdog(AnnotationConstants::MODULE_NAME, "Testing Container Not yet found for object " . $targetObjectID . " Elapsed time " . $time_elapsed_secs);
 
         if($time_elapsed_secs > 20){
           $msg = "Timeout Exception.  Taking too long to find solr index of the AnnotationContainer for target object with PID " . $targetObjectID;
