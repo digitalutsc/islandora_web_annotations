@@ -24,6 +24,10 @@ jQuery(document).ready(function() {
     // Add a parent div with this class
     openSeaDragonDiv.wrap('<div class="islandora-openseadragon" id="openseadragon-wrapper"></div>');
 
+    if(Drupal.settings.islandora_web_annotations.remove_clipper == true) {
+        // Remove clipper icon element(s) provided with large image solution pack.
+        jQuery('#clip').remove();
+    }
 
     if(Drupal.settings.islandora_web_annotations.view == true) {
         var saveButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsLargeImage()"></button>');
