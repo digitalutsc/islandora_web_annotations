@@ -70,6 +70,8 @@ class AnnotationContainerTracker {
         if($time_elapsed_secs > 20){
           $msg = "Timeout Exception.  Taking too long to find solr index of the AnnotationContainer for target object with PID " . $targetObjectID;
           watchdog(AnnotationConstants::MODULE_NAME, 'Error in AnnotationTracker -> pollSolr: %t', array('%t' => $msg), WATCHDOG_ERROR);
+          // Lets clean up the list, in case it got into the list
+          $this->cleanupInProcessList($targetObjectID);
           throw new Exception($msg);
         }
 
