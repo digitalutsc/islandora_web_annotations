@@ -15,7 +15,7 @@ class Annotation implements interfaceAnnotation
     var $repository;
 
     function __construct($i_repository) {
-        if($i_repository != null){
+        if(isset($i_repository)  && $i_repository != null){
             $this->repository = $i_repository;
         } else {
             $connection = islandora_get_tuque_connection();
@@ -124,7 +124,7 @@ class Annotation implements interfaceAnnotation
     private function getAnnotationJsonLD($actionType, $annotationData, $annotationMetadata)
     {
         $target = $annotationData["context"];
-        $PID = $annotationData['pid'];
+        $PID = isset($annotationData['pid']) ? $annotationData['pid'] : 'New';
 
         // We don't need this info in the file
         unset($annotationData['pid']);
@@ -135,7 +135,7 @@ class Annotation implements interfaceAnnotation
             "@type" => AnnotationConstants::ANNOTATION_CLASS_1,
             "body" => (object) $annotationData,
             "target" => $target,
-            "pid" => "New"
+            "pid" => $PID
 
         );
 
@@ -145,7 +145,6 @@ class Annotation implements interfaceAnnotation
         }
         if($actionType == "update"){
             $now = date("Y-m-d H:i:s");
-            $data["pid"] = $PID;
             $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $annotationMetadata["created"], 'modifiedBy' => $annotationMetadata["author"], 'modified' => $now);
         }
 

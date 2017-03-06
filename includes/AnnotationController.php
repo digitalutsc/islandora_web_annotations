@@ -12,11 +12,12 @@ require_once('AnnotationContainer.php');
 
 function createAnnotation(){
     $targetObjectID = null;
+    $json = '';
     try
     {
         parse_str(file_get_contents("php://input"), $postVars);
-        $json = $postVars['json'] ? $postVars['json'] : '';
-        $targetObjectID = $postVars['targetPid'] ? $postVars['targetPid'] : '';
+        $json = isset($postVars['json']) ? $postVars['json'] : '';
+        $targetObjectID = isset($postVars['targetPid']) ? $postVars['targetPid'] : '';
 
         if($targetObjectID != '') {
             $annotationData =  isset($_POST['annotationData']) ? $_POST['annotationData'] : '';
@@ -56,6 +57,8 @@ function createAnnotationForVideo($json){
     $targetPID = substr($uri, strrpos($uri, '/') + 1);
     $oAnnotationContainer = new AnnotationContainer();
     $output = $oAnnotationContainer->createAnnotation($targetPID, $annotationData, $annotationMetadata);
+
+    watchdog(AnnotationConstants::MODULE_NAME, "Video Annotations - mmmmmmmmmmmmmmmmmmmmmmmm" . $output);
 
     $annotationData = json_decode($output, true);
 
@@ -122,8 +125,8 @@ function updateAnnotation(){
 
     try {
         parse_str(file_get_contents("php://input"), $putVars);
-        $annotationID = $putVars['annotationPID'] ? $putVars['annotationPID'] : '';
-        $json = $putVars['json'] ? $putVars['json'] : '';
+        $annotationID = isset($putVars['annotationPID'])  ? $putVars['annotationPID'] : '';
+        $json = isset($putVars['json']) ? $putVars['json'] : '';
 
         if($annotationID != '') {
             $annotationData = $putVars['annotationData'] ? $putVars['annotationData'] : '';
@@ -149,7 +152,7 @@ function updateAnnotation(){
             throw new Exception("Delete request not valid.");
         }
 
-        $oAnnotation = new Annotation();
+        $oAnnotation = new Annotation(null);
         $bConflict = $oAnnotation->checkEditConflict($annotationID, $ETag);
 
         // If conflict exists, return message
@@ -176,11 +179,10 @@ function deleteAnnotation(){
     $annotationID = null;
     try {
         parse_str(file_get_contents("php://input"), $deleteVars);
-        $annotationID = $deleteVars['annotationID'] ? $deleteVars['annotationID'] : '';
-        $json = $deleteVars['json'] ? $deleteVars['json'] : '';
+        $annotationID = isset($deleteVars['annotationID']) ? $deleteVars['annotationID'] : '';
+        $json = isset($deleteVars['json']) ? $deleteVars['json'] : '';
 
         if($annotationID != '') {
-            $annotationID = $deleteVars['annotationID'] ? $deleteVars['annotationID'] : '';
             $annotationContainerID = $deleteVars['annotationContainerID'] ? $deleteVars['annotationContainerID'] : '';
             $ETag = $_SERVER['HTTP_IF_MATCH'];
         } else if($json != '') {
@@ -193,7 +195,7 @@ function deleteAnnotation(){
         }
 
         // Delete the object
-        $oAnnotation = new Annotation();
+        $oAnnotation = new Annotation(null);
         $bConflict = $oAnnotation->checkEditConflict($annotationID, $ETag);
 
         // If conflict exists, return message
