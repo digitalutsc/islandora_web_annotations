@@ -33,9 +33,15 @@ function islandora_web_annotations_admin(array $form, array &$form_state) {
   );
   $form['islandora_web_annotations_load_true'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Load annotations by default for large images.'),
-      '#description' => t('When checked, annotations will be loaded by default for large images.  You will still be able to toggle annotations (view, hide).'),
+      '#title' => t('Load annotations by default for basic and large images.'),
+      '#description' => t('When checked, annotations will be loaded by default for basic and large images.  You will still be able to toggle annotations (view, hide).'),
       '#default_value' => variable_get('islandora_web_annotations_load_true', FALSE),
+  );
+  $form['islandora_web_annotations_remove_clipper'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Remove clipper for large images.'),
+      '#description' => t('When checked, the clipper from the large image solution pack will be removed.'),
+      '#default_value' => variable_get('islandora_web_annotations_remove_clipper', FALSE),
   );
   $form['islandora_web_annotations_namespace'] = array(
       '#type' => 'textfield',

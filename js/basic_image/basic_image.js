@@ -14,13 +14,20 @@ jQuery(document).ready(function() {
     if(Drupal.settings.islandora_web_annotations.view == true) {
         var loadAnnotationsButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsBasicImage()"></button>');
         loadAnnotationsButton.appendTo(jQuery(".islandora-basic-image-content")[0]);
+      
         //Update button position for consistency.
         var update_pos_css = {
             top: image_top_pos,
             left: image_left_pos
         };
         jQuery("#load-annotation-button").css(update_pos_css);
-
+      
+        // Make sure that the basic image has loaded before loading annotations by default.
+        jQuery("img[typeof='foaf:Image']").load(function() {
+            if (Drupal.settings.islandora_web_annotations.load_true == true) {
+                getAnnotationsBasicImage();
+            }
+        });
     }
 
     if(Drupal.settings.islandora_web_annotations.create == true) {
