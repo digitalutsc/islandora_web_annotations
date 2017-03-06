@@ -56,6 +56,13 @@ function islandora_web_annotations_admin(array $form, array &$form_state) {
       '#description' => t('Sets the Solr field containing an object\'s isAnnotationContainerOf relationship.'),
       '#default_value' => variable_get('islandora_web_annotations_isannotationcontainerof_solr_field', 'RELS_EXT_isAnnotationContainerOf_uri_s'),
   );
+  $form['islandora_web_annotations_inprocess'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Objects for which AnnotationContainers are being currently created.'),
+    '#required' => FALSE,
+    '#description' => t('Editing this field can distrub AnnotationContainer creation. Provided here to aid troubleshooting.'),
+    '#default_value' => variable_get('islandora_web_annotations_inprocess', ''),
+  );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['reset'] = array(
       '#type' => 'submit',

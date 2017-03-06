@@ -58,8 +58,6 @@ function createAnnotationForVideo($json){
     $oAnnotationContainer = new AnnotationContainer();
     $output = $oAnnotationContainer->createAnnotation($targetPID, $annotationData, $annotationMetadata);
 
-    watchdog(AnnotationConstants::MODULE_NAME, "Video Annotations - mmmmmmmmmmmmmmmmmmmmmmmm" . $output);
-
     $annotationData = json_decode($output, true);
 
     $arrResult["rows"] = [];
