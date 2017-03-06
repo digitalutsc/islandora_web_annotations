@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * @file
  * AnnotationContainerTracker implements logic to handle simultaneous editing
@@ -49,7 +47,7 @@ class AnnotationContainerTracker {
       $isLockAvailable = lock_acquire('getAnnotationContainer');
       $time_elapsed_secs = microtime(true) - $start;
 
-      if($time_elapsed_secs > 20){
+      if($time_elapsed_secs > 40){
         $msg = "Timeout Exception.  Taking too long to get lock for getAnnotationContainer.";
         watchdog(AnnotationContainerTracker::MODULE_NAME, 'Error in AnnotationTracker -> getLock: %t', array('%t' => $msg), WATCHDOG_ERROR);
         throw new Exception($msg);
@@ -71,7 +69,7 @@ class AnnotationContainerTracker {
         // If it takes too long to get indexed info, probably something wrong, log and throw exception
         $time_elapsed_secs = microtime(true) - $start;
 
-        if($time_elapsed_secs > 20){
+        if($time_elapsed_secs > 40){
           $msg = "Timeout Exception.  Taking too long to find solr index of the AnnotationContainer for target object with PID " . $targetObjectID;
           watchdog(AnnotationContainerTracker::MODULE_NAME, 'Error in AnnotationTracker -> pollSolr: %t', array('%t' => $msg), WATCHDOG_ERROR);
           // Lets clean up the list, in case it got into the list
