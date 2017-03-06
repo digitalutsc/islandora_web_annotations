@@ -8,11 +8,20 @@
 var g_contentType = "basic-image";
 
 jQuery(document).ready(function() {
-
+    var image_position = jQuery("img[typeof='foaf:Image']").position();
+    var image_top_pos = image_position.top;
+    var image_left_pos = image_position.left;
     if(Drupal.settings.islandora_web_annotations.view == true) {
         var loadAnnotationsButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsBasicImage()"></button>');
         loadAnnotationsButton.appendTo(jQuery(".islandora-basic-image-content")[0]);
-
+      
+        //Update button position for consistency.
+        var update_pos_css = {
+            top: image_top_pos,
+            left: image_left_pos
+        };
+        jQuery("#load-annotation-button").css(update_pos_css);
+      
         // Make sure that the basic image has loaded before loading annotations by default.
         jQuery("img[typeof='foaf:Image']").load(function() {
             if (Drupal.settings.islandora_web_annotations.load_true == true) {
@@ -24,6 +33,12 @@ jQuery(document).ready(function() {
     if(Drupal.settings.islandora_web_annotations.create == true) {
         var addButton = jQuery('<button id="add-annotation-button" class="annotator-adder-actions__button h-icon-add" title="Add Annotation" onclick="initBasicImageAnnotation();"></button>');
         addButton.appendTo(jQuery(".islandora-basic-image-content")[0]);
+        //Update button position for consistency.
+        var update_pos_css = {
+            top: image_top_pos,
+            left: image_left_pos + 48
+        };
+        jQuery("#add-annotation-button").css(update_pos_css);
     }
 
     executeCommonLoadOperations();
