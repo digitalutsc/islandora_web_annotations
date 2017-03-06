@@ -216,7 +216,8 @@ function updateAnnotation(annotationData) {
             var checksum = annoInfo.checksum;
             var updatedText = annoInfo.body.text;
             var creator = annoInfo.creator;
-            updateAnnotationInfo(annotationPID, checksum, updatedText, creator);
+            var created = annoInfo.created;
+            updateAnnotationInfo(annotationPID, checksum, updatedText, creator, created);
 
             if(status == "success") {
                 var verbose_message = "Successfully updated the annotation: " + JSON.stringify(annoInfo);
@@ -236,12 +237,13 @@ function updateAnnotation(annotationData) {
 }
 
 // Update AnnotatoinDatastore
-function updateAnnotationInfo(pid, checksum, updatedText, creator) {
+function updateAnnotationInfo(pid, checksum, updatedText, creator, created) {
     var annotations = anno.getAnnotations()
     for(var j = 0; j < annotations.length; j++){
         if(annotations[j].pid == pid) {
             annotations[j].checksum = checksum;
             annotations[j].creator = creator;
+            annotations[j].created = created;
             var currentText = document.getElementById("block_label_" + pid).innerHTML;
             currentText = currentText.trim()
             var labelNumber = currentText.substring(4, 5);
