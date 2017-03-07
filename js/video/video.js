@@ -110,7 +110,7 @@ jQuery(document).ready(function() {
     });
 
     ova.annotator.subscribe('annotationCreated', function(annotation){
-        var verbose_message = "Annotation successfully created: " + JSON.stringify(annotation);;
+        var verbose_message = "Annotation successfully created: " + JSON.stringify(annotation);
         var short_message = "Annotation successfully created.";
         verbose_alert(short_message, verbose_message);
     });
@@ -126,6 +126,8 @@ jQuery(document).ready(function() {
         var short_message = "Annotation successfully deleted.";
         verbose_alert(short_message, verbose_message);
     });
+
+
 });
 
 function applyPermissionsOnView(annotations){
@@ -143,6 +145,32 @@ function applyPermissionsOnView(annotations){
     }
 
 }
+
+
+/**
+ * issue#123
+ * Due to an bug in the annotator js library, the  annotationCreated does not return the pid of the created annotation.
+ * We need to attach a POST listener to get this info and update the store.
+ * This is required to enable the user to edit the annotation immediately after creating it.
+ */
+jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
+    if (ajaxOptions.type === 'POST' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
+        var jsonData = JSON.parse(jqXHR.responseText);
+
+        // Basic error check
+        if(jsonData.rows[0]){
+            var PID = jsonData.rows[0].pid;
+            var checksum = jsonData.rows[0].checksum;
+            var annoLength = ova.annotator.plugins["Store"].annotations.length;
+            var lastAnnoIndex = Number(annoLength) - 1;
+            // Set annotation PID
+            ova.annotator.plugins["Store"].annotations[lastAnnoIndex].pid = PID;
+            ova.annotator.plugins["Store"].annotations[lastAnnoIndex].checksum = checksum;
+        } else {
+            alert("Error in creating the annotation.");
+        }
+    }
+});
 
 function positionAnnotatorForm(formSelector){
     var left = jQuery(".vjs-selectionbar-RS").first().css("left");

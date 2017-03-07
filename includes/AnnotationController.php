@@ -146,6 +146,15 @@ function updateAnnotation(){
 
             $annotationID  = $annotationData["pid"];
             $ETag = $annotationData["checksum"];
+
+            // Immediately after creating an annotation, if the user edits it
+            // It comes in with additional data fields that needs to be cleanup.
+            if (array_key_exists('rows', $annotationData)) {
+              unset($annotationData["total"]);
+              unset($annotationData["rows"]);
+            }
+            unset($annotationData["annotationContainerID"]);
+            unset($annotationData["checksum"]);
         } else {
             throw new Exception("Delete request not valid.");
         }
