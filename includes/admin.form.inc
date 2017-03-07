@@ -57,7 +57,7 @@ function islandora_web_annotations_admin(array $form, array &$form_state) {
       '#default_value' => variable_get('islandora_web_annotations_isannotationcontainerof_solr_field', 'RELS_EXT_isAnnotationContainerOf_uri_s'),
   );
   $form['islandora_web_annotations_inprocess'] = array(
-    '#type' => 'textfield',
+    '#type' => 'textarea',
     '#title' => t('Objects for which AnnotationContainers are being currently created.'),
     '#required' => FALSE,
     '#description' => t('Editing this field can distrub AnnotationContainer creation. Provided here to aid troubleshooting.'),
