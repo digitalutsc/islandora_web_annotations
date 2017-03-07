@@ -156,13 +156,19 @@ function applyPermissionsOnView(annotations){
 jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
     if (ajaxOptions.type === 'POST' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
         var jsonData = JSON.parse(jqXHR.responseText);
-        var PID = jsonData.rows[0].pid;
-        var checksum = jsonData.rows[0].checksum;
-        var annoLength = ova.annotator.plugins["Store"].annotations.length;
-        var lastAnnoIndex = Number(annoLength) - 1;
-        // Set annotation PID
-        ova.annotator.plugins["Store"].annotations[lastAnnoIndex].pid = PID;
-        ova.annotator.plugins["Store"].annotations[lastAnnoIndex].checksum = checksum;
+
+        // Basic error check
+        if(jsonData.rows[0]){
+            var PID = jsonData.rows[0].pid;
+            var checksum = jsonData.rows[0].checksum;
+            var annoLength = ova.annotator.plugins["Store"].annotations.length;
+            var lastAnnoIndex = Number(annoLength) - 1;
+            // Set annotation PID
+            ova.annotator.plugins["Store"].annotations[lastAnnoIndex].pid = PID;
+            ova.annotator.plugins["Store"].annotations[lastAnnoIndex].checksum = checksum;
+        } else {
+            alert("Error in creating the annotation.");
+        }
     }
 });
 
