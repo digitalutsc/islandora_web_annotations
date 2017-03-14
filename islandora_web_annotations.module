@@ -85,14 +85,16 @@ function islandora_web_annotations_menu() {
         'page callback' => 'getRoot',
         'access callback' => TRUE,
         'file' => 'includes/AnnotationController.php',
+        'type' => MENU_CALLBACK,
     );
 
     $items['islandora_web_annotations/search'] = array(
-        'title' => 'Create Web Annotation',
-        'description' => 'Add a new Web Annotation',
+        'title' => 'Search Web Annotations',
+        'description' => 'Search Web Annotations',
         'page callback' => 'searchAnnotations',
         'access callback' => TRUE,
         'file' => 'includes/AnnotationController.php',
+        'type' => MENU_CALLBACK,
     );
     // End: Video related routes
 
