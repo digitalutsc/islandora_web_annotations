@@ -99,8 +99,14 @@ jQuery(document).ready(function() {
     });
 
     ova.annotator.subscribe('annotationEditorShown', function(viewer, annotations){
+
+        // Remove the list items which contain default permission checkboxes
+        // from the Open Video Annotation editor.  We do not use these.
+        jQuery('li.annotator-checkbox').remove();
+
         if(jQuery(".islandora-oralhistories-object").length > 0){
             positionAnnotatorForm(".annotator-editor");
+
         }
 
     });
