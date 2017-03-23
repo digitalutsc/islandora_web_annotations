@@ -60,7 +60,7 @@ function islandora_web_annotations_admin(array $form, array &$form_state) {
     '#type' => 'textarea',
     '#title' => t('Objects for which AnnotationContainers are being currently created.'),
     '#required' => FALSE,
-    '#description' => t('Editing this field can distrub AnnotationContainer creation. Provided here to aid troubleshooting.'),
+    '#description' => t('Editing this field can distrupt AnnotationContainer creation. Provided here to aid troubleshooting.'),
     '#default_value' => variable_get('islandora_web_annotations_inprocess', ''),
   );
   $form['actions'] = array('#type' => 'actions');
