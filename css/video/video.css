@@ -1,5 +1,4 @@
-.annotator-widget.annotator-listing
-{
+.annotator-widget.annotator-listing {
     max-height: 300px;
     overflow-y: auto;
 }
