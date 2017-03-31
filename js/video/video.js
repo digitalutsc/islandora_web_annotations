@@ -214,6 +214,13 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
     }
 });
 
+/**
+ * After an annotation is added the checksum is updated in the UI.
+ *
+ * @param pid
+ * @param checksum
+ * return None
+ */
 function updateChecksum(pid, checksum) {
     var annosLength = ova.annotator.plugins["Store"].annotations.length;
     for(var j = 0; j < annosLength; j++){
