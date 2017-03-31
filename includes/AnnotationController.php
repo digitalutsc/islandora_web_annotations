@@ -60,7 +60,7 @@ function createAnnotationForVideo($json){
 
     $annotationData = json_decode($output, true);
 
-    $arrResult["rows"] = [];
+    $arrResult["rows"] = array();
     array_push(  $arrResult["rows"], $annotationData);
     $arrResult["total"] = 1;
 
@@ -83,7 +83,7 @@ function searchAnnotations(){
     $annotationData = json_decode($output, true);
     $items = $annotationData["first"]["items"];
 
-    $arrResult["rows"] = [];
+    $arrResult["rows"] = array();
 
     for($i = 0; $i < count($items); $i++) {
         $items[$i]["annotationContainerID"] = $AnnotationContainerPID;
