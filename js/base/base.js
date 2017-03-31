@@ -217,9 +217,9 @@ function updateAnnotation(annotationData) {
             var updatedText = annoInfo.body.text;
             var creator = annoInfo.creator;
             var created = annoInfo.created;
-            updateAnnotationInfo(annotationPID, checksum, updatedText, creator, created);
 
             if(status == "success") {
+                updateAnnotationInfo(annotationPID, checksum, updatedText, creator, created);
                 var verbose_message = "Successfully updated the annotation: " + JSON.stringify(annoInfo);
                 var short_message = "Update successful.";
                 verbose_alert(short_message, verbose_message);
