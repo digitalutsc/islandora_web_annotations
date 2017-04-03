@@ -187,7 +187,7 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
         } else {
             var verbose_message = "Unable to update.  Error info: " + JSON.stringify(annoInfo);
             var short_message = "Error: Unable to update.";
-            verbose_alert(short_massage, verbose_message);
+            verbose_alert(short_message, verbose_message);
         }
 
     } else if (ajaxOptions.type === 'DELETE' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
