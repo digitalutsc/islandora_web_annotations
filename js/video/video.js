@@ -108,31 +108,11 @@ jQuery(document).ready(function() {
             positionAnnotatorForm(".annotator-editor");
 
         }
-
     });
 
     ova.annotator.subscribe('beforeAnnotationUpdated', function(annotation){
         annotation.author = ova.currentUser;
     });
-
-    ova.annotator.subscribe('annotationCreated', function(annotation){
-        var verbose_message = "Annotation successfully created: " + JSON.stringify(annotation);
-        var short_message = "Annotation successfully created.";
-        verbose_alert(short_message, verbose_message);
-    });
-
-    ova.annotator.subscribe('annotationUpdated', function(annotation){
-        var verbose_message = "Successfully updated the annotation: " + JSON.stringify(annotation);
-        var short_message = "Update successful.";
-        verbose_alert(short_message, verbose_message);
-    });
-
-    ova.annotator.subscribe('annotationDeleted', function(annotation){
-        var verbose_message = "Annotation successfully deleted: " + JSON.stringify(annotation);
-        var short_message = "Annotation successfully deleted.";
-        verbose_alert(short_message, verbose_message);
-    });
-
 
 });
 
@@ -160,11 +140,13 @@ function applyPermissionsOnView(annotations){
  * This is required to enable the user to edit the annotation immediately after creating it.
  */
 jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
+    var jsonDataText = JSON.parse(jqXHR.responseText);
+
     if (ajaxOptions.type === 'POST' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
-        var jsonData = JSON.parse(jqXHR.responseText);
+        var jsonData = jsonDataText;
 
         // Basic error check
-        if(jsonData.rows[0]){
+        if(typeof jsonData.rows  !== 'undefined'){
             var PID = jsonData.rows[0].pid;
             var checksum = jsonData.rows[0].checksum;
             var annoLength = ova.annotator.plugins["Store"].annotations.length;
@@ -172,11 +154,83 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
             // Set annotation PID
             ova.annotator.plugins["Store"].annotations[lastAnnoIndex].pid = PID;
             ova.annotator.plugins["Store"].annotations[lastAnnoIndex].checksum = checksum;
+
+            var verbose_message = "Annotation successfully created: " + JSON.stringify(jsonData);
+            var short_message = "Annotation successfully created.";
+            verbose_alert(short_message, verbose_message);
         } else {
-            alert("Error in creating the annotation.");
+            var verbose_message = "Error in creating the annotation: " + JSON.stringify(jsonData);
+            var short_message = "Error in creating the annotation.";
+            verbose_alert(short_message, verbose_message);
+        }
+
+    } else if (ajaxOptions.type === 'PUT' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
+        var jsonData = JSON.parse(jsonDataText);
+        var status = jsonData.status;
+        if(status === undefined){
+            alert("Error in updating annotation.  Server failed to return valid response.");
+            return;
+        }
+
+        var annoInfo = jsonData.data;
+        if(status == "success") {
+            var pid = annoInfo.pid;
+            var checksum = annoInfo.checksum;
+            updateChecksum(pid, checksum);
+
+            var verbose_message = "Successfully updated the annotation: " + JSON.stringify(annoInfo);
+            var short_message = "Update successful.";
+            verbose_alert(short_message, verbose_message);
+        } else if(status == "conflict"){
+            var msg = "There was an edit conflict.  Please copy your changes, reload the annotations and try again";
+            verbose_alert(msg, msg);
+        } else {
+            var verbose_message = "Unable to update.  Error info: " + JSON.stringify(annoInfo);
+            var short_message = "Error: Unable to update.";
+            verbose_alert(short_message, verbose_message);
+        }
+
+    } else if (ajaxOptions.type === 'DELETE' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
+        var jsonData = JSON.parse(jsonDataText);
+        var status = jsonData.status;
+        if(status === undefined){
+            alert("Error in deleting annotation.  Server failed to return valid response.");
+            return;
+        }
+        var annoInfo = jsonData.data;
+
+        if(status == "success") {
+            var verbose_message = "Successfully deleted the annotation: " + JSON.stringify(annoInfo);
+            var short_message = "Annotation successfully deleted.";
+            verbose_alert(short_message, verbose_message);
+        } else if(status == "conflict"){
+            var msg = "There was an edit conflict.  Please reload the annotations to view the changes.  You can try again to delete.";
+            verbose_alert(msg, msg);
+        } else {
+            var verbose_message = "Unable to delete.  Error info: "  + JSON.stringify(annoInfo);
+            var short_message = "Error: Unable to delete.";
+            verbose_alert(short_message, verbose_message);
         }
     }
 });
+
+/**
+ * After an annotation is added the checksum is updated in the UI.
+ *
+ * @param pid
+ * @param checksum
+ * return None
+ */
+function updateChecksum(pid, checksum) {
+    var annosLength = ova.annotator.plugins["Store"].annotations.length;
+    for(var j = 0; j < annosLength; j++){
+        var annoPID = ova.annotator.plugins["Store"].annotations[j].pid;
+        if(annoPID == pid) {
+            ova.annotator.plugins["Store"].annotations[j].checksum = checksum;
+            break;
+        }
+    }
+}
 
 function positionAnnotatorForm(formSelector){
     var left = jQuery(".vjs-selectionbar-RS").first().css("left");
