@@ -146,7 +146,7 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
         var jsonData = jsonDataText;
 
         // Basic error check
-        if(typeof jsonData.rows  !== undefined){
+        if(typeof jsonData.rows  !== 'undefined'){
             var PID = jsonData.rows[0].pid;
             var checksum = jsonData.rows[0].checksum;
             var annoLength = ova.annotator.plugins["Store"].annotations.length;
