@@ -8,7 +8,7 @@
 var g_contentType = "basic-image";
 
 jQuery(document).ready(function() {
-    var image_position = jQuery("img[typeof='foaf:Image']").position();
+    var image_position = jQuery(".islandora-basic-image-content img").position();
     var image_top_pos = image_position.top;
     var image_left_pos = image_position.left;
     if(Drupal.settings.islandora_web_annotations.view == true) {
