@@ -229,7 +229,7 @@ function updateAnnotation(annotationData) {
             } else {
                 var verbose_message = "Unable to update.  Error info: " + JSON.stringify(annoInfo);
                 var short_message = "Error: Unable to update.";
-                verbose_alert(short_massage, verbose_message);
+                verbose_alert(short_message, verbose_message);
             }
         }
     });
