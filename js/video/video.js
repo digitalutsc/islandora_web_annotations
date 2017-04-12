@@ -241,6 +241,10 @@ function positionAnnotatorForm(formSelector){
 
     var height = jQuery(document.getElementsByTagName("video")[0]).height();
     var top = height - 20;
+
+    if(formSelector === ".annotator-editor") {
+        top = top - 25;
+    }
     jQuery(formSelector).first().css({top: top + "px"});
 
 }
