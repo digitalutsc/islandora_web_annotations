@@ -149,11 +149,9 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
         if(typeof jsonData.rows  !== 'undefined'){
             var PID = jsonData.rows[0].pid;
             var checksum = jsonData.rows[0].checksum;
-            var annoLength = ova.annotator.plugins["Store"].annotations.length;
-            var lastAnnoIndex = Number(annoLength) - 1;
             // Set annotation PID
-            ova.annotator.plugins["Store"].annotations[lastAnnoIndex].pid = PID;
-            ova.annotator.plugins["Store"].annotations[lastAnnoIndex].checksum = checksum;
+            ova.annotator.plugins["Store"].annotations[0].pid = PID;
+            ova.annotator.plugins["Store"].annotations[0].checksum = checksum;
 
             var verbose_message = "Annotation successfully created: " + JSON.stringify(jsonData);
             var short_message = "Annotation successfully created.";
