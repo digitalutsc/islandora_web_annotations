@@ -119,7 +119,6 @@ jQuery(document).ready(function() {
         applyBlock("created");
     });
 
-
 });
 
 function applyPermissionsOnView(annotations){
