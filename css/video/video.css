@@ -2,3 +2,9 @@
     max-height: 300px;
     overflow-y: auto;
 }
+
+
+/* Used in the blocking message */
+.blockMsg h1 {
+    font-size: 14px !important;
+}
