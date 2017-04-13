@@ -112,6 +112,11 @@ jQuery(document).ready(function() {
 
     ova.annotator.subscribe('beforeAnnotationUpdated', function(annotation){
         annotation.author = ova.currentUser;
+        applyBlock("updated");
+    });
+
+    ova.annotator.subscribe('annotationCreated', function(annotation) {
+        applyBlock("created");
     });
 
 });
@@ -143,6 +148,8 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
     var jsonDataText = JSON.parse(jqXHR.responseText);
 
     if (ajaxOptions.type === 'POST' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
+        jQuery('.annotator-wrapper').unblock();
+
         var jsonData = jsonDataText;
 
         // Basic error check
@@ -163,6 +170,8 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
         }
 
     } else if (ajaxOptions.type === 'PUT' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
+        jQuery('.annotator-wrapper').unblock();
+
         var jsonData = JSON.parse(jsonDataText);
         var status = jsonData.status;
         if(status === undefined){
@@ -254,4 +263,19 @@ function verbose_alert(short_message, verbose_message) {
     } else {
         alert(short_message);
     }
+}
+
+function applyBlock(actionType){
+    var msg = '<h1>Annotation is being ' + actionType + '.  Please wait.....</h1>';
+
+    jQuery('.annotator-wrapper').block({
+        message: msg,
+        css: {
+            border: 'none',
+            width: '400px',
+            padding: '15px',
+            '-webkit-border-radius': '10px',
+            '-moz-border-radius': '10px'
+        }
+    });
 }
