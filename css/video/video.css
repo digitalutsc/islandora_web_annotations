@@ -7,3 +7,41 @@
 .blockMsg h1 {
     font-size: 14px !important;
 }
+
+
+/* Closed caption positioning for OH */
+
+.video-js {
+    -moz-user-select: none;
+    background-color: #000;
+    font-family: Arial,sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: normal;
+    padding: 0;
+    position: relative;
+}
+
+.video-js .vjs-text-track-display {
+    bottom: 4em;
+    left: 1em;
+    position: absolute;
+    right: 1em;
+    text-align: center;
+}
+.video-js.vjs-user-inactive.vjs-playing .vjs-text-track-display {
+    bottom: 1em;
+}
+.video-js .vjs-text-track {
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    font-size: 1.4em;
+    margin-bottom: 0.1em;
+    text-align: center;
+}
+.video-js .vjs-subtitles {
+    color: #ffffff;
+}
+.video-js .vjs-captions {
+    color: #ffcc66;
+}
