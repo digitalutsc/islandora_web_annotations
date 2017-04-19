@@ -63,7 +63,7 @@ jQuery(document).ready(function() {
         alert(e)
     }
 
-    // Apply Permissions
+    // Apply Permissions after OpenVideoAnnotation elements are loaded
     if(Drupal.settings.islandora_web_annotations.view === false){
         jQuery(".vjs-showannotations-annotation").hide();
         jQuery(".vjs-statistics-annotation").hide();
