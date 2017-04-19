@@ -14,14 +14,14 @@ jQuery(document).ready(function() {
     if(Drupal.settings.islandora_web_annotations.view == true) {
         var loadAnnotationsButton = jQuery('<button id="load-annotation-button" title="Toggle Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsBasicImage()"></button>');
         loadAnnotationsButton.appendTo(jQuery(".islandora-basic-image-content")[0]);
-      
+
         //Update button position for consistency.
         var update_pos_css = {
             top: image_top_pos,
             left: image_left_pos
         };
         jQuery("#load-annotation-button").css(update_pos_css);
-      
+
         // Make sure that the basic image has loaded before loading annotations by default.
         jQuery("img[typeof='foaf:Image']").load(function() {
             if (Drupal.settings.islandora_web_annotations.load_true == true) {
@@ -73,15 +73,22 @@ function initBasicImageAnnotation(){
 
     jQuery("#add-annotation-button").remove();
     jQuery(".annotorious-hint").css("left", "45px");
-
 }
 
 function getAnnotationsBasicImage() {
+    // issue#151 - reset annotation
+    anno.showSelectionWidget();
+
     if(jQuery(".annotorious-hint-icon").is(":visible")=== false) {
         initBasicImageAnnotation();
     }
     var objectPID = getBasicImagePID();
     getAnnotations(objectPID);
+
+    // issue#151 - Ensure that the user is not able to create annotations if they do not have permission to do so
+    if(Drupal.settings.islandora_web_annotations.create == false) {
+        anno.hideSelectionWidget();
+    }
 }
 
 function getBasicImagePID() {
