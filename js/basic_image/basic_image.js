@@ -71,6 +71,11 @@ function initBasicImageAnnotation(){
         deleteAnnotation(annotation);
     });
 
+    // issue#151 - Ensure that the user is not able to create annotations if they do not have permission to do so
+    if(Drupal.settings.islandora_web_annotations.create == false) {
+        anno.hideSelectionWidget();
+    }
+
     jQuery("#add-annotation-button").remove();
     jQuery(".annotorious-hint").css("left", "45px");
 
