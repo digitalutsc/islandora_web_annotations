@@ -8,14 +8,6 @@ jQuery(document).ready(function() {
     // Hide Lib related permission fields
     jQuery(".annotator-checkbox").hide();
 
-    if(Drupal.settings.islandora_web_annotations.view === false){
-        jQuery(".vjs-showannotations-annotation").hide();
-        jQuery(".vjs-statistics-annotation").hide();
-    }
-
-    if(Drupal.settings.islandora_web_annotations.create == false) {
-        jQuery(".vjs-new-annotation").hide();
-    }
 
     jQuery("#islandora_videojs_html5_api").addClass("video-js");
     jQuery("#islandora_videojs_html5_api").attr("preload", "none");
@@ -70,6 +62,17 @@ jQuery(document).ready(function() {
     catch(e){
         alert(e)
     }
+
+    // Apply Permissions after OpenVideoAnnotation elements are loaded
+    if(Drupal.settings.islandora_web_annotations.view === false){
+        jQuery(".vjs-showannotations-annotation").hide();
+        jQuery(".vjs-statistics-annotation").hide();
+    }
+
+    if(Drupal.settings.islandora_web_annotations.create == false) {
+        jQuery(".vjs-new-annotation").hide();
+    }
+
 
     //change the user (Experimental)
     ova.setCurrentUser(user);
