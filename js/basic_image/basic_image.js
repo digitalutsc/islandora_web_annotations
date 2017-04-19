@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
     var image_top_pos = image_position.top;
     var image_left_pos = image_position.left;
     if(Drupal.settings.islandora_web_annotations.view == true) {
-        var loadAnnotationsButton = jQuery('<button id="load-annotation-button" title="Load Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsBasicImage()"></button>');
+        var loadAnnotationsButton = jQuery('<button id="load-annotation-button" title="Toggle Annotations" class="annotator-adder-actions__button h-icon-annotate" onclick="getAnnotationsBasicImage()"></button>');
         loadAnnotationsButton.appendTo(jQuery(".islandora-basic-image-content")[0]);
       
         //Update button position for consistency.
