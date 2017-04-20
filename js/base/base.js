@@ -213,12 +213,13 @@ function updateAnnotation(annotationData) {
             var jsonData = JSON.parse(data);
             var status = jsonData.status;
             var annoInfo = jsonData.data;
-            var checksum = annoInfo.checksum;
-            var updatedText = annoInfo.body.text;
-            var creator = annoInfo.creator;
-            var created = annoInfo.created;
 
             if(status == "success") {
+                var checksum = annoInfo.checksum;
+                var updatedText = annoInfo.body.text;
+                var creator = annoInfo.creator;
+                var created = annoInfo.created;
+
                 updateAnnotationInfo(annotationPID, checksum, updatedText, creator, created);
                 var verbose_message = "Successfully updated the annotation: " + JSON.stringify(annoInfo);
                 var short_message = "Update successful.";
