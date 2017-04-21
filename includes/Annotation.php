@@ -182,7 +182,7 @@ class Annotation implements interfaceAnnotation
         $textvalue = $annotationData["text"];
         $creator = $annotationMetadata["creator"];
 
-        // @nbsp; results in an invalid xml, replace that with &#160;
+        // &nbsp; results in an invalid xml, replace that with &#160;
         $textvalue = str_replace("&nbsp;", "&#160;", $textvalue);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><annotation></annotation>');
