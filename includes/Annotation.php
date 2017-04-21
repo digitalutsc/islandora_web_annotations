@@ -181,16 +181,13 @@ class Annotation implements interfaceAnnotation
 
         $textvalue = $annotationData["text"];
         $creator = $annotationMetadata["creator"];
-
-        // &nbsp; results in an invalid xml, replace that with &#160;
-        $textvalue = str_replace("&nbsp;", "&#160;", $textvalue);
-
+      
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><annotation></annotation>');
 
         $xml->addChild('title', "Annotation for " . $targetID);
         $xml->addChild('target', $targetID);
         $xml->addChild('creator', $creator);
-        $xml->addChild('textvalue', $textvalue);
+        $xml = $this->addCadata('textvalue', $textvalue, $xml);
 
         // If video annotation
         if (array_key_exists('rangeTime', $annotationData)) {
@@ -204,5 +201,26 @@ class Annotation implements interfaceAnnotation
 
         return $contentXML;
     }
+
+  /**
+   * Adds a CDATA property to an XML document.
+   *
+   * @param string $name
+   *   Name of property that should contain CDATA.
+   * @param string $value
+   *   Value that should be inserted into a CDATA child.
+   * @param object $parent
+   *   Element that the CDATA child should be attached too.
+   */
+  private function addCadata($name, $value, &$parent) {
+    $child = $parent->addChild($name);
+
+    if ($child !== NULL) {
+      $child_node = dom_import_simplexml($child);
+      $child_owner = $child_node->ownerDocument;
+      $child_node->appendChild($child_owner->createCDATASection($value));
+    }
+    return $child;
+  }
 
 }
