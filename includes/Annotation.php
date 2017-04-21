@@ -181,13 +181,13 @@ class Annotation implements interfaceAnnotation
 
         $textvalue = $annotationData["text"];
         $creator = $annotationMetadata["creator"];
-      
+
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><annotation></annotation>');
 
         $xml->addChild('title', "Annotation for " . $targetID);
         $xml->addChild('target', $targetID);
         $xml->addChild('creator', $creator);
-        $xml = $this->addCadata('textvalue', $textvalue, $xml);
+        $this->addCadata('textvalue', $textvalue, $xml);
 
         // If video annotation
         if (array_key_exists('rangeTime', $annotationData)) {
