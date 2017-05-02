@@ -178,7 +178,7 @@ function updateAnnotation(){
         $output = json_encode($output);
     }
 
-    drupal_json_output($output);
+    echo $output;
     drupal_exit();
 }
 

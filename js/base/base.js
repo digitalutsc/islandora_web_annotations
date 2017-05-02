@@ -210,7 +210,7 @@ function updateAnnotation(annotationData) {
 
         },
         success: function(data) {
-            var jsonData = JSON.parse(data);
+            var jsonData = data;
             var status = jsonData.status;
             var annoInfo = jsonData.data;
 
