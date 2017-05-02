@@ -175,7 +175,7 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
     } else if (ajaxOptions.type === 'PUT' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
         jQuery('.annotator-wrapper').unblock();
 
-        var jsonData = JSON.parse(jsonDataText);
+        var jsonData = jsonDataText;
         var status = jsonData.status;
         if(status === undefined){
             alert("Error in updating annotation.  Server failed to return valid response.");
@@ -237,6 +237,8 @@ function updateChecksum(pid, checksum) {
         var annoPID = ova.annotator.plugins["Store"].annotations[j].pid;
         if(annoPID == pid) {
             ova.annotator.plugins["Store"].annotations[j].checksum = checksum;
+            delete ova.annotator.plugins["Store"].annotations[j].status;
+            delete ova.annotator.plugins["Store"].annotations[j].data;
             break;
         }
     }
