@@ -119,6 +119,13 @@ function getAnnotations(targetObjectId) {
             // Extract data
             var jsonData = JSON.parse(data);
             annotationContainerID = jsonData["@id"];
+            if(typeof(jsonData.first) == 'undefined' ){
+                // first property is undefined when there are
+                // no annotations (or annotation container).
+                b_annotationsShown = false;
+                return false;
+            }
+
             var annotations = jsonData.first.items;
 
             for(var i = 0; i< annotations.length; i++) {
