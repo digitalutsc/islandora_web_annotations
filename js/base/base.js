@@ -232,7 +232,7 @@ function updateAnnotation(annotationData) {
                 var short_message = "Update successful.";
                 verbose_alert(short_message, verbose_message);
             } else if(status == "conflict"){
-                var msg = "There was an edit conflict.  Please copy your changes, reload the annotations and try again";
+                var msg = "There was an edit conflict.  Please hover over the annotation you edited, copy the content, refresh annotations page and try updating again.";
                 verbose_alert(msg, msg);
             } else {
                 var verbose_message = "Unable to update.  Error info: " + JSON.stringify(annoInfo);
