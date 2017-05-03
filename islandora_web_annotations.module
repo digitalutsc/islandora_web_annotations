@@ -190,6 +190,7 @@ function islandora_web_annotations_islandora_required_objects(IslandoraTuque $co
 
     $object1 = installObject($connection, AnnotationConstants::WADM_CONTENT_MODEL, AnnotationConstants::WADM_CONTENT_MODEL_LABEL, "webannotation_ds_composite_model.xml");
     $object2 = installObject($connection, AnnotationConstants::WADMContainer_CONTENT_MODEL, AnnotationConstants::WADMContainer_CONTENT_MODEL_LABEL, "webannotation_ds_composite_model.xml");
+    $object3 = install_annotations_collections_object($connection);
 
     return array(
       'islandora_web_annotations' => array(
@@ -197,6 +198,7 @@ function islandora_web_annotations_islandora_required_objects(IslandoraTuque $co
         'objects' => array(
           $object1,
           $object2,
+          $object3,
         ),
       ),
     );
@@ -245,6 +247,16 @@ function islandora_web_annotations_islandora_object_alter(AbstractObject $object
 }
 
 
+/**
+ * Install Annotations Content Models.
+ *
+ * @param $connection
+ * @param $contentModel
+ * @param $contentModelLabel
+ * @param $composite_model_fileName
+ *
+ * @return object.
+ */
 function installObject($connection, $contentModel, $contentModelLabel, $composite_model_fileName){
   try{
     $object = $connection->repository->constructObject($contentModel);
@@ -266,5 +278,39 @@ function installObject($connection, $contentModel, $contentModelLabel, $composit
   } catch(Exception $e) {
     watchdog(AnnotationConstants::MODULE_NAME, 'Error in installIslandoraObject: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
     return null;
+  }
+}
+
+/**
+ * Install Annotation Collection.
+ *
+ * @param $connection
+ *
+ * @return object.
+ */
+function install_annotations_collections_object($connection) {
+  try {
+    // Annotations Collection.
+    $annotations_collection = $connection->repository->constructObject('islandora:annotations_collection');
+    $annotations_collection->owner = 'fedoraAdmin';
+    $annotations_collection->label = 'Annotations Collection';
+    $annotations_collection->models = 'islandora:collectionCModel';
+    $annotations_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
+
+    $datastream = $annotations_collection->constructDatastream('COLLECTION_POLICY', 'X');
+    $datastream->label = 'Collection policy';
+    $datastream->mimetype = 'text/xml';
+    $moduleDir = realpath(__DIR__);
+    $datastream->setContentFromFile($moduleDir . "/xml/islandora_annotations_collection_policy.xml", FALSE);
+    $annotations_collection->ingestDatastream($datastream);
+
+    $objectID = $annotations_collection->id;
+
+    watchdog(AnnotationConstants::MODULE_NAME, 'installObject with pid: %t', array('%t' => $objectID), WATCHDOG_INFO);
+    return $annotations_collection;
+
+  } catch (Exception $e) {
+    watchdog(AnnotationConstants::MODULE_NAME, 'Error in install_annotations_collections_object: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
+    return NULL;
   }
 }

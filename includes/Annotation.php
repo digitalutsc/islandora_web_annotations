@@ -39,6 +39,7 @@ class Annotation implements interfaceAnnotation
             $object->label = "Annotation for " . $targetPID;
             $object->models = array(AnnotationConstants::WADM_CONTENT_MODEL);
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', AnnotationConstants::WADM_CONTENT_MODEL);
+            $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', AnnotationConstants::ANNOTATION_COLLECTION_NS);
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfAnnotationContainer', $annotationContainerID);
             $dsid = AnnotationConstants::WADM_DSID;
 
