@@ -1,4 +1,4 @@
-# Islandora Web Annotations [![Build Status](https://travis-ci.org/digitalutsc/islandora_web_annotations.svg?branch=master)](https://travis-ci.org/digitalutsc/islandora_web_annotations)
+# Islandora Web Annotations [![Build Status](https://travis-ci.org/digitalutsc/islandora_web_annotations.svg?branch=7.x )](https://travis-ci.org/digitalutsc/islandora_web_annotations)
 
 An experimental Islandora module with the aim of adding annotation support to Islandora using the [W3C Web annotation model](https://github.com/w3c/web-annotation).   
 
