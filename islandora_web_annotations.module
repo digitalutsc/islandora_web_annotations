@@ -147,7 +147,12 @@ function islandora_web_annotations_views_api() {
 /**
  * Send user access related information to js for access control
  */
-function islandora_web_annotations_init() {
+function islandora_web_annotations_islandora_view_object(AbstractObject $object) {
+  $pid = "unknown";
+  if (isset($object)) {
+    $pid = $object->id;
+  }
+
   global $user;
   $username = "anonymous";
 
@@ -169,6 +174,7 @@ function islandora_web_annotations_init() {
 
   drupal_add_js(array('islandora_web_annotations' =>
     array('user'=>$username,
+      'pid' => $pid,
       'view' => $view,
       'create'=>$create,
       'edit_any'=>$edit_any,

@@ -92,10 +92,7 @@ function getAnnotationsBasicImage() {
 }
 
 function getBasicImagePID() {
-    var objectURL = window.location.href;
-    var objectPID = objectURL.substr(objectURL.lastIndexOf('/') + 1);
-    objectPID = objectPID.replace("%3A", ":");
-    objectPID = objectPID.replace("#", "");
+    var objectPID = Drupal.settings.islandora_web_annotations.pid;
     return objectPID;
 }
 
