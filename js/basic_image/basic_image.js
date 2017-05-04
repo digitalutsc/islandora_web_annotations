@@ -6,6 +6,7 @@
  */
 
 var g_contentType = "basic-image";
+var g_contentURI = window.location.href;
 
 jQuery(document).ready(function() {
     var image_position = jQuery(".islandora-basic-image-content img").position();
@@ -93,6 +94,7 @@ function getAnnotationsBasicImage() {
 
 function getBasicImagePID() {
     var objectPID = Drupal.settings.islandora_web_annotations.pid;
+    g_contentURI = location.protocol + '//' + location.host + "/islandora/object/" + objectPID
     return objectPID;
 }
 
