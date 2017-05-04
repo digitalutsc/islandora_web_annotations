@@ -14,9 +14,8 @@ jQuery(document).ready(function() {
 
     preload="none"
 
-    var objectUri = window.location.href;
-    objectUri = objectUri.replace("%3A", ":");
-    objectUri = objectUri.replace("#", "");
+    var objectPID = Drupal.settings.islandora_web_annotations.pid;
+    var objectUri = location.protocol + '//' + location.host + "/islandora/object/" + objectPID
 
     var options = {
         optionsAnnotator: {
