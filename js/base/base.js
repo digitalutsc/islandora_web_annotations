@@ -42,8 +42,6 @@ function createAnnotation(targetObjectId, annotationData) {
         annotationData: annotationData
     };
 
-
-
     jQuery.ajax({
         url: location.protocol + '//' + location.host + '/islandora_web_annotations/create',
         dataType: 'json',
