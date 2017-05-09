@@ -6,6 +6,7 @@
  */
 
 var g_contentType = "large-image";
+var g_contentURI = window.location.href;
 
 jQuery(document).ready(function() {
 
@@ -81,6 +82,7 @@ jQuery(document).ready(function() {
 
 
 function getAnnotationsLargeImage() {
-    var targetObjectId = Drupal.settings.islandoraOpenSeadragon.pid;
-    getAnnotations(targetObjectId);
+    var objectPID = Drupal.settings.islandora_web_annotations.pid;
+    g_contentURI = location.protocol + '//' + location.host + "/islandora/object/" + objectPID
+    getAnnotations(objectPID);
 }

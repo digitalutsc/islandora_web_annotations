@@ -33,6 +33,9 @@ function createAnnotation(targetObjectId, annotationData) {
     var metadata = {}
     metadata.creator = user;
 
+    // Ensure that canonical path is saved, not path autho
+    annotationData.context = g_contentURI;
+
     var annotation = {
         targetPid: targetObjectId,
         metadata: metadata,
@@ -193,6 +196,8 @@ function updateAnnotation(annotationData) {
     delete annotationData.created;
     delete annotationData.checksum;
 
+    // Ensure that canonical path is saved, not path autho
+    annotationData.context = g_contentURI;
 
     var annotationPID = annotationData.pid;
     var annotation = {
