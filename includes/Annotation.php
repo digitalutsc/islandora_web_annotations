@@ -143,8 +143,8 @@ class Annotation implements interfaceAnnotation
         $annotationUtils = new AnnotationUtil();
         $utc_now = $annotationUtils->utcNow();
         if($actionType == "create") {
-          $now = $utc_now;
-          $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $now);
+            $now = $utc_now;
+            $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $now);
         }
         if($actionType == "update"){
             $now = $utc_now;
