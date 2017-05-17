@@ -1,16 +1,16 @@
-# Contributing to Islandora Oral Histories Solution Pack
+# Contributing to Islandora Web Annotations Utility Module
 
-All contributions to Islandora Oral Histories Solution Pack are welcome: use-cases, documentation, code, bug reports, feature requests, etc. You do not need to be a programmer to contribute!
+All contributions to Islandora Web Annotations Utility Module are welcome: use-cases, documentation, code, bug reports, feature requests, etc. You do not need to be a programmer to contribute!
 
-Regardless of how you want to contribute to Islandora Oral Histories Solution Pack, start by opening a Github issue. Someone (probably one of the maintainers) will respond and keep the discussion going.
+Regardless of how you want to contribute to Islandora Web Annotations Utility Module, start by opening a Github issue. Someone (probably one of the maintainers) will respond and keep the discussion going.
 
 ### Write some documentation
 
-If you use Islandora Oral Histories Solution Pack and you have documented a task for yourself, consider sharing it with other users. We'd be happy to put it on the Islandora Oral Histories Solution Pack wiki or link to it if you'd rather maintain it somewhere else.
+If you use Islandora Web Annotations Utility Module and you have documented a task for yourself, consider sharing it with other users. We'd be happy to put it on the Islandora Web Annotations Utility Module wiki or link to it if you'd rather maintain it somewhere else.
 
 ### Request a new feature
 
-We love hear about how you want to use Islandora Oral Histories Solution Pack! In order to help us understand a new feature request, we ask you to provide us with a structured use case following this template:
+We love hear about how you want to use Islandora Web Annotations Utility Module! In order to help us understand a new feature request, we ask you to provide us with a structured use case following this template:
 
 | Title (Goal)  | The title or goal of your use case                            |
 --------------- |------------------------------------                           |
@@ -52,7 +52,7 @@ Contributions to the Islandora codebase should be sent as GitHub pull requests. 
 
     1. [Open an issue](https://github.com/digitalutsc/islandora_solution_pack_oralhistories/issues) and assign it the label of "enhancement" or "feature request", if a similar issue does not exist already. If a similar issue does exist, then you should consider participating in the work on the existing issue.
     2. Comment on the issue with your plan for implementing the issue. Explain what pieces of the codebase you are going to touch and how everything is going to fit together.
-    3. The Islandora Oral Histories Solution Pack maintainers will work with you on the design to make sure you are on the right track.
+    3. The Islandora Web Annotations Utility Module maintainers will work with you on the design to make sure you are on the right track.
     4. Implement your issue, create a pull request (see below), and iterate from there.
 
 #### Issue / Topic Branches
@@ -63,15 +63,15 @@ All issues should be worked on in separate git branches. The branch name should 
 
 Take a look at [Creating a pull request](https://help.github.com/articles/creating-a-pull-request). In a nutshell you need to:
 
-1. [Fork](https://help.github.com/articles/fork-a-repo) the Islandora Oral Histories Solution Pack repository to your personal GitHub account. See [Fork a repo](https://help.github.com/articles/fork-a-repo) for detailed instructions.
+1. [Fork](https://help.github.com/articles/fork-a-repo) the Islandora Web Annotations Utility Module repository to your personal GitHub account. See [Fork a repo](https://help.github.com/articles/fork-a-repo) for detailed instructions.
 2. Commit any changes to the issue/topic branch in your fork. Comments can be as terse as "Work on #243.", etc. but you can be more descriptive if you want. However, please refer to the issue you are working on somewhere in the commit comment using Github's '#' shortcut, as in the example.
-3. Send a [pull request](https://help.github.com/articles/creating-a-pull-request) to the Islandora Oral Histories Solution Pack GitHub repository that you forked in step 1 (in other words, https://github.com/MarcusBarnes/mik).
+3. Send a [pull request](https://help.github.com/articles/creating-a-pull-request) to the Islandora Web Annotations Utility Module GitHub repository that you forked in step 1 (in other words, https://github.com/MarcusBarnes/mik).
 
-You may want to read [Syncing a fork](https://help.github.com/articles/syncing-a-fork) for instructions on how to keep your fork up to date with the latest changes of the upstream (official) `Islandora Oral Histories Solution Pack` repository.
+You may want to read [Syncing a fork](https://help.github.com/articles/syncing-a-fork) for instructions on how to keep your fork up to date with the latest changes of the upstream (official) `Islandora Web Annotations Utility Module` repository.
 
 ## License Agreements
 
-Islandora Oral Histories Solution Pack is licensed under GPL version 3 or higher. By opening a pull request or otherwise contributing code to the Islandora Oral Histories Solution Pack codebase, you transfer non-exclusive ownership of that code (you retain ownership of your code for other purposes) to the Islandora Oral Histories Solution Pack maintainers for the sole purpose of redistributing your contribution within the Islandora Oral Histories Solution Pack codebase under the conditions of the GPLv3 license or higher. You also warrant that you have the legal authority to make such a transfer.
+Islandora Web Annotations Utility Module is licensed under GPL version 3 or higher. By opening a pull request or otherwise contributing code to the Islandora Web Annotations Utility Module codebase, you transfer non-exclusive ownership of that code (you retain ownership of your code for other purposes) to the Islandora Web Annotations Utility Module maintainers for the sole purpose of redistributing your contribution within the Islandora Web Annotations Utility Module codebase under the conditions of the GPLv3 license or higher.  You also warrant that you have the legal authority to make such a transfer.
 
 ## Thanks
 
