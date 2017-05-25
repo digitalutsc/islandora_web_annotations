@@ -50,7 +50,7 @@ Contributions to the Islandora codebase should be sent as GitHub pull requests. 
 
 * For all code contributions, please use the following process in order to to prevent any wasted work and catch design issues early on.
 
-    1. [Open an issue](https://github.com/digitalutsc/islandora_solution_pack_oralhistories/issues) and assign it the label of "enhancement" or "feature request", if a similar issue does not exist already. If a similar issue does exist, then you should consider participating in the work on the existing issue.
+    1. [Open an issue](https://github.com/digitalutsc/islandora_web_annotations/issues) and assign it the label of "enhancement" or "feature request", if a similar issue does not exist already. If a similar issue does exist, then you should consider participating in the work on the existing issue.
     2. Comment on the issue with your plan for implementing the issue. Explain what pieces of the codebase you are going to touch and how everything is going to fit together.
     3. The Islandora Web Annotations Utility Module maintainers will work with you on the design to make sure you are on the right track.
     4. Implement your issue, create a pull request (see below), and iterate from there.
