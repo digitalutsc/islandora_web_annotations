@@ -102,7 +102,7 @@ class AnnotationUtil
     /**
      *  Returns datetime as a xsd:dateTime with the UTC timezone expressed as "Z".
      */
-    public function utcNow() {
+    public static function utcNow() {
       $now = date("Y-m-d H:i:s");
       $utc_now = new DateTime($now);
       $utc_now->setTimezone(new DateTimeZone('UTC'));

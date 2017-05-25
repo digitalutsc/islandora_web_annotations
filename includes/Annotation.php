@@ -65,6 +65,7 @@ class Annotation implements interfaceAnnotation
             $checksum =  $WADMObject->checksum;
 
             $annotationJsonLDData["checksum"] = $checksum;
+            $annotationJsonLDData["pid"] = $annotationPID;
             $annotationJsonLD = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
             watchdog(AnnotationConstants::MODULE_NAME , 'Annotation : createAnnotation: Added new annotation @annotationPID', array("@annotationPID" => $annotationPID), WATCHDOG_INFO);
@@ -124,10 +125,12 @@ class Annotation implements interfaceAnnotation
     private function getAnnotationJsonLD($actionType, $annotationData, $annotationMetadata)
     {
         $pid = isset($annotationData['pid']) ? $annotationData['pid'] : 'New';
+        global $base_url;
+        $annotationIRI = $base_url . "/islandora/object/" . $pid;
 
         $data = array(
           "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION),
-          "@id" => $pid,
+          "@id" => $annotationIRI,
           "@type" => AnnotationConstants::ANNOTATION_CLASS_1
         );
 
@@ -137,13 +140,11 @@ class Annotation implements interfaceAnnotation
           $data = convert_ova_to_W3C_annotation_datamodel($annotationData, $data);
         }
 
-        $annotationUtils = new AnnotationUtil();
-        $utc_now = $annotationUtils->utcNow();
+        $utc_now = AnnotationUtil::utcNow();
         if($actionType == "create") {
             $now = $utc_now;
             $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $now);
-        }
-        if($actionType == "update"){
+        } elseif($actionType == "update") {
             $now = $utc_now;
             $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $annotationMetadata["created"], 'modifiedBy' => $annotationMetadata["author"], 'modified' => $now);
         }
@@ -175,9 +176,7 @@ class Annotation implements interfaceAnnotation
 
     private function generateDerivativeContent($annotationData, $annotationMetadata){
         $target = $annotationData["context"];
-        $pos = strrpos($target, '/');
-        $targetID = $pos === false ? $target : substr($target, $pos + 1);
-        $targetID = str_replace("%3A",":",$targetID);
+        $targetID = AnnotationUtil::getPIDfromURL($target);
 
         $textvalue = $annotationData["text"];
         $creator = $annotationMetadata["creator"];

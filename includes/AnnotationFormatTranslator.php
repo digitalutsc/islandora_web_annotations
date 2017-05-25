@@ -17,10 +17,10 @@ function convert_annotorious_to_W3C_annotation_datamodel($annotationData, $data)
   $shapes = $annotationData["shapes"];
   $target_source = $annotationData["src"];
 
-  $target_source_relative_path = parse_url($target_source)["path"];
+  // $target_source_relative_path = parse_url($target_source)["path"];
   $bodytext = $annotationData["text"];
 
-  $target = array('source' => $target_source_relative_path, 'format' => 'image', 'selector' => array('shapes' => $shapes));
+  $target = array('source' => $target_source, 'format' => 'image', 'selector' => array('shapes' => $shapes));
 
   $data["target"] = $target;
   $data["body"] = array('type' => 'TextualBody', 'bodytext' => $bodytext, 'format' => 'text/plain');
@@ -45,6 +45,10 @@ function convert_ova_to_W3C_annotation_datamodel($annotationData, $data) {
 
   $target_org = $annotationData["target"];
   $target_source = $target_org["src"];
+
+  global $base_url;
+  $target_source = $base_url . $target_source;
+
 
   $target = array('source' => $target_source, 'format' => $media, 'selector' => array('rangeTime' => $rangeTime));
   $data["target"] = $target;
