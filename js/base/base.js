@@ -425,11 +425,43 @@ function deleteAllLabelsAndBlockItems(){
     jQuery("#annotation-list").parent().remove();
 }
 
+/**
+ * Common Methods
+ */
+
 function verbose_alert(short_message, verbose_message) {
     var verbose_flag = Drupal.settings.islandora_web_annotations.verbose_messages;
-    if(verbose_flag){
+    if (verbose_flag) {
         alert(verbose_message);
     } else {
-        alert(short_message);
+        showGrowlMsg(short_message);
     }
+}
+
+function showGrowlMsg(i_msg) {
+
+    jQuery.blockUI({
+        message: i_msg,
+        fadeIn: 700,
+        fadeOut: 700,
+        timeout: 2000,
+        showOverlay: false,
+        centerY: false,
+        css: {
+            width: '400px',
+            bottom: '10px',
+            top: '-100',
+            left: '',
+            right: '10px',
+            height: '50px',
+            border: 'none',
+            padding: '5px',
+            backgroundColor: '#000',
+            '-webkit-border-radius': '10px',
+            '-moz-border-radius': '10px',
+            opacity: .6,
+            color: '#fff'
+        }
+    });
+
 }

@@ -68,8 +68,13 @@ function initBasicImageAnnotation(){
         updateAnnotation(annotation);
     });
 
-    anno.addHandler("onAnnotationRemoved", function(annotation) {
-        deleteAnnotation(annotation);
+    anno.addHandler("beforeAnnotationRemoved", function(annotation) {
+        var isConfirmed = confirm("This annotation will be deleted. This action cannot be reversed. Are you sure?");
+        if (isConfirmed) {
+            deleteAnnotation(annotation);
+        } else {
+            return false;
+        }
     });
 
     jQuery("#add-annotation-button").remove();
