@@ -98,4 +98,15 @@ class AnnotationUtil
         $targetPID = substr($url, strrpos($url, '/') + 1);
         return $targetPID;
     }
+
+    /**
+     *  Returns datetime as a xsd:dateTime with the UTC timezone expressed as "Z".
+     */
+    public function utcNow() {
+      $now = date("Y-m-d H:i:s");
+      $utc_now = new DateTime($now);
+      $utc_now->setTimezone(new DateTimeZone('UTC'));
+      return $utc_now->format('Y-m-d\TH:i:s\Z');
+    }
+
 }
