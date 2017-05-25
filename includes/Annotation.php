@@ -8,7 +8,7 @@
 require_once('AnnotationConstants.php');
 require_once('AnnotationUtil.php');
 require_once('interfaceAnnotation.php');
-
+require_once('AnnotationFormatTranslator.php');
 
 class Annotation implements interfaceAnnotation
 {
@@ -43,6 +43,9 @@ class Annotation implements interfaceAnnotation
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfAnnotationContainer', $annotationContainerID);
             $dsid = AnnotationConstants::WADM_DSID;
 
+            $annotationPID =  $object->id;
+            $annotationData['pid'] = $annotationPID;
+
             $annotationJsonLDData = $this->getAnnotationJsonLD("create", $annotationData, $annotationMetadata);
             $annotationJsonLD = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
@@ -52,14 +55,10 @@ class Annotation implements interfaceAnnotation
             $ds->setContentFromString($annotationJsonLD);
             $object->ingestDatastream($ds);
             $this->repository->ingestObject($object);
-            $annotationPID =  $object->id;
 
             // Create Derivative
             $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);
             $this->createUpdateDerivative($object, $contentXML);
-
-            // Update JsonLD with PID info
-            $annotationJsonLDData["pid"] = $annotationPID;
 
             // Get WADM ds checksum
             $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
@@ -124,21 +123,19 @@ class Annotation implements interfaceAnnotation
 
     private function getAnnotationJsonLD($actionType, $annotationData, $annotationMetadata)
     {
-        $target = $annotationData["context"];
-        $PID = isset($annotationData['pid']) ? $annotationData['pid'] : 'New';
-
-        // We don't need this info in the file
-        unset($annotationData['pid']);
+        $pid = isset($annotationData['pid']) ? $annotationData['pid'] : 'New';
 
         $data = array(
-            "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION),
-            "@id" => AnnotationUtil::generateUUID(),
-            "@type" => AnnotationConstants::ANNOTATION_CLASS_1,
-            "body" => (object) $annotationData,
-            "target" => $target,
-            "pid" => $PID
-
+          "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION),
+          "@id" => $pid,
+          "@type" => AnnotationConstants::ANNOTATION_CLASS_1
         );
+
+        if ($annotationMetadata["targetFormat"] == "image") {
+          $data = convert_annotorious_to_W3C_annotation_datamodel($annotationData, $data);
+        } elseif ($annotationMetadata["targetFormat"] == "video") {
+          $data = convert_ova_to_W3C_annotation_datamodel($annotationData, $data);
+        }
 
         $annotationUtils = new AnnotationUtil();
         $utc_now = $annotationUtils->utcNow();

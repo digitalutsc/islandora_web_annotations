@@ -53,6 +53,7 @@ function createAnnotationForVideo($json){
     $user = $annotationData["user"];
     $annotationMetadata["created"] = $created;
     $annotationMetadata["creator"] = $user;
+    $annotationMetadata["targetFormat"] = "video";
 
     $targetPID = substr($uri, strrpos($uri, '/') + 1);
     $oAnnotationContainer = new AnnotationContainer();
@@ -143,6 +144,7 @@ function updateAnnotation(){
             $annotationMetadata["created"] = $created;
             $annotationMetadata["creator"] = $user;
             $annotationMetadata["author"] = $author;
+            $annotationMetadata["targetFormat"] = "video";
 
             $annotationID  = $annotationData["pid"];
             $ETag = $annotationData["checksum"];

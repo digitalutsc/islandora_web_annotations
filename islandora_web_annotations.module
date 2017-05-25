@@ -234,7 +234,7 @@ function islandora_web_annotations_islandora_object_alter(AbstractObject $object
         $WADM_SEARCH_Object = $object->getDatastream("WADM");
         $content = $WADM_SEARCH_Object->content;
         $contentJson = json_decode($content);
-        $targetURL = $contentJson->target;
+        $targetURL = $contentJson->target->source;
         $targetPID = AnnotationUtil::getPIDfromURL($targetURL);
 
         // Get the container

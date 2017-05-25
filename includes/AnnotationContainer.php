@@ -10,6 +10,7 @@ require_once(__DIR__ . '/AnnotationUtil.php');
 require_once(__DIR__ . '/interfaceAnnotationContainer.php');
 require_once(__DIR__ . '/Annotation.php');
 require_once(__DIR__ . '/AnnotationContainerTracker.php');
+require_once(__DIR__ . '/AnnotationFormatTranslator.php');
 module_load_include('inc', 'islandora', 'includes/solution_packs');
 
 class AnnotationContainer implements interfaceAnnotationContainer
@@ -86,15 +87,12 @@ class AnnotationContainer implements interfaceAnnotationContainer
                 }
                 $dsContent = (string)$WADMObject->content;
                 $checksum = $WADMObject->checksum;
-
                 if($dsContent != "NotFound") {
-                    $dsContentJson = json_decode($dsContent);
-                    $body = $dsContentJson->body;
-                    $body->pid = $items[$i];
-                    $body->creator = $dsContentJson->creator;
-                    $body->created = $dsContentJson->created;
-                    $body->checksum = $checksum;
-                    array_push($newArray, $body);
+                  $dsContentJson = json_decode($dsContent);
+                  $body = conver_W3C_to_lib_annotation_datamodel($dsContentJson);
+                  $body->checksum = $checksum;
+
+                  array_push($newArray, $body);
                 }
             }
 

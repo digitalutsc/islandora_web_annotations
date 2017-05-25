@@ -32,6 +32,7 @@ function createAnnotation(targetObjectId, annotationData) {
     var user = Drupal.settings.islandora_web_annotations.user;
     var metadata = {}
     metadata.creator = user;
+    metadata.targetFormat = "image";
 
     // Ensure that canonical path is saved, not path autho
     annotationData.context = g_contentURI;
@@ -186,10 +187,11 @@ function updateAnnotation(annotationData) {
     var created = annotationData.created;
     var checksum = annotationData.checksum;
 
-    var metadata = {}
+    var metadata = {};
     metadata.author = user;
     metadata.creator = creator;
     metadata.created = created;
+    metadata.targetFormat = "image";
 
     // Do not want data duplicated
     delete annotationData.creator;
