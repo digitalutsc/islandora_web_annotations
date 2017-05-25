@@ -34,7 +34,7 @@ To report a bug you should open an issue that summarizes the bug. Set the Issue 
 In order to help us understand and fix the bug it would be useful if you could provide us with:
 
 1. The steps to reproduce the bug. This includes information about e.g. the Islandora version you were using along with version of stack components.
-2. If applicble, some sample data that triggers the bug.
+2. If applicable, some sample data that triggers the bug.
 3. The expected behavior.
 4. The current, incorrect behavior.
 
