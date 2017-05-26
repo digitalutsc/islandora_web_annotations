@@ -45,12 +45,9 @@ function convert_ova_to_W3C_annotation_datamodel($annotationData, $data) {
 
   $target_org = $annotationData["target"];
   $target_source = $target_org["src"];
+  $container = $target_org["container"];
 
-  global $base_url;
-  $target_source = $base_url . $target_source;
-
-
-  $target = array('source' => $target_source, 'format' => $media, 'selector' => array('rangeTime' => $rangeTime));
+  $target = array('source' => $target_source, 'format' => $media, 'selector' => array('rangeTime' => $rangeTime), 'container' => $container);
   $data["target"] = $target;
 
   $data["body"] = array('type' => 'TextualBody', 'bodytext' => $bodytext, 'format' => 'text/html');
@@ -75,13 +72,17 @@ function conver_W3C_to_lib_annotation_datamodel($dsContentJson) {
   $annoObject->creator = $dsContentJson->creator;
   $annoObject->created = $dsContentJson->created;
 
-  if ($targetFormat == "video") {
+  if ((strpos($targetFormat, 'audio') !== false) || (strpos($targetFormat, 'video') !== false)) {
     $annoObject->rangeTime = $dsContentJson->target->selector->rangeTime;
     $annoObject->user = $dsContentJson->creator;
     $target_source = $dsContentJson->target->source;
-    $target = array('src' => $target_source, 'ext' => $target_source, 'container' => 'islandora_videojs');
+    $container = $dsContentJson->target->container;
+    if ($container == null) {
+      $container = "islandora_videojs";
+    }
+    $target = array('src' => $target_source, 'ext' => $target_source, 'container' => $container);
     $annoObject->target = $target;
-  } else if ($targetFormat == "image") {
+  } else if (strpos($targetFormat, 'image') !== false) {
     $annoObject->shapes = $dsContentJson->target->selector->shapes;
     $annoObject->src = $dsContentJson->target->source;
   }
