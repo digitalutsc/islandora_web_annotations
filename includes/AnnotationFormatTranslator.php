@@ -23,7 +23,7 @@ function convert_annotorious_to_W3C_annotation_datamodel($annotationData, $data)
 
   // body
   $bodytext = $annotationData["text"];
-  $data["body"] = array('type' => 'TextualBody', 'bodytext' => $bodytext, 'format' => 'text/plain');
+  $data["body"] = array('type' => 'TextualBody', 'bodyValue' => $bodytext, 'format' => 'text/plain');
 
   return $data;
 
@@ -51,7 +51,7 @@ function convert_ova_to_W3C_annotation_datamodel($annotationData, $data) {
 
   // body
   $bodytext = $annotationData["text"];
-  $data["body"] = array('type' => 'TextualBody', 'bodytext' => $bodytext, 'format' => 'text/html');
+  $data["body"] = array('type' => 'TextualBody', 'bodyValue' => $bodytext, 'format' => 'text/html');
 
   return $data;
 }
@@ -67,7 +67,7 @@ function conver_W3C_to_lib_annotation_datamodel($dsContentJson) {
   $targetFormat = $dsContentJson->target->format;
 
   $annoObject = new stdClass;
-  $annoObject->text = $dsContentJson->body->bodytext;
+  $annoObject->text = $dsContentJson->body->bodyValue;
   $annoObject->media = $dsContentJson->target->format;
   $annoObject->pid = $dsContentJson->{"@id"};
 
