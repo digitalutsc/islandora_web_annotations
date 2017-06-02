@@ -167,6 +167,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
 
         // Update the datastream
         $contentJson["first"]["items"] = $items;
+        $contentJson["total"] = $contentJson["total"] - 1;
         $updatedContent = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         $WADMObject->content = $updatedContent;
 
@@ -199,10 +200,10 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $items = $contentJson["first"]["items"];
             array_push($items, $annotationPID);
             $contentJson["first"]["items"] = $items;
+            $contentJson["total"] = $contentJson["total"] + 1;
             $newContent = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             $WADMObject->content = $newContent;
-
-            watchdog(AnnotationConstants::MODULE_NAME , 'AnnotationContainer : addContainerItem: Added the following item to the container: @annotationContainerID' , array("@annotationContainerID" => $annotationContainerID), WATCHDOG_INFO);
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : addContainerItem: Added the following item to the container: @annotationContainerID' , array("@annotationContainerID" => $annotationContainerID), WATCHDOG_INFO);
         } catch(Exception $e){
             watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : addContainerItem: Failed to add new item to the container: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
             throw $e;
