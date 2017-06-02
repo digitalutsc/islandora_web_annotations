@@ -70,12 +70,21 @@ function conver_W3C_to_lib_annotation_datamodel($dsContentJson) {
   $annoObject->text = $dsContentJson->body->bodytext;
   $annoObject->media = $dsContentJson->target->format;
   $annoObject->pid = $dsContentJson->{"@id"};
-  $annoObject->creator = $dsContentJson->creator;
+
+  $userURL = $dsContentJson->creator;
+
+  $userInfo = explode('/', $userURL);
+  if(sizeof($userInfo) > 1) {
+    $userName = $userInfo[sizeof($userInfo) - 1];
+  } else {
+    $userName = $userURL;
+  }
+  $annoObject->creator = $userName;
   $annoObject->created = $dsContentJson->created;
 
   if ((strpos($targetFormat, 'audio') !== false) || (strpos($targetFormat, 'video') !== false)) {
     $annoObject->rangeTime = $dsContentJson->target->selector->rangeTime;
-    $annoObject->user = $dsContentJson->creator;
+    $annoObject->user = $userName;
     $target_source = $dsContentJson->target->source;
     $container = $dsContentJson->target->container;
     if ($container == null) {

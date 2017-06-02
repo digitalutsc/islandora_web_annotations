@@ -128,6 +128,9 @@ class Annotation implements interfaceAnnotation
         global $base_url;
         $annotationIRI = $base_url . "/islandora/object/" . $pid;
 
+        $userURL = $base_url . "/users/" . $annotationMetadata["creator"];
+
+
         $data = array(
           "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION),
           "@id" => $annotationIRI,
@@ -143,10 +146,10 @@ class Annotation implements interfaceAnnotation
         $utc_now = AnnotationUtil::utcNow();
         if($actionType == "create") {
             $now = $utc_now;
-            $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $now);
+            $metadata = array('creator' => $userURL, 'created' => $now);
         } elseif($actionType == "update") {
             $now = $utc_now;
-            $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $annotationMetadata["created"], 'modified' => $now);
+            $metadata = array('creator' => $userURL, 'created' => $annotationMetadata["created"], 'modified' => $now);
         }
 
         $data = array_merge($data, $metadata);
