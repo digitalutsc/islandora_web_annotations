@@ -37,13 +37,14 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', AnnotationConstants::WADMContainer_CONTENT_MODEL);
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isAnnotationContainerOf', $targetObjectID);
             $dsid = AnnotationConstants::WADMContainer_DSID;
+            $annotationContainerPID =  $object->id;
 
             $ds = $object->constructDatastream($dsid, 'M');
             $ds->label = $dsid;
             $ds->mimetype = AnnotationConstants::ANNOTATION_MIMETYPE;
 
             $targetPageID = $target . "/annotations/?page=0";
-            $test = $this->getAnnotationContainerJsonLD($targetObjectID, $targetPageID);
+            $test = $this->getAnnotationContainerJsonLD($annotationContainerPID, $targetObjectID, $targetPageID);
             $ds->setContentFromString($test);
             $object->ingestDatastream($ds);
             $this->repository->ingestObject($object);
@@ -210,11 +211,12 @@ class AnnotationContainer implements interfaceAnnotationContainer
 
     }
 
-    private function getAnnotationContainerJsonLD($targetObjectID, $targetPageID)
+    private function getAnnotationContainerJsonLD($annotationContainerPID, $targetObjectID, $targetPageID)
     {
-        $containerID = AnnotationUtil::generateUUID();
+      global $base_url;
+      $containerID = $base_url . "/islandora/object/" . $annotationContainerPID;
 
-        $data = array(
+      $data = array(
             "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION, AnnotationConstants::ONTOLOGY_CONTEXT_LDP),
             "@id" => $containerID,
             "@type" => array("BasicContainer", "AnnotationCollection"),
