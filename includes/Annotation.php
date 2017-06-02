@@ -146,7 +146,7 @@ class Annotation implements interfaceAnnotation
             $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $now);
         } elseif($actionType == "update") {
             $now = $utc_now;
-            $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $annotationMetadata["created"], 'modifiedBy' => $annotationMetadata["author"], 'modified' => $now);
+            $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $annotationMetadata["created"], 'modified' => $now);
         }
 
         $data = array_merge($data, $metadata);
