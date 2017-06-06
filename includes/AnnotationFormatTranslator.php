@@ -23,7 +23,7 @@ function convert_annotorious_to_W3C_annotation_datamodel($annotationData, $data)
 
   // body
   $bodytext = $annotationData["text"];
-  $data["body"] = array('type' => 'TextualBody', 'bodyValue' => $bodytext, 'format' => 'text/plain');
+  $data["body"] = array('@type' => 'TextualBody', 'bodyValue' => $bodytext, 'format' => 'text/plain');
 
   return $data;
 
@@ -51,7 +51,7 @@ function convert_ova_to_W3C_annotation_datamodel($annotationData, $data) {
 
   // body
   $bodytext = $annotationData["text"];
-  $data["body"] = array('type' => 'TextualBody', 'bodyValue' => $bodytext, 'format' => 'text/html');
+  $data["body"] = array('@type' => 'TextualBody', 'bodyValue' => $bodytext, 'format' => 'text/html');
 
   return $data;
 }

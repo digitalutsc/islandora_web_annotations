@@ -223,7 +223,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
             "@type" => array("BasicContainer", "AnnotationCollection"),
             "total" => "0",
             "label" => "annotationContainer for " . $targetObjectID,
-            "first" => (object) array("id" => $targetPageID, "type" => AnnotationConstants::ANNOTATION_CLASS_2, "items" => array())
+            "first" => (object) array("@id" => $targetPageID, "@type" => AnnotationConstants::ANNOTATION_CLASS_2, "items" => array())
         );
         $annotationContainerJsonLD = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         return $annotationContainerJsonLD;
