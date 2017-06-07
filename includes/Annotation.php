@@ -8,7 +8,7 @@
 require_once('AnnotationConstants.php');
 require_once('AnnotationUtil.php');
 require_once('interfaceAnnotation.php');
-
+require_once('AnnotationFormatTranslator.php');
 
 class Annotation implements interfaceAnnotation
 {
@@ -43,6 +43,9 @@ class Annotation implements interfaceAnnotation
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfAnnotationContainer', $annotationContainerID);
             $dsid = AnnotationConstants::WADM_DSID;
 
+            $annotationPID =  $object->id;
+            $annotationData['pid'] = $annotationPID;
+
             $annotationJsonLDData = $this->getAnnotationJsonLD("create", $annotationData, $annotationMetadata);
             $annotationJsonLD = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
@@ -52,20 +55,17 @@ class Annotation implements interfaceAnnotation
             $ds->setContentFromString($annotationJsonLD);
             $object->ingestDatastream($ds);
             $this->repository->ingestObject($object);
-            $annotationPID =  $object->id;
 
             // Create Derivative
             $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);
             $this->createUpdateDerivative($object, $contentXML);
-
-            // Update JsonLD with PID info
-            $annotationJsonLDData["pid"] = $annotationPID;
 
             // Get WADM ds checksum
             $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
             $checksum =  $WADMObject->checksum;
 
             $annotationJsonLDData["checksum"] = $checksum;
+            $annotationJsonLDData["pid"] = $annotationPID;
             $annotationJsonLD = json_encode($annotationJsonLDData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
             watchdog(AnnotationConstants::MODULE_NAME , 'Annotation : createAnnotation: Added new annotation @annotationPID', array("@annotationPID" => $annotationPID), WATCHDOG_INFO);
@@ -124,31 +124,32 @@ class Annotation implements interfaceAnnotation
 
     private function getAnnotationJsonLD($actionType, $annotationData, $annotationMetadata)
     {
-        $target = $annotationData["context"];
-        $PID = isset($annotationData['pid']) ? $annotationData['pid'] : 'New';
+        $pid = isset($annotationData['pid']) ? $annotationData['pid'] : 'New';
+        global $base_url;
+        $annotationIRI = $base_url . "/islandora/object/" . $pid;
 
-        // We don't need this info in the file
-        unset($annotationData['pid']);
+        $userURL = $base_url . "/users/" . $annotationMetadata["creator"];
+
 
         $data = array(
-            "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION),
-            "@id" => AnnotationUtil::generateUUID(),
-            "@type" => AnnotationConstants::ANNOTATION_CLASS_1,
-            "body" => (object) $annotationData,
-            "target" => $target,
-            "pid" => $PID
-
+          "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION),
+          "@id" => $annotationIRI,
+          "@type" => AnnotationConstants::ANNOTATION_CLASS_1
         );
 
-        $annotationUtils = new AnnotationUtil();
-        $utc_now = $annotationUtils->utcNow();
+        if ($annotationMetadata["targetFormat"] == "image") {
+          $data = convert_annotorious_to_W3C_annotation_datamodel($annotationData, $data);
+        } elseif ($annotationMetadata["targetFormat"] == "video") {
+          $data = convert_ova_to_W3C_annotation_datamodel($annotationData, $data);
+        }
+
+        $utc_now = AnnotationUtil::utcNow();
         if($actionType == "create") {
             $now = $utc_now;
-            $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $now);
-        }
-        if($actionType == "update"){
+            $metadata = array('creator' => $userURL, 'created' => $now);
+        } elseif($actionType == "update") {
             $now = $utc_now;
-            $metadata = array('creator' => $annotationMetadata["creator"], 'created' => $annotationMetadata["created"], 'modifiedBy' => $annotationMetadata["author"], 'modified' => $now);
+            $metadata = array('creator' => $userURL, 'created' => $annotationMetadata["created"], 'modified' => $now);
         }
 
         $data = array_merge($data, $metadata);
@@ -178,9 +179,7 @@ class Annotation implements interfaceAnnotation
 
     private function generateDerivativeContent($annotationData, $annotationMetadata){
         $target = $annotationData["context"];
-        $pos = strrpos($target, '/');
-        $targetID = $pos === false ? $target : substr($target, $pos + 1);
-        $targetID = str_replace("%3A",":",$targetID);
+        $targetID = AnnotationUtil::getPIDfromURL($target);
 
         $textvalue = $annotationData["text"];
         $creator = $annotationMetadata["creator"];

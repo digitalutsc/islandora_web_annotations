@@ -99,10 +99,33 @@ class AnnotationUtil
         return $targetPID;
     }
 
+  /**
+   * Returns the PID from a URL.
+   *
+   * @param string $url
+   *   Canonoical url of the source.
+   * @return string $targetPID
+   */
+    public static function getPIDfromCanonicalURL($url) {
+
+      // Clean URL
+      $url = str_replace("%3A",":",$url);
+
+      // Get Path
+      $urlInfo = parse_url($url);
+      $path = $urlInfo['path'];
+
+      // Get PID from path /islandora/object/pid
+      $pathInfo = explode("/", $path);
+      $targetPID = $pathInfo[3];
+
+      return $targetPID;
+    }
+
     /**
      *  Returns datetime as a xsd:dateTime with the UTC timezone expressed as "Z".
      */
-    public function utcNow() {
+    public static function utcNow() {
       $now = date("Y-m-d H:i:s");
       $utc_now = new DateTime($now);
       $utc_now->setTimezone(new DateTimeZone('UTC'));

@@ -6,7 +6,7 @@
  */
 
 var g_contentType = "large-image";
-var g_contentURI = window.location.href;
+var g_targetURL = window.location.href;
 
 jQuery(document).ready(function() {
 
@@ -35,6 +35,7 @@ jQuery(document).ready(function() {
         saveButton.appendTo(jQuery("#openseadragon-wrapper"));
 
         if(Drupal.settings.islandora_web_annotations.load_true == true){
+            setContentURI();
             getAnnotationsLargeImage();
         }
     }
@@ -42,6 +43,7 @@ jQuery(document).ready(function() {
     if(Drupal.settings.islandora_web_annotations.create == true) {
         var addButton = jQuery('<button id="add-annotation-button" title="Add Annotation" class="annotator-adder-actions__button h-icon-add" onclick="anno.activateSelector();"></button>');
         addButton.appendTo(jQuery("#openseadragon-wrapper"));
+        setContentURI();
     }
 
 
@@ -88,6 +90,10 @@ jQuery(document).ready(function() {
 
 function getAnnotationsLargeImage() {
     var objectPID = Drupal.settings.islandora_web_annotations.pid;
-    g_contentURI = location.protocol + '//' + location.host + "/islandora/object/" + objectPID
     getAnnotations(objectPID);
+}
+
+function setContentURI() {
+    var objectPID = Drupal.settings.islandora_web_annotations.pid;
+    g_targetURL = location.protocol + '//' + location.host + "/islandora/object/" + objectPID
 }

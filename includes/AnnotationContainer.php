@@ -10,6 +10,7 @@ require_once(__DIR__ . '/AnnotationUtil.php');
 require_once(__DIR__ . '/interfaceAnnotationContainer.php');
 require_once(__DIR__ . '/Annotation.php');
 require_once(__DIR__ . '/AnnotationContainerTracker.php');
+require_once(__DIR__ . '/AnnotationFormatTranslator.php');
 module_load_include('inc', 'islandora', 'includes/solution_packs');
 
 class AnnotationContainer implements interfaceAnnotationContainer
@@ -36,13 +37,14 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', AnnotationConstants::WADMContainer_CONTENT_MODEL);
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isAnnotationContainerOf', $targetObjectID);
             $dsid = AnnotationConstants::WADMContainer_DSID;
+            $annotationContainerPID =  $object->id;
 
             $ds = $object->constructDatastream($dsid, 'M');
             $ds->label = $dsid;
             $ds->mimetype = AnnotationConstants::ANNOTATION_MIMETYPE;
 
             $targetPageID = $target . "/annotations/?page=0";
-            $test = $this->getAnnotationContainerJsonLD($targetObjectID, $targetPageID);
+            $test = $this->getAnnotationContainerJsonLD($annotationContainerPID, $targetObjectID, $targetPageID);
             $ds->setContentFromString($test);
             $object->ingestDatastream($ds);
             $this->repository->ingestObject($object);
@@ -86,15 +88,12 @@ class AnnotationContainer implements interfaceAnnotationContainer
                 }
                 $dsContent = (string)$WADMObject->content;
                 $checksum = $WADMObject->checksum;
-
                 if($dsContent != "NotFound") {
-                    $dsContentJson = json_decode($dsContent);
-                    $body = $dsContentJson->body;
-                    $body->pid = $items[$i];
-                    $body->creator = $dsContentJson->creator;
-                    $body->created = $dsContentJson->created;
-                    $body->checksum = $checksum;
-                    array_push($newArray, $body);
+                  $dsContentJson = json_decode($dsContent);
+                  $body = conver_W3C_to_lib_annotation_datamodel($dsContentJson);
+                  $body->checksum = $checksum;
+                  $body->pid = $items[$i];
+                  array_push($newArray, $body);
                 }
             }
 
@@ -168,6 +167,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
 
         // Update the datastream
         $contentJson["first"]["items"] = $items;
+        $contentJson["total"] = $contentJson["total"] - 1;
         $updatedContent = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         $WADMObject->content = $updatedContent;
 
@@ -200,10 +200,10 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $items = $contentJson["first"]["items"];
             array_push($items, $annotationPID);
             $contentJson["first"]["items"] = $items;
+            $contentJson["total"] = $contentJson["total"] + 1;
             $newContent = json_encode($contentJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             $WADMObject->content = $newContent;
-
-            watchdog(AnnotationConstants::MODULE_NAME , 'AnnotationContainer : addContainerItem: Added the following item to the container: @annotationContainerID' , array("@annotationContainerID" => $annotationContainerID), WATCHDOG_INFO);
+            watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : addContainerItem: Added the following item to the container: @annotationContainerID' , array("@annotationContainerID" => $annotationContainerID), WATCHDOG_INFO);
         } catch(Exception $e){
             watchdog(AnnotationConstants::MODULE_NAME, 'AnnotationContainer : addContainerItem: Failed to add new item to the container: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
             throw $e;
@@ -212,17 +212,18 @@ class AnnotationContainer implements interfaceAnnotationContainer
 
     }
 
-    private function getAnnotationContainerJsonLD($targetObjectID, $targetPageID)
+    private function getAnnotationContainerJsonLD($annotationContainerPID, $targetObjectID, $targetPageID)
     {
-        $containerID = AnnotationUtil::generateUUID();
+      global $base_url;
+      $containerID = $base_url . "/islandora/object/" . $annotationContainerPID;
 
-        $data = array(
+      $data = array(
             "@context" => array(AnnotationConstants::ONTOLOGY_CONTEXT_ANNOTATION, AnnotationConstants::ONTOLOGY_CONTEXT_LDP),
             "@id" => $containerID,
             "@type" => array("BasicContainer", "AnnotationCollection"),
             "total" => "0",
             "label" => "annotationContainer for " . $targetObjectID,
-            "first" => (object) array("id" => $targetPageID, "type" => AnnotationConstants::ANNOTATION_CLASS_2, "items" => array())
+            "first" => (object) array("@id" => $targetPageID, "@type" => AnnotationConstants::ANNOTATION_CLASS_2, "items" => array())
         );
         $annotationContainerJsonLD = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         return $annotationContainerJsonLD;

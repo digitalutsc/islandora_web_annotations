@@ -86,7 +86,8 @@ class AnnotationContainerTracker {
     return $annotationContainerID;
   }
 
-  private function cleanupInProcessList($targetObjectID){
+  public function cleanupInProcessList($targetObjectID) {
+
     $currentList  = variable_get('islandora_web_annotations_inprocess');
     $pids = explode("||", $currentList);
     $newList = array_diff($pids, array($targetObjectID));
