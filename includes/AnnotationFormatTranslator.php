@@ -17,8 +17,9 @@ function convert_annotorious_to_W3C_annotation_datamodel($annotationData, $data)
   // target
   $shapes = $annotationData["shapes"];
   $target_source = $annotationData["src"];
+
   $selector_ext_jsonld = "http://ontology.digitalscholarship.utsc.utoronto.ca/ns/anno_extension.jsonld";
-  $target = array('source' => $target_source, 'format' => 'image', 'selector' => array('@context' => $selector_ext_jsonld, 'shapes' => $shapes));
+  $target = array('@id' => $annotationData['context'], 'source' => $target_source, 'format' => 'image', 'selector' => array('@context' => $selector_ext_jsonld, 'shapes' => $shapes));
   $data["target"] = $target;
 
   // body
@@ -50,7 +51,7 @@ function convert_ova_to_W3C_annotation_datamodel($annotationData, $data) {
 
   $container = $target_org["container"];
   $selector_ext_jsonld = "http://ontology.digitalscholarship.utsc.utoronto.ca/ns/anno_extension.jsonld";
-  $target = array('source' => $target_source, 'format' => $media, 'selector' => array('@context' => $selector_ext_jsonld, 'rangeTime' => $rangeTime), 'container' => $container);
+  $target = array('@id' => $annotationData['context'], 'source' => $target_source, 'format' => $media, 'selector' => array('@context' => $selector_ext_jsonld, 'rangeTime' => $rangeTime), 'container' => $container);
   $data["target"] = $target;
 
   // body
