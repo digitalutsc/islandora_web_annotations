@@ -244,6 +244,10 @@ function islandora_web_annotations_islandora_object_alter(AbstractObject $object
         // Remove the annotation from the container
         $annoID = $object->id;
         $oAnnotationContainer->removeItem($annotationContainerID, $annoID);
+
+        // Clean up AnnotationContainers tracking list
+        $annotationContainerTracker = new AnnotationContainerTracker();
+        $annotationContainerTracker->cleanupInProcessList($targetPID);
       }
       catch (Exception $e) {
         watchdog(AnnotationConstants::MODULE_NAME, 'Error in updating AnnotationContainer after deleting an annotation: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
