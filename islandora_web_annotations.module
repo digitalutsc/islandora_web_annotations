@@ -134,8 +134,10 @@ function islandora_web_annotations_permission() {
 }
 
 
+
 /**
  * Implements hook_views_api().
+ * For the Solr Views Annotation Block
  */
 function islandora_web_annotations_views_api() {
   return array(
@@ -143,6 +145,27 @@ function islandora_web_annotations_views_api() {
     'path' => drupal_get_path('module', 'islandora_web_annotations') . '/includes/views',
   );
 }
+
+
+/**
+ * Implementation of hook_views_handlers().
+ * For the Solr Views Annotation Block
+ */
+function islandora_web_annotations_views_handlers() {
+  return array(
+      'info' => array(
+          'path' => drupal_get_path('module', 'islandora_web_annotations') . '/includes/views',
+      ),
+      'handlers' => array(
+          'islandora_web_annotations_handler_htmlrender' => array(
+              'parent' => 'views_handler_field',
+          ),
+      ),
+  );
+}
+
+
+
 
 /**
  * Send user access related information to js for access control
@@ -167,7 +190,7 @@ function islandora_web_annotations_islandora_view_object(AbstractObject $object)
   $edit_own = user_access(ISLANDORA_WEB_ANNOTATION_EDIT_OWN);
   $delete_own = user_access(ISLANDORA_WEB_ANNOTATION_DELETE_OWN);
 
-  $verbose_messages = variable_get('islandora_web_annotations_verbose', FALSE);
+  $verbose_messages = variable_get('islandviewsora_web_annotations_verbose', FALSE);
   $hide_list_block = variable_get('islandora_web_annotations_hide_list_block', FALSE);
   $load_true = variable_get('islandora_web_annotations_load_true', FALSE);
   $remove_clipper = variable_get('islandora_web_annotations_remove_clipper', FALSE);
