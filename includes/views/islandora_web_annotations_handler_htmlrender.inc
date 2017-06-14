@@ -2,9 +2,7 @@
 /**
  * @file
  * Definition of appnovation_fillout_viewsfield_handler_fillout.
- 
- 
- KIM PHAM - A WORK IN PROGRESS. 
+ * KIM PHAM - A WORK IN PROGRESS.
  */
 
 class islandora_web_annotations_handler_htmlrender extends views_handler_field {

@@ -3,9 +3,7 @@
  * Created by PhpStorm.
  * User: kpham
  * Date: 2017-06-08
- * Time: 17:35
-
-KIM PHAM - A WORK IN PROGRESS. handler change to islandora_web_annotations_handler_htmlrender if need to render html
+ * Time: 17:35 KIM PHAM - A WORK IN PROGRESS. handler change to islandora_web_annotations_handler_htmlrender if need to render html
  */
 
 /**
