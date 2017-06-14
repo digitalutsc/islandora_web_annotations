@@ -93,11 +93,11 @@ function islandora_web_annotations_views_default_views() {
 
 
     $view = new view();
-    $view->name = 'clone_of_islandora_web_annotation_block_images_page';
+    $view->name = 'islandora_web_annotation_block_images_page';
     $view->description = '';
     $view->tag = 'islandora_web_annotations';
     $view->base_table = 'islandora_solr';
-    $view->human_name = 'Clone of Islandora Web Annotation Block - Images, Page';
+    $view->human_name = 'Islandora Web Annotation Block - Images, Page';
     $view->core = 7;
     $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -118,12 +118,13 @@ function islandora_web_annotations_views_default_views() {
     $handler->display->display_options['style_plugin'] = 'list';
     $handler->display->display_options['style_options']['type'] = 'ol';
     $handler->display->display_options['row_plugin'] = 'fields';
-    /* Field: Broken/missing handler */
+    /* Field: Islandora Solr: annotation_value */
     $handler->display->display_options['fields']['annotation_value']['id'] = 'annotation_value';
     $handler->display->display_options['fields']['annotation_value']['table'] = 'islandora_solr';
     $handler->display->display_options['fields']['annotation_value']['field'] = 'annotation_value';
     $handler->display->display_options['fields']['annotation_value']['label'] = '';
     $handler->display->display_options['fields']['annotation_value']['element_label_colon'] = FALSE;
+    $handler->display->display_options['fields']['annotation_value']['link_to_object'] = 0;
     /* Sort criterion: Islandora Solr: fgs_createdDate_dt */
     $handler->display->display_options['sorts']['fgs_createdDate_dt']['id'] = 'fgs_createdDate_dt';
     $handler->display->display_options['sorts']['fgs_createdDate_dt']['table'] = 'islandora_solr';
