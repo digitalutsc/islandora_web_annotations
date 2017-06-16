@@ -19,10 +19,9 @@ function islandora_web_annotations_views_default_views() {
     $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
-
     /*
- * Creates the display with common display options and returns the handler.
- */
+     * Creates the display with common display options and returns the handler.
+     */
     function getDisplayHandler($view, $title) {
         $handler = $view->new_display('default', 'Master', 'default');
         $handler->display->display_options['title'] = $title;
@@ -106,11 +105,7 @@ function islandora_web_annotations_views_default_views() {
     /* Display: Block */
     $handler = $view->new_display('block', 'Block', 'islandora_annotations_audio_video');
 
-
     $views['islandora_web_annotation_block_audio_video'] = $view;
-
-
-
 
     $view = new view();
     $view->name = 'islandora_web_annotation_block_image_page';
