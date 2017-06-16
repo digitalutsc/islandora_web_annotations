@@ -40,8 +40,6 @@ function islandora_web_annotations_views_default_views() {
     }
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
-    $handler->display->display_options['title'] = 'Islandora Web Annotation Block - Audio, Video';
     $handler = getDisplayHandler($view, "Islandora Web Annotation Block - Audio, Video");
     $handler->display->display_options['style_plugin'] = 'table';
     $handler->display->display_options['style_options']['columns'] = array(
@@ -123,8 +121,6 @@ function islandora_web_annotations_views_default_views() {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
-    $handler->display->display_options['title'] = 'Islandora Web Annotation Block - Image, Page';
     $handler = getDisplayHandler($view, "Islandora Web Annotation Block - Image, Page");
     $handler->display->display_options['style_plugin'] = 'list';
     $handler->display->display_options['style_options']['type'] = 'ol';
@@ -160,7 +156,7 @@ function islandora_web_annotations_views_default_views() {
 
     /* Display: Block */
     $handler = $view->new_display('block', 'Block', 'islandora_annotations_image_page');
-    
+
 
     $views['islandora_web_annotation_block_image_page'] = $view;
 
