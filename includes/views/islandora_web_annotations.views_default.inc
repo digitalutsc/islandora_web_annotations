@@ -36,6 +36,18 @@ function islandora_web_annotations_views_default_views() {
         $handler->display->display_options['pager']['options']['offset'] = '0';
         $handler->display->display_options['pager']['options']['id'] = '0';
         $handler->display->display_options['pager']['options']['quantity'] = '9';
+
+        /* Contextual filter: Islandora Solr: annotation_parent */
+        $handler->display->display_options['arguments']['annotation_parent']['id'] = 'annotation_parent';
+        $handler->display->display_options['arguments']['annotation_parent']['table'] = 'islandora_solr';
+        $handler->display->display_options['arguments']['annotation_parent']['field'] = 'annotation_parent';
+        $handler->display->display_options['arguments']['annotation_parent']['default_action'] = 'default';
+        $handler->display->display_options['arguments']['annotation_parent']['default_argument_type'] = 'raw';
+        $handler->display->display_options['arguments']['annotation_parent']['default_argument_options']['index'] = '2';
+        $handler->display->display_options['arguments']['annotation_parent']['summary']['number_of_records'] = '0';
+        $handler->display->display_options['arguments']['annotation_parent']['summary']['format'] = 'default_summary';
+        $handler->display->display_options['arguments']['annotation_parent']['summary_options']['items_per_page'] = '25';
+
         return $handler;
     }
 
@@ -90,16 +102,6 @@ function islandora_web_annotations_views_default_views() {
     $handler->display->display_options['sorts']['annotation_rangeTimeStart_sort']['id'] = 'annotation_rangeTimeStart_sort';
     $handler->display->display_options['sorts']['annotation_rangeTimeStart_sort']['table'] = 'islandora_solr';
     $handler->display->display_options['sorts']['annotation_rangeTimeStart_sort']['field'] = 'annotation_rangeTimeStart_sort';
-    /* Contextual filter: Islandora Solr: annotation_parent */
-    $handler->display->display_options['arguments']['annotation_parent']['id'] = 'annotation_parent';
-    $handler->display->display_options['arguments']['annotation_parent']['table'] = 'islandora_solr';
-    $handler->display->display_options['arguments']['annotation_parent']['field'] = 'annotation_parent';
-    $handler->display->display_options['arguments']['annotation_parent']['default_action'] = 'default';
-    $handler->display->display_options['arguments']['annotation_parent']['default_argument_type'] = 'raw';
-    $handler->display->display_options['arguments']['annotation_parent']['default_argument_options']['index'] = '2';
-    $handler->display->display_options['arguments']['annotation_parent']['summary']['number_of_records'] = '0';
-    $handler->display->display_options['arguments']['annotation_parent']['summary']['format'] = 'default_summary';
-    $handler->display->display_options['arguments']['annotation_parent']['summary_options']['items_per_page'] = '25';
 
     /* Display: Block */
     $handler = $view->new_display('block', 'Block', 'islandora_annotations_audio_video');
@@ -143,16 +145,6 @@ function islandora_web_annotations_views_default_views() {
     $handler->display->display_options['sorts']['fgs_createdDate_dt']['id'] = 'fgs_createdDate_dt';
     $handler->display->display_options['sorts']['fgs_createdDate_dt']['table'] = 'islandora_solr';
     $handler->display->display_options['sorts']['fgs_createdDate_dt']['field'] = 'fgs_createdDate_dt';
-    /* Contextual filter: Islandora Solr: annotation_parent */
-    $handler->display->display_options['arguments']['annotation_parent']['id'] = 'annotation_parent';
-    $handler->display->display_options['arguments']['annotation_parent']['table'] = 'islandora_solr';
-    $handler->display->display_options['arguments']['annotation_parent']['field'] = 'annotation_parent';
-    $handler->display->display_options['arguments']['annotation_parent']['default_action'] = 'default';
-    $handler->display->display_options['arguments']['annotation_parent']['default_argument_type'] = 'raw';
-    $handler->display->display_options['arguments']['annotation_parent']['default_argument_options']['index'] = '2';
-    $handler->display->display_options['arguments']['annotation_parent']['summary']['number_of_records'] = '0';
-    $handler->display->display_options['arguments']['annotation_parent']['summary']['format'] = 'default_summary';
-    $handler->display->display_options['arguments']['annotation_parent']['summary_options']['items_per_page'] = '25';
 
     /* Display: Block */
     $handler = $view->new_display('block', 'Block', 'islandora_annotations_image_page');
