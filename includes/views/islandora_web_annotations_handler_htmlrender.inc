@@ -8,8 +8,22 @@
 class islandora_web_annotations_handler_htmlrender extends views_handler_field {
     function render($values) {
         watchdog("test", "handler");
-        $value = $values->{$this->field_alias};
+        $value = $this->get_value($values);
         return $value;
-
     }
+
+
+//    function render($values) {
+//        watchdog("test", "handler");
+//        $value = $values->{$this->field_alias};
+//        return $value;
+//
+//    }
+
+
+//        function render($values)
+//        {
+//            $value = $this->get_value($values);
+//            return $this->sanitize_value($value);
+//        }
 }
