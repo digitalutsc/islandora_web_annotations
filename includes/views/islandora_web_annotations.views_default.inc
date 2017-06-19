@@ -97,6 +97,12 @@ function islandora_web_annotations_views_default_views() {
     $handler->display->display_options['fields']['annotation_value_render']['table'] = 'islandora_solr';
     $handler->display->display_options['fields']['annotation_value_render']['field'] = 'annotation_value_render';
     $handler->display->display_options['fields']['annotation_value_render']['label'] = 'Annotation';
+    /* Field: Islandora Solr: fgs_ownerId_s */
+    $handler->display->display_options['fields']['fgs_ownerId_s']['id'] = 'fgs_ownerId_s';
+    $handler->display->display_options['fields']['fgs_ownerId_s']['table'] = 'islandora_solr';
+    $handler->display->display_options['fields']['fgs_ownerId_s']['field'] = 'fgs_ownerId_s';
+    $handler->display->display_options['fields']['fgs_ownerId_s']['label'] = 'Author';
+    $handler->display->display_options['fields']['fgs_ownerId_s']['link_to_object'] = 0;
     /* Sort criterion: Islandora Solr: annotation_rangeTimeStart_sort */
     $handler->display->display_options['sorts']['annotation_rangeTimeStart_sort']['id'] = 'annotation_rangeTimeStart_sort';
     $handler->display->display_options['sorts']['annotation_rangeTimeStart_sort']['table'] = 'islandora_solr';
@@ -136,6 +142,12 @@ function islandora_web_annotations_views_default_views() {
     $handler->display->display_options['fields']['annotation_value_render']['field'] = 'annotation_value_render';
     $handler->display->display_options['fields']['annotation_value_render']['label'] = '';
     $handler->display->display_options['fields']['annotation_value_render']['element_label_colon'] = FALSE;
+    /* Field: Islandora Solr: fgs_ownerId_ms */
+    $handler->display->display_options['fields']['fgs_ownerId_ms']['id'] = 'fgs_ownerId_ms';
+    $handler->display->display_options['fields']['fgs_ownerId_ms']['table'] = 'islandora_solr';
+    $handler->display->display_options['fields']['fgs_ownerId_ms']['field'] = 'fgs_ownerId_ms';
+    $handler->display->display_options['fields']['fgs_ownerId_ms']['label'] = 'Author';
+    $handler->display->display_options['fields']['fgs_ownerId_ms']['link_to_object'] = 0;
     /* Sort criterion: Islandora Solr: fgs_createdDate_dt */
     $handler->display->display_options['sorts']['fgs_createdDate_dt']['id'] = 'fgs_createdDate_dt';
     $handler->display->display_options['sorts']['fgs_createdDate_dt']['table'] = 'islandora_solr';
