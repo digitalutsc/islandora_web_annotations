@@ -1,9 +1,9 @@
 # Islandora Web Annotations [![Build Status](https://travis-ci.org/digitalutsc/islandora_web_annotations.svg?branch=7.x )](https://travis-ci.org/digitalutsc/islandora_web_annotations)
 
-An experimental Islandora module with the aim of adding annotation support to Islandora using the [W3C Web annotation model](https://github.com/w3c/web-annotation).   
+An Islandora module that enables annotation on Islandora objects, following the [W3C Web annotation model](https://github.com/w3c/web-annotation).   
 
 # Status
-Currently under initial stages of development and not for use on production sites.
+This module is under active development. A release is available that has been tested against the 7.x-1.9 release of Islandora. 
 
 ## Requirements
 
@@ -19,14 +19,14 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 ## Configuration
 
-This module requires specific configurations for different content models and solution packs.  Please see the [project wiki documentation](https://github.com/digitalutsc/islandora_web_annotations/wiki) for guides on how to configure for specific content models and solution packs.
+This module requires specific configurations for different content models and solution packs.  Please see the [project wiki documentation](https://github.com/digitalutsc/islandora_web_annotations/wiki) for guides on how to configure for specific content models and solution packs as well as how to index annotation content.
 
 ## What is Different About This module?
 
-This module can be considered an Islandora utility module, however, like solution packs, it installs content models into Fedora commons to facilite the creation of annotation objects. The two content models that are installed are the Annotation content model and Annotation Container Content model.  These content models do not apply to the collection level at this time.  By default, all content models become available in certain administration interfaces such as the collection management interface.  These content models should not be selected through these interfaces at this time.
+This module can be considered an Islandora utility module; However, like solution packs, it installs content models into the Fedora repository to facilite the creation of annotation objects. The two content models that are installed are the Annotation content model and Annotation Container Content model.  These content models are not relevant for collection policies at this time.  By default, all content models become available in certain administration interfaces such as the collection management interface.  Selecting these content models through these interfaces has no discernable effect, though we recommend avoiding selecting these content models.
 
 ## Maintainers/Sponsors
-Current maintainers:
+Software leads:
 * [Nat Kanthan](https://github.com/Natkeeran)
 * [Marcus Barnes](https://github.com/MarcusBarnes)
 
