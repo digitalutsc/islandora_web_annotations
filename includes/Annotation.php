@@ -128,7 +128,7 @@ class Annotation implements interfaceAnnotation
         global $base_url;
         $annotationIRI = $base_url . "/islandora/object/" . $pid;
 
-        $userURL = $base_url . "/users/" . $annotationMetadata["creator"];
+        $userURL = $base_url . "/user/" . $annotationMetadata["creator"];
 
 
         $data = array(
