@@ -1,6 +1,5 @@
-[![DOI](https://zenodo.org/badge/72134170.svg)](https://zenodo.org/badge/latestdoi/72134170)
-
-# Islandora Web Annotations [![Build Status](https://travis-ci.org/digitalutsc/islandora_web_annotations.svg?branch=7.x )](https://travis-ci.org/digitalutsc/islandora_web_annotations)
+# Islandora Web Annotations 
+[![Build Status](https://travis-ci.org/digitalutsc/islandora_web_annotations.svg?branch=7.x )](https://travis-ci.org/digitalutsc/islandora_web_annotations) [![DOI](https://zenodo.org/badge/72134170.svg)](https://zenodo.org/badge/latestdoi/72134170)
 
 An Islandora module that enables annotation on Islandora objects, following the [W3C Web annotation model](https://github.com/w3c/web-annotation).   
 
