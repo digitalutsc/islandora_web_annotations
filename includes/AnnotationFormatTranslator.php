@@ -46,8 +46,10 @@ function convert_ova_to_W3C_annotation_datamodel($annotationData, $data) {
   $target_org = $annotationData["target"];
   $target_source = $target_org["src"];
 
-  global $base_url;
-  $target_source = $base_url . $target_source;
+  if (strpos($media, 'image') !== false) {
+    global $base_url;
+    $target_source = $base_url . $target_source;
+  }
 
   $container = $target_org["container"];
   $selector_ext_jsonld = "http://ontology.digitalscholarship.utsc.utoronto.ca/ns/anno_extension.jsonld";
