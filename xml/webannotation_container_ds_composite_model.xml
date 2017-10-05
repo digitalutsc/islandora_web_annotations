@@ -6,6 +6,6 @@
         <form FORMAT_URI="info:fedora/fedora-system:FedoraRELSExt-1.0" MIME="text/xml"></form>
     </dsTypeModel>
     <dsTypeModel ID="WADMContainer">
-        <form MIME="application/ld+json"></form>
+        <form MIME="application/json"></form>
     </dsTypeModel>
 </dsCompositeModel>
