@@ -9,6 +9,7 @@ require_once('AnnotationConstants.php');
 require_once('AnnotationUtil.php');
 require_once('interfaceAnnotation.php');
 require_once('AnnotationFormatTranslator.php');
+require_once('derivatives.inc');
 
 class Annotation implements interfaceAnnotation
 {
@@ -56,10 +57,6 @@ class Annotation implements interfaceAnnotation
             $object->ingestDatastream($ds);
             $this->repository->ingestObject($object);
 
-            // Create Derivative
-            $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);
-            $this->createUpdateDerivative($object, $contentXML);
-
             // Get WADM ds checksum
             $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
             $checksum =  $WADMObject->checksum;
@@ -93,9 +90,7 @@ class Annotation implements interfaceAnnotation
         $annotationJsonLDData["checksum"] = $checksum;
 
         // Update Derivative
-        $contentXML = $this->generateDerivativeContent($annotationData, $annotationMetadata);
-        $this->createUpdateDerivative($object, $contentXML);
-
+        // islandora_web_annotations_create_wadm_derivative($object);
         return $annotationJsonLDData;
     }
 
@@ -155,74 +150,4 @@ class Annotation implements interfaceAnnotation
         $data = array_merge($data, $metadata);
         return $data;
     }
-
-    private function createUpdateDerivative(AbstractObject $object, $contentXML){
-        try {
-
-            $dsid = 'WADM_SEARCH';
-            $datastream = isset($object[$dsid]) ? $object[$dsid] : $object->constructDatastream($dsid);
-            $datastream->label = 'WADM_SEARCH';
-            $datastream->mimeType = 'text/xml';
-
-            $filename = $dsid . '.xml';
-            $dest = file_build_uri($filename);
-            $file = file_save_data($contentXML, $dest, FILE_EXISTS_REPLACE);
-
-            AnnotationUtil::add_datastream($object, $dsid, $file->uri);
-
-            file_delete($file);
-
-        } catch (exception $e) {
-            watchdog(AnnotationConstants::MODULE_NAME, 'Unable to create vtt indexing datastream: ' . $e->getmessage());
-        }
-    }
-
-    private function generateDerivativeContent($annotationData, $annotationMetadata){
-        $target = $annotationData["context"];
-        $targetID = AnnotationUtil::getPIDfromURL($target);
-
-        $textvalue = $annotationData["text"];
-        $creator = $annotationMetadata["creator"];
-
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><annotation></annotation>');
-
-        $xml->addChild('title', "Annotation for " . $targetID);
-        $xml->addChild('target', $targetID);
-        $xml->addChild('creator', $creator);
-        $this->addCadata('textvalue', $textvalue, $xml);
-
-        // If video annotation
-        if (array_key_exists('rangeTime', $annotationData)) {
-            $rangeTimeStart = $annotationData["rangeTime"]["start"];
-            $xml->addChild('rangeTimeStart', $rangeTimeStart);
-            $rangeTimeEnd = $annotationData["rangeTime"]["end"];
-            $xml->addChild('rangeTimeEnd', $rangeTimeEnd);
-        }
-
-        $contentXML = $xml->asXML();
-
-        return $contentXML;
-    }
-
-  /**
-   * Adds a CDATA property to an XML document.
-   *
-   * @param string $name
-   *   Name of property that should contain CDATA.
-   * @param string $value
-   *   Value that should be inserted into a CDATA child.
-   * @param object $parent
-   *   Element that the CDATA child should be attached too.
-   */
-  private function addCadata($name, $value, &$parent) {
-    $child = $parent->addChild($name);
-
-    if ($child !== NULL) {
-      $child_node = dom_import_simplexml($child);
-      $child_owner = $child_node->ownerDocument;
-      $child_node->appendChild($child_owner->createCDATASection($value));
-    }
-    return $child;
-  }
-
 }
