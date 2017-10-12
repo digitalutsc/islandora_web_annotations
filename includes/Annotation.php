@@ -9,7 +9,6 @@ require_once('AnnotationConstants.php');
 require_once('AnnotationUtil.php');
 require_once('interfaceAnnotation.php');
 require_once('AnnotationFormatTranslator.php');
-require_once('derivatives.inc');
 
 class Annotation implements interfaceAnnotation
 {
