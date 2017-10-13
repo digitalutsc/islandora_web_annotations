@@ -35,6 +35,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
             $object->label = "AnnotationContainer for " . $targetObjectID;
             $object->models = array(AnnotationConstants::WADMContainer_CONTENT_MODEL);
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', AnnotationConstants::WADMContainer_CONTENT_MODEL);
+            $object->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', AnnotationConstants::ANNOTATION_COLLECTION_NS);
             $object->relationships->add(FEDORA_RELS_EXT_URI, 'isAnnotationContainerOf', $targetObjectID);
             $dsid = AnnotationConstants::WADMContainer_DSID;
             $annotationContainerPID =  $object->id;
