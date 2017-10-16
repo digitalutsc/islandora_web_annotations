@@ -225,12 +225,12 @@ function islandora_web_annotations_islandora_required_objects(IslandoraTuque $co
 
 function islandora_web_annotations_islandora_object_alter(AbstractObject $object, array &$context) {
   // If delete action
-  if($context["action"] == "purge"){
+  if ($context["action"] == "purge") {
     $object_content_models = $object->relationships->get('info:fedora/fedora-system:def/model#', 'hasModel');
     $type = $object_content_models[0]["object"]["value"];
 
     // If it is an annotation
-    if($type == "islandora:WADMCModel"){
+    if ($type == "islandora:WADMCModel") {
       try {
         // Get the target PID, needed to get the container
         $WADM_SEARCH_Object = $object->getDatastream("WADM");
@@ -253,6 +253,25 @@ function islandora_web_annotations_islandora_object_alter(AbstractObject $object
       }
       catch (Exception $e) {
         watchdog(AnnotationConstants::MODULE_NAME, 'Error in updating AnnotationContainer after deleting an annotation: %t', array('%t' => $e->getMessage()), WATCHDOG_ERROR);
+      }
+   } else if ($type == "islandora:WADMContainerCModel") {
+      try {
+        // Get datastream info
+        $WADM_SEARCH_Object = $object->getDatastream("WADMContainer");
+        $content = $WADM_SEARCH_Object->content;
+        $contentJson = json_decode($content, TRUE);
+        $items = $contentJson["first"]["items"];
+
+        $annotationContainerID = $object->id;
+        $oAnnotationContainer = new AnnotationContainer();
+        // Purge all annotations belonging to the annotation container
+        for ($i = 0; $i < count($items); $i++) {
+          $annoID = $items[$i];
+          $oAnnotationContainer->deleteAnnotation($annotationContainerID, $annoID);
+        }
+      }
+      catch (Exception $e) {
+        watchdog(AnnotationConstants::MODULE_NAME, 'Error in deleting Annotation container and its annotations');
       }
     }
   }
