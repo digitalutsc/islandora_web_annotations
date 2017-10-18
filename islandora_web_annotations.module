@@ -345,3 +345,19 @@ function install_annotations_collections_object($connection) {
     return NULL;
   }
 }
+
+/**
+ * Implements hook_islandora_CMODEL_PID_derivative().
+ */
+function islandora_web_annotations_islandora_WADMCModel_islandora_derivative(AbstractObject $object, $ds_modified_params = array()) {
+  $derivatives[] = array(
+    'source_dsid' => "WADM",
+    'destination_dsid' => "WADM_SEARCH",
+    'function' => array(
+      'islandora_web_annotations_create_wadm_derivative',
+    ),
+    'file' => drupal_get_path('module', 'islandora_web_annotations') . '/includes/derivatives.inc',
+  );
+
+  return $derivatives;
+}
