@@ -1,7 +1,7 @@
 #islandora_web_annotations
 
-sudo: true
-
+sudo: required
+dist: trusty
 language: php
 
 php:
