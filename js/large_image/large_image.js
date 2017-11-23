@@ -52,17 +52,11 @@ jQuery(document).ready(function() {
 
 
     // Position issue
-    var isChrome = !!window.chrome;
-    if(!isChrome){
-        window.pageYOffset = 0;
-    }
+    window.pageYOffset = 0;
 
     // This is a fix to address the annotation positioning (#6) related to issue in FireFox, not an issue in Chrome
     anno.addHandler('onEditorShown', function(annotation) {
-        var isChrome = !!window.chrome;
-        if(!isChrome){
-            window.pageYOffset = 0;
-        }
+        window.pageYOffset = 0;
     });
 
     anno.addHandler("onAnnotationCreated", function(annotation) {
