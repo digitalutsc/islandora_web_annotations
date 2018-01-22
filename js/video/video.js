@@ -123,6 +123,12 @@ jQuery(document).ready(function() {
         applyBlock("created");
     });
 
+    // Play video when button clicked from View
+    jQuery(".playvideo").click(function() {
+        var pid = jQuery(this).attr('id');
+        ova.playTarget(pid);
+    });
+
 });
 
 function applyPermissionsOnView(annotations){
