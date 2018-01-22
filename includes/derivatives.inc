@@ -36,7 +36,7 @@ function islandora_web_annotations_create_wadm_derivative(AbstractObject $object
  * Generate the xml.
  */
 function generateDerivativeContent($wadmObj) {
-  $targetURL = $wadmObj["@id"];
+  $targetURL = $wadmObj["target"]["@id"];
   $targetPID = AnnotationUtil::getPIDfromURL($targetURL);
   $textvalue = $wadmObj["body"]["bodyValue"];
 
