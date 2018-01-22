@@ -64,6 +64,15 @@ function islandora_web_annotations_views_default_views() {
             'empty_column' => 0,
         ),
     );
+    /* Field: Islandora Solr: PID */
+    $handler->display->display_options['fields']['PID']['id'] = 'PID';
+    $handler->display->display_options['fields']['PID']['table'] = 'islandora_solr';
+    $handler->display->display_options['fields']['PID']['field'] = 'PID';
+    $handler->display->display_options['fields']['PID']['label'] = '';
+    $handler->display->display_options['fields']['PID']['alter']['alter_text'] = TRUE;
+    $handler->display->display_options['fields']['PID']['alter']['text'] = '<span class="playvideo" id="[PID]"><img style="vertical-align:middle" src="/sites/all/modules/islandora_web_annotations/css/video/ic_play_arrow_black.svg"></span>';
+    $handler->display->display_options['fields']['PID']['element_label_colon'] = FALSE;
+    $handler->display->display_options['fields']['PID']['link_to_object'] = 0;
     /* Field: Islandora Solr: annotation_rangeTimeStart */
     $handler->display->display_options['fields']['annotation_rangeTimeStart']['id'] = 'annotation_rangeTimeStart';
     $handler->display->display_options['fields']['annotation_rangeTimeStart']['table'] = 'islandora_solr';
