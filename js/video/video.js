@@ -123,7 +123,43 @@ jQuery(document).ready(function() {
         applyBlock("created");
     });
 
+    askIfUserWantsToPlay();
 });
+
+/**
+ * If the page gets loaded from search results, provide the user option to play the annotation.
+ */
+function askIfUserWantsToPlay() {
+
+    jQuery.blockUI({
+        message: "Would you like to play the video annotation? <br><span id='yes_play'>Yes</span> &nbsp;&nbsp;&nbsp;&nbsp;<span id='do_not_play'>No</span>",
+        fadeIn: 700,
+        fadeOut: 700,
+        timeout: 3000,
+        showOverlay: false,
+        centerY: false,
+        css: {
+            height: '50px',
+            border: 'none',
+            padding: '5px',
+            backgroundColor: '#000',
+            '-webkit-border-radius': '10px',
+            '-moz-border-radius': '10px',
+            opacity: .6,
+            color: '#fff'
+        }
+    });
+
+    jQuery('#yes_play').click(function() {
+        jQuery.unblockUI();
+        var annotationPID = getParameterByName("annotationPID");
+        ova.playTarget(annotationPID);
+    });
+
+    jQuery('#do_not_play').click(function() {
+        jQuery.unblockUI();
+    });
+}
 
 function applyPermissionsOnView(annotations){
 
@@ -316,4 +352,22 @@ function showGrowlMsg(i_msg) {
         }
     });
 
+}
+
+
+/**
+ * Utility method
+ *
+ * @param param_name
+ * @param url
+ * @returns {*}
+ */
+function getParameterByName(param_name, url) {
+    if (!url) url = window.location.href;
+    param_name = param_name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + param_name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
