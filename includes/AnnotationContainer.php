@@ -94,6 +94,7 @@ class AnnotationContainer implements interfaceAnnotationContainer
                   $body = conver_W3C_to_lib_annotation_datamodel($dsContentJson);
                   $body->checksum = $checksum;
                   $body->pid = $items[$i];
+                  $body->id = $items[$i];
                   array_push($newArray, $body);
                 }
             }

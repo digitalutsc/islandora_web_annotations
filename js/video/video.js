@@ -124,6 +124,13 @@ jQuery(document).ready(function() {
     });
 
     askIfUserWantsToPlay();
+
+    // Play video when button clicked from View
+    jQuery(".playvideo").click(function() {
+        var pid = jQuery(this).attr('id');
+        ova.playTarget(pid);
+    });
+
 });
 
 /**
