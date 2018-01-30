@@ -60,12 +60,23 @@ jQuery(document).ready(function() {
     });
 
     anno.addHandler("onAnnotationCreated", function(annotation) {
+        // Get text from tinymce and set it to annotation store on create
+        if (tinymce) {
+            var text = tinymce.activeEditor.getContent();
+            annotation.text = text;
+        }
+
         var targetObjectId = Drupal.settings.islandoraOpenSeadragon.pid;
         annotation.pid = "New";
         createAnnotation(targetObjectId, annotation);
     });
 
     anno.addHandler("onAnnotationUpdated", function(annotation) {
+        // Get text from tinymce and set it to annotation store on update
+        if (tinymce) {
+            var text = tinymce.activeEditor.getContent();
+            annotation.text = text;
+        }
         updateAnnotation(annotation);
     });
 

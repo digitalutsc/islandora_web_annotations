@@ -89,7 +89,7 @@ span.marker-large-mage {
 
 /* Issue-54 */
 
-.annotorious-editor, .annotorious-popup {
+.annotorious-popup {
     max-height: 300px;
     overflow-y: auto;
 }
