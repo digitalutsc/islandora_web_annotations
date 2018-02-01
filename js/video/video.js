@@ -123,7 +123,9 @@ jQuery(document).ready(function() {
         applyBlock("created");
     });
 
-    askIfUserWantsToPlay();
+    if (window.location.href.indexOf("annotationPID") > -1) {
+        askIfUserWantsToPlay();
+    }
 
     // Play video when button clicked from View
     jQuery(".playvideo").click(function() {
