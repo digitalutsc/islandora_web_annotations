@@ -34,7 +34,7 @@ function executeCommonLoadOperations() {
             menubar : false,
             statusbar: false,
             plugins: "link",
-            toolbar: "bold italic underline | alignleft aligncenter alignright | link blockquote"
+            toolbar: "bold italic underline | alignleft aligncenter alignright | link"
         });
 
         var currentText = annotation.text;
