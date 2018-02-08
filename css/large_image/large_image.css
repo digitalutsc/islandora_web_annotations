@@ -33,3 +33,11 @@
 {
     background-color : transparent !important; /* should be replaced with OpenSeadragon setting */
 }
+
+/*  Adjustments to the annotatation editor box area */
+div.annotorious-editor {
+    padding-top: 0.5em;
+}
+#mceu_7 {
+    width: 99% !important;
+}
