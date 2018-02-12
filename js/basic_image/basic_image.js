@@ -44,6 +44,21 @@ jQuery(document).ready(function() {
 
     executeCommonLoadOperations();
 
+    // Get text from tinymce and set it to annotation store on create and update
+    anno.addHandler("onAnnotationCreated", function(annotation) {
+        if (tinymce) {
+            var text = tinymce.activeEditor.getContent();
+            annotation.text = text;
+        }
+    });
+
+    anno.addHandler("onAnnotationUpdated", function(annotation) {
+        if (tinymce) {
+            var text = tinymce.activeEditor.getContent();
+            annotation.text = text;
+        }
+    });
+
 });
 
 

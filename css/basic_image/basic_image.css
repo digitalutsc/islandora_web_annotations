@@ -14,3 +14,11 @@
     top: 135px;
     left:82px;
 }
+
+/*  Adjustments to the annotation editor box area */
+div.annotorious-editor {
+    padding-top: 0.5em;
+}
+#mceu_7 {
+    width: 99% !important;
+}

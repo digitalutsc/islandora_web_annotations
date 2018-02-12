@@ -26,6 +26,25 @@ function executeCommonLoadOperations() {
             jQuery(".annotorious-popup-button-delete").show();
         }
     });
+
+    /*Rich text editor for basic/large image */
+    anno.addHandler("onEditorShown", function(annotation) {
+        tinymce.init({
+            selector: '.annotorious-editor-text',
+            menubar : false,
+            statusbar: false,
+            plugins: "link",
+            toolbar: "bold italic underline | alignleft aligncenter alignright | link"
+        });
+
+        var currentText = annotation.text;
+        if(typeof currentText === 'undefined'){
+            tinymce.activeEditor.setContent("");
+        } else {
+            tinymce.activeEditor.setContent(currentText);
+        }
+    });
+
 }
 
 function createAnnotation(targetObjectId, annotationData) {
