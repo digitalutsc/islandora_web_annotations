@@ -50,7 +50,7 @@ function generateDerivativeContent($wadmObj) {
   $xml->addChild('creator', $creator);
   addCDATAchild('textvalue', $textvalue, $xml);
 
-  if ($wadmObj["target"]["format"] == "video") {
+  if ($wadmObj["target"]["format"] == "video" || $wadmObj["target"]["format"] == "audio") {
     $rangeTimeStart = $wadmObj["target"]["selector"]["rangeTime"]["start"];
     $xml->addChild('rangeTimeStart', $rangeTimeStart);
     $rangeTimeEnd = $wadmObj["target"]["selector"]["rangeTime"]["end"];
