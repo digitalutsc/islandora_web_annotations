@@ -71,7 +71,8 @@ function createUpdateDerivative(AbstractObject $object, $contentXML){
   $datastream->label = 'WADM_SEARCH';
   $datastream->mimeType = 'text/xml';
 
-  $filename = $dsid . '.xml';
+  $time_id = time();
+  $filename = $time_id . "_" . $dsid . '.xml';
   $dest = file_build_uri($filename);
   $file = file_save_data($contentXML, $dest, FILE_EXISTS_REPLACE);
   $result = AnnotationUtil::add_datastream($object, $dsid, $file->uri);
