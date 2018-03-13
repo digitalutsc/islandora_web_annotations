@@ -37,10 +37,10 @@ function executeCommonLoadOperations() {
             toolbar: "bold italic underline | alignleft aligncenter alignright | link"
         });
 
-        var currentText = annotation.text;
-        if(typeof currentText === 'undefined'){
+        if(typeof annotation === 'undefined' || annotation == false){
             tinymce.activeEditor.setContent("");
         } else {
+            var currentText = annotation.text;
             tinymce.activeEditor.setContent(currentText);
         }
     });
@@ -369,7 +369,7 @@ function insertLabelForNewAnnotation(pid, annotation) {
     insertLabel(g_contentType, i, pid, canvas, x1, y1, width1, height1);
 
     var text = annotation.text;
-    var htmlItem = "<li id='block_label_"+ pid + "' style='margin-bottom: 8px'><b> [" + i + "]</b> " + text + "</li>";
+    var htmlItem = "<li id='block_label_"+ pid + "' style='margin-bottom: 8px'><b>[" + i + "]</b> " + text + "</li>";
     insertUpdateAnnotationDataBlock(htmlItem);
 }
 
