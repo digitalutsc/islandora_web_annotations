@@ -85,12 +85,19 @@ class Annotation implements interfaceAnnotation
 
         // Get WADM ds checksum
         $WADMObject = $object->getDatastream(AnnotationConstants::WADM_DSID);
+        $dsContent = (string)$WADMObject->content;
+        $dsContentJson = json_decode($dsContent);
+
+        $WADMObjectUpdated = conver_W3C_to_lib_annotation_datamodel($dsContentJson);
         $checksum =  $WADMObject->checksum;
-        $annotationJsonLDData["checksum"] = $checksum;
+
+        $WADMObjectUpdated->checksum = $checksum;
+        $WADMObjectUpdated->pid = $annotationPID;
+        $WADMObjectUpdated->id = $annotationPID;
 
         // Update Derivative
         // islandora_web_annotations_create_wadm_derivative($object);
-        return $annotationJsonLDData;
+        return $WADMObjectUpdated;
     }
 
     public function deleteAnnotation($annotationID){
