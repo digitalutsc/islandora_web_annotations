@@ -249,7 +249,7 @@ function updateAnnotation(annotationData) {
 
             if(status == "success") {
                 var checksum = annoInfo.checksum;
-                var updatedText = annoInfo.body.text;
+                var updatedText = annoInfo.text;
                 var creator = annoInfo.creator;
                 var created = annoInfo.created;
 
