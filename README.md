@@ -4,7 +4,7 @@
 An Islandora module that enables annotation on Islandora objects, following the [W3C Web annotation model](https://github.com/w3c/web-annotation).   
 
 # Status
-This module is under active development. Please see the latest [release](https://github.com/digitalutsc/islandora_web_annotations/releases).
+This module is under active development. Please see the latest [release](https://github.com/digitalutsc/islandora_web_annotations/releases).   Currently, only Firefox and Chrome browsers are supported.
 
 ## Requirements
 
