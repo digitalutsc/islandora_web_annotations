@@ -217,6 +217,7 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
             var short_message = "Error in creating the annotation.";
             verbose_alert(short_message, verbose_message);
         }
+        jQuery(".vjs-controltimepanel-RS").hide();
 
     } else if (ajaxOptions.type === 'PUT' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
         jQuery('.annotator-wrapper').unblock();
@@ -245,6 +246,7 @@ jQuery(document).ajaxComplete(function(event, jqXHR, ajaxOptions) {
             var short_message = "Error: Unable to update.";
             verbose_alert(short_message, verbose_message);
         }
+        jQuery(".vjs-controltimepanel-RS").hide();
 
     } else if (ajaxOptions.type === 'DELETE' && /\/islandora_web_annotations/.test(ajaxOptions.url)) {
         var jsonData = JSON.parse(jsonDataText);
