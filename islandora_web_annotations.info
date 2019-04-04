@@ -1,7 +1,7 @@
 name = Islandora Web Annotations
 description = "Islandora Web Annotations"
 package = Islandora
-version = 7.x-dev
+version = 7.x-1.12
 core = 7.x
 dependencies[] = context
 dependencies[] = context_addassets
